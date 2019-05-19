@@ -11,7 +11,11 @@ namespace Fritz.ResourceManagement.Domain
 
     public ScheduleStatus Status { get; set; }
 
+		public string Name { get; set; }
+
     public string CronPattern { get; set; }
+
+		public TimeSpan Duration { get; set; }
 
     public DateTime MinStartDateTime { get; set; }
 
