@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Fritz.ResourceManagement.Domain;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 {
 	public class WhenExpandingSchedule
 	{
-
-		private Schedule _MySchedule = new Schedule {
+    private readonly ILoggerFactory _LoggerFactory;
+    private Schedule _MySchedule = new Schedule {
 			RecurringSchedules = new List<RecurringSchedule> {
 				new RecurringSchedule {
 					MinStartDateTime = new DateTime(2019, 5, 1),
@@ -20,6 +21,16 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 				}
 			}
 		};
+
+		public WhenExpandingSchedule()
+		{
+				
+			_LoggerFactory = LoggerFactory.Create(config => {
+				config.SetMinimumLevel(LogLevel.Trace)
+					.AddConsole();
+			});
+
+		}
 
 		[Fact]
 		public void ShouldExpandWithinDelimitedDatesOnly()
@@ -45,7 +56,7 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 
 			// act
 			var sut = new Fritz.ResourceManagement.Scheduling.ScheduleManager();
-			var results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 5, 1), new DateTime(2019, 5, 15));
+			var results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 5, 1), new DateTime(2019, 5, 15), _LoggerFactory.CreateLogger("test"));
 
 			// assert
 			Assert.Equal(2, results.Count());
