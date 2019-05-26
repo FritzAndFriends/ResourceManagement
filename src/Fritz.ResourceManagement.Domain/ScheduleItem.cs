@@ -2,6 +2,10 @@ using System;
 
 namespace Fritz.ResourceManagement.Domain
 {
+
+	/// <summary>
+	/// A one-off instance of an item on the schedule
+	/// </summary>
   public class ScheduleItem
   {
 

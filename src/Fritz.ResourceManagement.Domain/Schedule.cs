@@ -11,7 +11,7 @@ namespace Fritz.ResourceManagement.Domain
 
     public IList<RecurringSchedule> RecurringSchedules {get; set;}
 
-    public IList<(DateTime start, DateTime end)> ScheduleExceptions { get; set; }
+    public IList<ScheduleException> ScheduleExceptions { get; set; }
 
   }
 

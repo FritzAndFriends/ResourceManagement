@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Fritz.ResourceManagement.Domain
 {
+	/// <summary>
+	/// An event that re-occurs on the schedule given a recurrence pattern defined in CronPattern
+	/// </summary>
   public class RecurringSchedule {
 
     public int Id { get; set; }
