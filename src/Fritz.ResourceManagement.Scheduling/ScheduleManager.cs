@@ -59,19 +59,19 @@ namespace Fritz.ResourceManagement.Scheduling
 			}
 
 			// Scenario 4
-			if (ts1.StartDateTime <= ts2.StartDateTime && ts1.EndDateTime >= ts2.EndDateTime) {
+			if (ts1.StartDateTime < ts2.StartDateTime && ts1.EndDateTime > ts2.EndDateTime) {
 				logger.LogTrace("Time 1 is contained entirely within Time 2");
 				return (ts2.StartDateTime, ts2.EndDateTime);
 			}
 
 			// Scenario 5
-			if (ts1.StartDateTime >= ts2.StartDateTime && ts1.EndDateTime >= ts2.EndDateTime) {
+			if (ts1.StartDateTime >= ts2.StartDateTime && ts1.EndDateTime > ts2.EndDateTime) {
 				logger.LogTrace("Time 1 starts after Time 2 and overlaps");
 				return (ts1.StartDateTime, ts2.EndDateTime);
 			}
 
 			// Scenario 6
-			if (ts1.StartDateTime <= ts2.StartDateTime && ts1.EndDateTime <= ts2.EndDateTime) {
+			if (ts1.StartDateTime < ts2.StartDateTime && ts1.EndDateTime <= ts2.EndDateTime) {
 				logger.LogTrace("Time 2 starts after Time 1 and overlaps");
 				return (ts2.StartDateTime, ts1.EndDateTime);
 			}
