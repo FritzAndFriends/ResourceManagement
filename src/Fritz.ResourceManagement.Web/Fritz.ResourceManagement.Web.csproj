@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-		<_RazorComponentInclude>Components\**\*.razor</_RazorComponentInclude>
+		<!-- <_RazorComponentInclude>Components\**\*.razor</_RazorComponentInclude> -->
     <UserSecretsId>aspnet-Fritz.ResourceManagement.Web-B750FD56-9948-40A0-85AB-70C6CF2B68BC</UserSecretsId>
   </PropertyGroup>
 

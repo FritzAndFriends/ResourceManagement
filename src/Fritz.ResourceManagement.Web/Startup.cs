@@ -42,6 +42,11 @@ namespace Fritz.ResourceManagement.Web
 						services.AddDbContext<Models.MyDbContext>(options => 
 							options.UseNpgsql(Configuration.GetConnectionString("db")));
 
+						services.AddSignalR();
+						services.AddServerSideBlazor();
+
+						//cheer ultramark 31/05/2019 100
+
             services.AddRazorPages()
                 .AddNewtonsoftJson();
         }
@@ -76,7 +81,7 @@ namespace Fritz.ResourceManagement.Web
                 endpoints.MapRazorPages();
 
 								endpoints.MapBlazorHub();
-								endpoints.MapFallbackToAreaPage("_Host", "Identity");
+								endpoints.MapFallbackToAreaPage("/_Host", "Identity");
 
             });
         }
