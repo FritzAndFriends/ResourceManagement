@@ -36,7 +36,7 @@ namespace Fritz.ResourceManagement.Web
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("db")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<MyUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 						services.AddDbContext<Models.MyDbContext>(options => 
@@ -74,6 +74,10 @@ namespace Fritz.ResourceManagement.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+
+								endpoints.MapBlazorHub();
+								endpoints.MapFallbackToAreaPage("_Host", "Identity");
+
             });
         }
     }
