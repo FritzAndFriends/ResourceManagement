@@ -1,0 +1,11 @@
+﻿@page
+@model Fritz.ResourceManagement.Web.Pages.AvailabilityModel
+@{
+    ViewData["Title"] = "Availability";
+}
+
+<h1>Availability</h1>
+
+<div id="Availability">
+	@(await Html.RenderComponentAsync<Fritz.ResourceManagement.Web.Components._Availability>())
+</div>

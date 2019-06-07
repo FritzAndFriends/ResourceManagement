@@ -1,12 +1,20 @@
 @page "/_Availability"
+@inject System.Security.Claims.ClaimsPrincipal CurrentUser
+@inject Models.MyDbContext DbContext
 
 <h5>This is the availability component</h5>
 
-My UserId is @UserId
+Current User: @CurrentUser.Identity.Name
+
+Total persons: @DbContext.Persons.Count()
 
 @functions {
 
-	[Parameter]
-	public Guid UserId {get; set;}
+	void GetMyAvailability()
+	{
+
+		// DbContext.Persons.First(p => p.User)
+
+	}
 
 }

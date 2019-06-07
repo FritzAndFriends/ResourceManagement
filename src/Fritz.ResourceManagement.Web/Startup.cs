@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,78 +12,85 @@ using Fritz.ResourceManagement.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Rewrite;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace Fritz.ResourceManagement.Web
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+  public class Startup
+  {
+	public Startup(IConfiguration configuration)
+	{
+	  Configuration = configuration;
+	}
 
-        public IConfiguration Configuration { get; }
+	public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-            });
+	// This method gets called by the runtime. Use this method to add services to the container.
+	public void ConfigureServices(IServiceCollection services)
+	{
+	  services.Configure<CookiePolicyOptions>(options =>
+	  {
+		// This lambda determines whether user consent for non-essential cookies is needed for a given request.
+		options.CheckConsentNeeded = context => true;
+	  });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("db")));
-            services.AddDefaultIdentity<MyUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+	  services.AddDbContext<ApplicationDbContext>(options =>
+		  options.UseNpgsql(
+			  Configuration.GetConnectionString("db")));
+	  services.AddDefaultIdentity<MyUser>()
+		  .AddEntityFrameworkStores<ApplicationDbContext>();
 
-						services.AddDbContext<Models.MyDbContext>(options => 
-							options.UseNpgsql(Configuration.GetConnectionString("db")));
+	  services.AddDbContext<Models.MyDbContext>(options =>
+		  options.UseNpgsql(Configuration.GetConnectionString("db")));
 
-						services.AddSignalR();
-						services.AddServerSideBlazor();
+	  services.AddSignalR();
+	  services.AddServerSideBlazor();
 
-						//cheer ultramark 31/05/2019 100
+	  //cheer ultramark 31/05/2019 100
 
-            services.AddRazorPages()
-                .AddNewtonsoftJson();
-        }
+	  services.AddHttpContextAccessor();
+	  services.AddScoped<ClaimsPrincipal>(context => context.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.User);
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+	  services.AddRazorPages()
+		  .AddNewtonsoftJson();
+	}
 
-            app.UseCookiePolicy();
+	// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+	{
+	  if (env.IsDevelopment())
+	  {
+		app.UseDeveloperExceptionPage();
+		app.UseDatabaseErrorPage();
+	  }
+	  else
+	  {
+		app.UseExceptionHandler("/Error");
+		// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+		app.UseHsts();
+	  }
 
-            app.UseRouting();
+	  app.UseHttpsRedirection();
+	  app.UseStaticFiles();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+	  app.UseCookiePolicy();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
+	  app.UseRouting();
 
-								endpoints.MapBlazorHub();
-								endpoints.MapFallbackToAreaPage("/_Host", "Identity");
+	  app.UseAuthentication();
+	  app.UseAuthorization();
 
-            });
-        }
-    }
+	  app.UseEndpoints(endpoints =>
+	  {
+		endpoints.MapRazorPages();
+
+		endpoints.MapBlazorHub();
+		endpoints.MapFallbackToPage("/_Host");
+
+	  });
+	}
+  }
 }
