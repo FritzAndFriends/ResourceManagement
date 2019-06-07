@@ -1,19 +1,87 @@
 @page "/_Availability"
+@using Fritz.ResourceManagement.Domain
+@using Microsoft.EntityFrameworkCore
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject Models.MyDbContext DbContext
 
-<h5>This is the availability component</h5>
+<h3>Set the availability for @CurrentUser.Identity.Name</h3>
 
-Current User: @CurrentUser.Identity.Name
+<div class="row">
 
-Total persons: @DbContext.Persons.Count()
+	<div class="col-md-4">
+		<h4>Scheduled Appointments</h4>
+
+		<ul>
+			@foreach (var scheduleItem in MySchedule?.ScheduleItems)
+			{
+				<li>@scheduleItem.Name :: @scheduleItem.StartDateTime - @scheduleItem.EndDateTime</li>
+			}
+		</ul>
+
+		<p>
+			<input type="text" name="Name" value="@NewScheduleItemName" placeholder="Name of the Appointment" />
+			<input type="datetime-local" name="StartTime" value="@NewScheduleItemStartTime" placeholder="Start Date and Time" />
+			<input type="datetime-local" name="EndTime" value="@NewScheduleItemEndTime" placeholder="End Date and Time" />
+		</p>
+		<button onclick="@AddNewScheduleItem">Add New Schedule Item</button>
+
+	</div>
+
+</div>
+
 
 @functions {
 
-	void GetMyAvailability()
+	// Cheer 500 electrichavoc 07/06/19
+
+	Schedule MySchedule = null;
+	string NewScheduleItemName = null;
+	DateTime? NewScheduleItemStartTime = null;
+	DateTime? NewScheduleItemEndTime = null;
+	ScheduleStatus NewScheduleItemStatus;
+
+	protected override void OnInit()
+	{
+		MySchedule = GetMyAvailability();
+	}
+
+
+	Schedule GetMyAvailability()
 	{
 
-		// DbContext.Persons.First(p => p.User)
+		var personId = CurrentUser.GetPersonId();
+
+		var thisPerson = DbContext
+			.Persons
+			.Include(p => p.Schedule)
+			.First(p => p.Id == personId);
+
+		return thisPerson.Schedule;
+
+	}
+
+	void AddNewScheduleItem()
+	{
+
+		// Cheer 200 ultramark 07/06/19
+		// Cheer 100 TheMichaelJolley 07/06/19
+
+		var newScheduleItem = new ScheduleItem
+		{
+			Name = NewScheduleItemName,
+			StartDateTime = NewScheduleItemStartTime.Value,
+			EndDateTime = NewScheduleItemEndTime.Value,
+			Status = ScheduleStatus.NotAvailable,
+			ScheduleId = MySchedule.Id
+		};
+
+		DbContext.Schedules.Update(MySchedule);
+		MySchedule.ScheduleItems.Add(newScheduleItem);
+		DbContext.SaveChanges();
+
+		NewScheduleItemName = null;
+		NewScheduleItemStartTime = null;
+		NewScheduleItemEndTime = null;
 
 	}
 

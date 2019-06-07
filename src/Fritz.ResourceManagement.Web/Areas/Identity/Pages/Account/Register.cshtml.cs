@@ -81,6 +81,10 @@ namespace Fritz.ResourceManagement.Web.Areas.Identity.Pages.Account
 		{
 		  _logger.LogInformation("User created a new account with password.");
 
+		  // Cheer 200 svavablount 07/06/19 
+
+		  await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim(MyUser.Claims.PERSONID, user.PersonId.ToString()));
+
 		  var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 		  var callbackUrl = Url.Page(
 			  "/Account/ConfirmEmail",
