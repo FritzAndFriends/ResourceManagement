@@ -19,9 +19,9 @@
 		</ul>
 
 		<p>
-			<input type="text" name="Name" value="@NewScheduleItemName" placeholder="Name of the Appointment" />
-			<input type="datetime-local" name="StartTime" value="@NewScheduleItemStartTime" placeholder="Start Date and Time" />
-			<input type="datetime-local" name="EndTime" value="@NewScheduleItemEndTime" placeholder="End Date and Time" />
+			<input type="text" name="Name" value="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
+			<input type="datetime-local" name="StartTime" value="@NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
+			<input type="datetime-local" name="EndTime" value="@NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
 		</p>
 		<button onclick="@AddNewScheduleItem">Add New Schedule Item</button>
 
@@ -35,10 +35,7 @@
 	// Cheer 500 electrichavoc 07/06/19
 
 	Schedule MySchedule = null;
-	string NewScheduleItemName = null;
-	DateTime? NewScheduleItemStartTime = null;
-	DateTime? NewScheduleItemEndTime = null;
-	ScheduleStatus NewScheduleItemStatus;
+	ScheduleItem NewScheduleItem = new ScheduleItem();
 
 	protected override void OnInit()
 	{
@@ -66,22 +63,14 @@
 		// Cheer 200 ultramark 07/06/19
 		// Cheer 100 TheMichaelJolley 07/06/19
 
-		var newScheduleItem = new ScheduleItem
-		{
-			Name = NewScheduleItemName,
-			StartDateTime = NewScheduleItemStartTime.Value,
-			EndDateTime = NewScheduleItemEndTime.Value,
-			Status = ScheduleStatus.NotAvailable,
-			ScheduleId = MySchedule.Id
-		};
+		NewScheduleItem.Status = ScheduleStatus.NotAvailable;
+		NewScheduleItem.ScheduleId = MySchedule.Id;
 
 		DbContext.Schedules.Update(MySchedule);
-		MySchedule.ScheduleItems.Add(newScheduleItem);
+		MySchedule.ScheduleItems.Add(NewScheduleItem);
 		DbContext.SaveChanges();
 
-		NewScheduleItemName = null;
-		NewScheduleItemStartTime = null;
-		NewScheduleItemEndTime = null;
+		NewScheduleItem = new ScheduleItem();
 
 	}
 

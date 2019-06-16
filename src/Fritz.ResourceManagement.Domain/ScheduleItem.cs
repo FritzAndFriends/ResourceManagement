@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Fritz.ResourceManagement.Domain
 {
@@ -6,7 +8,7 @@ namespace Fritz.ResourceManagement.Domain
   /// <summary>
   /// A one-off instance of an item on the schedule
   /// </summary>
-  public class ScheduleItem
+  public class ScheduleItem : IValidatableObject
   {
 
 	public int Id { get; set; }
@@ -28,10 +30,21 @@ namespace Fritz.ResourceManagement.Domain
 	{
 	  get
 	  {
-			return EndDateTime.Subtract(StartDateTime);
+		return EndDateTime.Subtract(StartDateTime);
 	  }
 	}
 
+	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+	{
+
+	  var results = new List<ValidationResult>();
+
+	  if (EndDateTime < StartDateTime)
+			results.Add(new ValidationResult("EndDateTime cannot be before StartDateTime", new[] { nameof(StartDateTime), nameof(EndDateTime) }));
+
+	  return results;
+
+	}
   }
 
 }
