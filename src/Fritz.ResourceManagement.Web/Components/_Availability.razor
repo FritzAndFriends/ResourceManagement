@@ -20,10 +20,10 @@
 
 		<p>
 			<input type="text" name="Name" value="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
-			<input type="datetime-local" name="StartTime" value="@NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
-			<input type="datetime-local" name="EndTime" value="@NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
+			<input type="datetime-local" name="StartTime" value="@NewScheduleItem.StartDateTime.ToString("s")" placeholder="Start Date and Time" />
+			<input type="datetime-local" name="EndTime" value="@NewScheduleItem.EndDateTime.ToString("s")" placeholder="End Date and Time" />
 		</p>
-		<button onclick="@AddNewScheduleItem">Add New Schedule Item</button>
+		<button onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
 
 	</div>
 
@@ -35,10 +35,11 @@
 	// Cheer 500 electrichavoc 07/06/19
 
 	Schedule MySchedule = null;
-	ScheduleItem NewScheduleItem = new ScheduleItem();
+	ScheduleItem NewScheduleItem;
 
 	protected override void OnInit()
 	{
+		ResetScheduleItem();
 		MySchedule = GetMyAvailability();
 	}
 
@@ -70,7 +71,17 @@
 		MySchedule.ScheduleItems.Add(NewScheduleItem);
 		DbContext.SaveChanges();
 
+		ResetScheduleItem();
+
+	}
+
+	void ResetScheduleItem()
+	{
+
 		NewScheduleItem = new ScheduleItem();
+		NewScheduleItem.StartDateTime = DateTime.Today;
+		NewScheduleItem.EndDateTime = DateTime.Today.AddDays(1);
+
 
 	}
 
