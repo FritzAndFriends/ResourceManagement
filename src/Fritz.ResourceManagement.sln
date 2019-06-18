@@ -1,15 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fritz.ResourceManagement.Web", "Fritz.ResourceManagement.Web\Fritz.ResourceManagement.Web.csproj", "{39B598D5-D1C1-423E-88CA-AA59232C1856}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fritz.ResourceManagement.Web", "Fritz.ResourceManagement.Web\Fritz.ResourceManagement.Web.csproj", "{39B598D5-D1C1-423E-88CA-AA59232C1856}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fritz.ResourceManagement.Domain", "Fritz.ResourceManagement.Domain\Fritz.ResourceManagement.Domain.csproj", "{97AF0ABF-17F2-48F8-8466-61883CDF9FED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fritz.ResourceManagement.Domain", "Fritz.ResourceManagement.Domain\Fritz.ResourceManagement.Domain.csproj", "{97AF0ABF-17F2-48F8-8466-61883CDF9FED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fritz.ResourceManagement.Scheduling", "Fritz.ResourceManagement.Scheduling\Fritz.ResourceManagement.Scheduling.csproj", "{6EBE3A43-707B-4E01-A154-863D072FDF29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fritz.ResourceManagement.Scheduling", "Fritz.ResourceManagement.Scheduling\Fritz.ResourceManagement.Scheduling.csproj", "{6EBE3A43-707B-4E01-A154-863D072FDF29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Scheduling", "Test.Scheduling\Test.Scheduling.csproj", "{F1791DD3-FC59-441A-9C42-5176D3D1FB67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Scheduling", "Test.Scheduling\Test.Scheduling.csproj", "{F1791DD3-FC59-441A-9C42-5176D3D1FB67}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02542A59-45AF-4A86-9CF0-16B2B58B5E5F}"
+	ProjectSection(SolutionItems) = preProject
+		Test.Scheduling\.editorconfig = Test.Scheduling\.editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,9 +24,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{39B598D5-D1C1-423E-88CA-AA59232C1856}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -72,5 +74,11 @@ Global
 		{F1791DD3-FC59-441A-9C42-5176D3D1FB67}.Release|x64.Build.0 = Release|Any CPU
 		{F1791DD3-FC59-441A-9C42-5176D3D1FB67}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1791DD3-FC59-441A-9C42-5176D3D1FB67}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26421E1D-5727-463D-911D-9B67A6702FDF}
 	EndGlobalSection
 EndGlobal
