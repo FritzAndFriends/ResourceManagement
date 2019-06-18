@@ -1,26 +1,19 @@
-﻿<div class="monthpicker">
+﻿<div style="width: 20em;">
 
-	<button id="prevMonth" onclick="@PrevMonth">&lt;</button>
-	<div id="name">@StartDate.ToString("MMMM yyyy")</div>
-	<button id="nextMonth" onclick="@NextMonth">&gt;</button>
-
-	<span class="day">Su</span>
-	<span class="day">M</span>
-	<span class="day">Tu</span>
-	<span class="day">W</span>
-	<span class="day">Th</span>
-	<span class="day">F</span>
-	<span class="day">Sa</span>
-
-	@for (var i=0; i<FirstDayOfMonthDoW; i++)
-	{
-		<span></span>
-	}
-
-	@for (var i=1; i<=LastDayOfMonth; i++)
-	{
-		<span>@i</span>
-	}
+	<div id="navrow">
+		<button onclick="PrevMonth">&lt;</button>
+		<span>@StartDate.ToString("MMMMM")</span>
+		<button onclick="NextMonth">&gt;</button>
+	</div>
+	<div id="dowRow">
+		<span>Su</span>
+		<span>M</span>
+		<span>Tu</span>
+		<span>W</span>
+		<span>Th</span>
+		<span>F</span>
+		<span>Sa</span>
+	</div>
 
 </div>
 
@@ -30,28 +23,16 @@
 	[Parameter]
 	DateTime StartDate { get; set; } = DateTime.Today;
 
-	int FirstDayOfMonthDoW {  get {
-
-			var first = new DateTime(StartDate.Year, StartDate.Month, 1);
-			return (int)first.DayOfWeek;
-
-		} }
-
-	int LastDayOfMonth { get
-		{
-			return new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1).AddDays(-1).Day;
-		} }
-
 	void PrevMonth()
 	{
 		StartDate = StartDate.AddMonths(-1);
-		StartDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+		StartDate = StartDate.AddDays(DateTime.DaysInMonth(StartDate.Year, StartDate.Month));
 	}
 
 	void NextMonth()
 	{
 		StartDate = StartDate.AddMonths(1);
-		StartDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+		StartDate = StartDate.AddDays(DateTime.DaysInMonth(StartDate.Year, StartDate.Month));
 	}
 
 }
