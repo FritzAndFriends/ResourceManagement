@@ -1,4 +1,3 @@
-@page "/_Availability"
 @using Fritz.ResourceManagement.Domain
 @using Microsoft.EntityFrameworkCore
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
@@ -19,7 +18,7 @@
 		</ul>
 
 		<p>
-			<input type="text" name="Name" value="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
+			<input type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
 			<input type="datetime-local" name="StartTime" value="@NewScheduleItem.StartDateTime.ToString("s")" placeholder="Start Date and Time" />
 			<input type="datetime-local" name="EndTime" value="@NewScheduleItem.EndDateTime.ToString("s")" placeholder="End Date and Time" />
 		</p>
