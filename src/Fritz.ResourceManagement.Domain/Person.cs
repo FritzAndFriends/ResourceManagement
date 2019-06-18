@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 
 namespace Fritz.ResourceManagement.Domain
 {
@@ -13,9 +14,11 @@ namespace Fritz.ResourceManagement.Domain
 
     public string SurName { get; set; }
 
-    public IList<PersonType> Type { get; set; }
+    public IList<PersonPersonType> PersonPersonType { get; set; }
 
     public string PhoneNumber { get; set; }
+
+		public Schedule Schedule { get; set; }
 
     #region Foreign Keys
 
