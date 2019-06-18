@@ -1,0 +1,56 @@
+﻿#MySchedule {
+	width: 20em;
+}
+
+.monthpicker {
+	min-height: 234px;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 0px;
+	grid-row-gap: 0px;
+}
+
+	.monthpicker #name {
+		grid-area: 1 / 2 / 2 / 7;
+		text-align: center;
+		font-weight: bold;
+	}
+
+	.monthpicker #prevMonth {
+		grid-area: 1 / 1 / 2 / 2;
+	}
+
+	.monthpicker #nextMonth {
+		grid-area: 1 / 7 / 2 / 8;
+	}
+
+	.monthpicker span {
+		text-align: center;
+		font-weight: bold;
+		min-height: 30px;
+	}
+
+	.monthpicker .day {
+		background-color: lightgrey;
+	}
+
+
+	/** Day View */
+
+.dayview {
+	display: grid;
+	grid-template-columns: 0.5fr 2fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 1px;
+	grid-row-gap: 1px;
+	background-color: grey;
+	border: 1px solid grey;
+}
+
+.dayview span {
+	background-color: #fff;
+	font-size: 0.8em;
+	text-align: right;
+	padding: 2px;
+}
