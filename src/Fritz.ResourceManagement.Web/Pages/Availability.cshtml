@@ -1,4 +1,5 @@
 ﻿@page
+@using Fritz.ResourceManagement.Web.Components
 @model Fritz.ResourceManagement.Web.Pages.AvailabilityModel
 @{
     ViewData["Title"] = "Availability";
@@ -6,6 +7,16 @@
 
 <h1>Availability</h1>
 
-<div id="Availability">
-	@(await Html.RenderComponentAsync<Fritz.ResourceManagement.Web.Components.Availability>())
+<div id="Availability" style="display: inline-block">
+	@(await Html.RenderComponentAsync<Availability>())
 </div>
+
+<div id="MySchedule" style="display: inline-block">
+	<h3>My Schedule</h3>
+	@(await Html.RenderComponentAsync<DayPicker>())
+
+	@(await Html.RenderComponentAsync<DayView>(new { SelectedDate = DateTime.Today}))
+
+</div>
+
+
