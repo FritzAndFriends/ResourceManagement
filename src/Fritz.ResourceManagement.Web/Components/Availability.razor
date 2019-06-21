@@ -2,6 +2,7 @@
 @using Microsoft.EntityFrameworkCore
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject Models.MyDbContext DbContext
+@inject Data.ScheduleState MyScheduleState
 
 <div id="Availability" style="display: inline-block; vertical-align: top;">
 
@@ -36,7 +37,7 @@
 	<h3>My Schedule</h3>
 
 	<CascadingValue Value="MySchedule" Name="MySchedule">
-		<CascadingValue Value="DateTime.Today" Name="SelectedDate">
+		<CascadingValue Value="SelectedDate" Name="SelectedDate">
 			<DayPicker />
 
 			<DayView />
@@ -53,12 +54,18 @@
 
 	Schedule MySchedule { get; set; } = null;
 
+	DateTime SelectedDate { get; set; } = DateTime.Today;
+
 	ScheduleItem NewScheduleItem;
 
 	protected override void OnInit()
 	{
 		ResetScheduleItem();
 		MySchedule = GetMyAvailability();
+
+		MyScheduleState.SelectDate(SelectedDate);
+		MyScheduleState.Schedule = MySchedule;
+
 	}
 
 
@@ -90,6 +97,8 @@
 		MySchedule.ScheduleItems.Add(NewScheduleItem);
 		DbContext.SaveChanges();
 
+		MyScheduleState.ScheduleUpdated();
+
 		ResetScheduleItem();
 
 	}
@@ -102,6 +111,11 @@
 		NewScheduleItem.EndDateTime = DateTime.Today.AddDays(1);
 
 
+	}
+
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
 	}
 
 }

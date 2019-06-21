@@ -1,17 +1,18 @@
 ﻿@using Fritz.ResourceManagement.Domain
+@inject Data.ScheduleState MyScheduleState
 <div class="monthpicker">
 
 	<button id="prevMonth" onclick="@PrevMonth">&lt;</button>
 	<div id="name">@SelectedDate.ToString("MMMM yyyy")</div>
 	<button id="nextMonth" onclick="@NextMonth">&gt;</button>
 
-	<span class="day">Su</span>
-	<span class="day">M</span>
-	<span class="day">Tu</span>
-	<span class="day">W</span>
-	<span class="day">Th</span>
-	<span class="day">F</span>
-	<span class="day">Sa</span>
+	<span class="dow">Su</span>
+	<span class="dow">M</span>
+	<span class="dow">Tu</span>
+	<span class="dow">W</span>
+	<span class="dow">Th</span>
+	<span class="dow">F</span>
+	<span class="dow">Sa</span>
 
 	@for (var i = 0; i < FirstDayOfMonthDoW; i++)
 	{
@@ -28,19 +29,25 @@
 		var hasAppt = MySchedule.ScheduleItems.Any(i => i.StartDateTime.Date == thisDay.Date) ?
 			"appt" : null;
 
-		<span class="@today @hasAppt" title="@todayTitle">@i</span>
+		<span class="@today @hasAppt day" title="@todayTitle" onclick="@(() => MyScheduleState.SelectDate(thisDay))">@i</span>
 	}
 
 </div>
 <button id="gotoToday" onclick="@GotoToday">Today</button>
+<span>Selected Date is: @SelectedDate</span>
 
 @functions {
 
-	[CascadingParameter(Name ="SelectedDate")]
-	DateTime SelectedDate { get; set; } = DateTime.Today;
+	//[CascadingParameter(Name ="SelectedDate")]
+	DateTime SelectedDate {
+		get { return MyScheduleState.SelectedDate; }
+		set { MyScheduleState.SelectDate(value); }
+	}
 
-	[CascadingParameter(Name ="MySchedule")]
-	Schedule MySchedule { get; set; } = null;
+	//[CascadingParameter(Name ="MySchedule")]
+	Schedule MySchedule {
+		get { return MyScheduleState.Schedule; }
+	}
 
 	int FirstDayOfMonthDoW
 	{

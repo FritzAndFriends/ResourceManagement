@@ -1,30 +1,60 @@
 ﻿@using Fritz.ResourceManagement.Domain
+@inject Data.ScheduleState MyScheduleState
 <div class="dayview">
-@{
-	var currentTime = new DateTimeOffset(2000, 1, 1, 8, 0, 0, TimeSpan.Zero);
-}
-@for (var i = 0; i < 24; i++)
-{
+	@{
+		var currentTime = new DateTimeOffset(2000, 1, 1, 8, 0, 0, TimeSpan.Zero);
+	}
+	@for (var i = 0; i < 24; i++)
+	{
 
-	<span>
-		@if (i % 2 == 0)
-		{
-			<text>@currentTime.ToString("h:mm tt")</text>
-			currentTime = currentTime.AddHours(1);
-		}
-	</span>
-}
+		<span class="grid">
+			@if (i % 2 == 0)
+			{
+				<text>@currentTime.ToString("h:mm tt")</text>
+				currentTime = currentTime.AddHours(1);
+			}
+		</span>
+	}
+
+	@foreach (var item in MySchedule.ScheduleItems.Where(s => s.StartDateTime.Date == SelectedDate.Date))
+	{
+		<span class="scheduleItem" style="top: calc(1.5em * @(item.StartDateTime.Hour-8)); height: calc(1.5em * @(item.Duration.Hours)))">
+			@item.Name  - @item.StartDateTime.ToShortTimeString()
+		</span>
+	}
 
 </div>
+
+Today is <span>@SelectedDate</span>
 
 
 @functions {
 
-	[CascadingParameter(Name ="SelectedDate")] DateTime SelectedDate { get; set; }
+	//[CascadingParameter(Name = "SelectedDate")]
+	DateTime SelectedDate {
+		get { return MyScheduleState.SelectedDate; }
+	}
 
-	[CascadingParameter(Name ="MySchedule")]
-	Schedule MySchedule { get; set; } = null;
+	//[CascadingParameter(Name ="MySchedule")]
+	Schedule MySchedule {
+		get { return MyScheduleState.Schedule; }
+	}
 
+	protected override void OnInit()
+	{
 
+		MyScheduleState.OnSelectedDateChanged += (o, args) =>
+		{
+			Invoke(StateHasChanged);
+		};
+
+		base.OnInit();
+	}
+
+	protected override void OnParametersSet()
+	{
+		this.StateHasChanged();
+		base.OnParametersSet();
+	}
 
 }
