@@ -1,7 +1,8 @@
-﻿<div class="monthpicker">
+﻿@using Fritz.ResourceManagement.Domain
+<div class="monthpicker">
 
 	<button id="prevMonth" onclick="@PrevMonth">&lt;</button>
-	<div id="name">@StartDate.ToString("MMMM yyyy")</div>
+	<div id="name">@SelectedDate.ToString("MMMM yyyy")</div>
 	<button id="nextMonth" onclick="@NextMonth">&gt;</button>
 
 	<span class="day">Su</span>
@@ -12,46 +13,69 @@
 	<span class="day">F</span>
 	<span class="day">Sa</span>
 
-	@for (var i=0; i<FirstDayOfMonthDoW; i++)
+	@for (var i = 0; i < FirstDayOfMonthDoW; i++)
 	{
 		<span></span>
 	}
 
-	@for (var i=1; i<=LastDayOfMonth; i++)
+	@for (var i = 1; i <= LastDayOfMonth; i++)
 	{
-		<span>@i</span>
+
+		var thisDay = new DateTime(SelectedDate.Year, SelectedDate.Month, i);
+		var today = (thisDay.Date == DateTime.Today.Date) ?
+			"today" : null;
+		var todayTitle = (string.IsNullOrEmpty(today)) ? null : "Today!";
+		var hasAppt = MySchedule.ScheduleItems.Any(i => i.StartDateTime.Date == thisDay.Date) ?
+			"appt" : null;
+
+		<span class="@today @hasAppt" title="@todayTitle">@i</span>
 	}
 
 </div>
-
+<button id="gotoToday" onclick="@GotoToday">Today</button>
 
 @functions {
 
-	[Parameter]
-	DateTime StartDate { get; set; } = DateTime.Today;
+	[CascadingParameter(Name ="SelectedDate")]
+	DateTime SelectedDate { get; set; } = DateTime.Today;
 
-	int FirstDayOfMonthDoW {  get {
+	[CascadingParameter(Name ="MySchedule")]
+	Schedule MySchedule { get; set; } = null;
 
-			var first = new DateTime(StartDate.Year, StartDate.Month, 1);
+	int FirstDayOfMonthDoW
+	{
+		get
+		{
+
+			var first = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
 			return (int)first.DayOfWeek;
 
-		} }
+		}
+	}
 
-	int LastDayOfMonth { get
+	int LastDayOfMonth
+	{
+		get
 		{
-			return new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1).AddDays(-1).Day;
-		} }
+			return new DateTime(SelectedDate.Year, SelectedDate.Month, 1).AddMonths(1).AddDays(-1).Day;
+		}
+	}
 
 	void PrevMonth()
 	{
-		StartDate = StartDate.AddMonths(-1);
-		StartDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+		SelectedDate = SelectedDate.AddMonths(-1);
+		SelectedDate = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
 	}
 
 	void NextMonth()
 	{
-		StartDate = StartDate.AddMonths(1);
-		StartDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+		SelectedDate = SelectedDate.AddMonths(1);
+		SelectedDate = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
+	}
+
+	void GotoToday()
+	{
+		SelectedDate = DateTime.Today;
 	}
 
 }

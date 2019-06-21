@@ -1,9 +1,10 @@
-﻿<div class="dayview">
-	@{ 
-		var currentTime = new DateTimeOffset(2000, 1, 1, 8, 0, 0, TimeSpan.Zero);
-	}
-	@for (var i = 0; i < 24; i++)
-	{
+﻿@using Fritz.ResourceManagement.Domain
+<div class="dayview">
+@{
+	var currentTime = new DateTimeOffset(2000, 1, 1, 8, 0, 0, TimeSpan.Zero);
+}
+@for (var i = 0; i < 24; i++)
+{
 
 	<span>
 		@if (i % 2 == 0)
@@ -11,15 +12,18 @@
 			<text>@currentTime.ToString("h:mm tt")</text>
 			currentTime = currentTime.AddHours(1);
 		}
-		</span>
-	}
+	</span>
+}
 
 </div>
 
 
 @functions {
 
-	[Parameter] DateTime SelectedDate { get; set; }
+	[CascadingParameter(Name ="SelectedDate")] DateTime SelectedDate { get; set; }
+
+	[CascadingParameter(Name ="MySchedule")]
+	Schedule MySchedule { get; set; } = null;
 
 
 

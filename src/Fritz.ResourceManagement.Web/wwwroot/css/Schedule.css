@@ -34,8 +34,22 @@
 		background-color: lightgrey;
 	}
 
+	.monthpicker .today {
+		border: 2px solid red;
+		cursor: pointer;
+	}
+
+	.monthpicker .appt {
+		background-color: midnightblue;
+		color: white;
+	}
 
 	/** Day View */
+
+/** TODO: investigate positioning with CSS using technique like:
+		https://blogs.igalia.com/mrego/2016/05/27/css-grid-layout-and-positioned-items/
+
+	*/
 
 .dayview {
 	display: grid;

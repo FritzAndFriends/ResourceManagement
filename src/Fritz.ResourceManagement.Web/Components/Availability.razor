@@ -3,37 +3,56 @@
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject Models.MyDbContext DbContext
 
-<h3>Set the availability for @CurrentUser.Identity.Name</h3>
+<div id="Availability" style="display: inline-block; vertical-align: top;">
 
-<div class="row">
+	<h3>Set the availability for @CurrentUser.Identity.Name</h3>
 
-	<div class="col-md-4">
-		<h4>Scheduled Appointments</h4>
+	<div class="row">
 
-		<ul>
-			@foreach (var scheduleItem in MySchedule?.ScheduleItems)
-			{
-				<li>@scheduleItem.Name :: @scheduleItem.StartDateTime - @scheduleItem.EndDateTime</li>
-			}
-		</ul>
+		<div class="col-md-4">
+			<h4>Scheduled Appointments</h4>
 
-		<p>
-			<input type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
-			<input type="datetime-local" name="StartTime" value="@NewScheduleItem.StartDateTime.ToString("s")" placeholder="Start Date and Time" />
-			<input type="datetime-local" name="EndTime" value="@NewScheduleItem.EndDateTime.ToString("s")" placeholder="End Date and Time" />
-		</p>
-		<button onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
+			<p>
+				<input type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
+				<input type="datetime" name="StartTime" bind="@NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
+				<input type="datetime" name="EndTime" bind="@NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
+			</p>
+			<button onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
+
+			<ul>
+				@foreach (var scheduleItem in MySchedule?.ScheduleItems)
+				{
+					<li>@scheduleItem.Name :: @scheduleItem.StartDateTime - @scheduleItem.EndDateTime</li>
+				}
+			</ul>
+
+		</div>
 
 	</div>
 
 </div>
+
+<div id="MySchedule" style="display: inline-block">
+	<h3>My Schedule</h3>
+
+	<CascadingValue Value="MySchedule" Name="MySchedule">
+		<CascadingValue Value="DateTime.Today" Name="SelectedDate">
+			<DayPicker />
+
+			<DayView />
+		</CascadingValue>
+	</CascadingValue>
+</div>
+
+
 
 
 @functions {
 
 	// Cheer 500 electrichavoc 07/06/19
 
-	Schedule MySchedule = null;
+	Schedule MySchedule { get; set; } = null;
+
 	ScheduleItem NewScheduleItem;
 
 	protected override void OnInit()
@@ -51,6 +70,7 @@
 		var thisPerson = DbContext
 			.Persons
 			.Include(p => p.Schedule)
+			.ThenInclude(s => s.ScheduleItems)
 			.First(p => p.Id == personId);
 
 		return thisPerson.Schedule;
