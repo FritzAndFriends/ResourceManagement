@@ -30,26 +30,55 @@
 		min-height: 30px;
 	}
 
-	.monthpicker .day {
+	.monthpicker .dow {
 		background-color: lightgrey;
 	}
 
+	.monthpicker .today {
+		border: 2px solid red;
+	}
+
+	.monthpicker .day {
+		cursor: pointer;
+	}
+
+	.monthpicker .appt {
+		background-color: midnightblue;
+		color: white;
+	}
 
 	/** Day View */
 
+/** TODO: investigate positioning with CSS using technique like:
+		https://blogs.igalia.com/mrego/2016/05/27/css-grid-layout-and-positioned-items/
+
+	*/
+
 .dayview {
 	display: grid;
+	position: relative;
 	grid-template-columns: 0.5fr 2fr;
-	grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: repeat(12, 1.5em);
 	grid-column-gap: 1px;
 	grid-row-gap: 1px;
 	background-color: grey;
 	border: 1px solid grey;
 }
 
-.dayview span {
+.dayview span.grid {
 	background-color: #fff;
 	font-size: 0.8em;
 	text-align: right;
 	padding: 2px;
 }
+
+	.dayview .scheduleItem {
+		position: absolute;
+		border: 1px solid navy;
+		background-color: papayawhip;
+		grid-column: 2 / auto;
+		left: 10px;
+		right: 10px;
+		height: 3em;
+	}
+

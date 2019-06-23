@@ -98,6 +98,7 @@ namespace Fritz.ResourceManagement.Scheduling
 					var cts = CrontabSchedule.Parse(r.CronPattern);
 					outList.AddRange(cts.GetNextOccurrences(expandRange.Value.begin, expandRange.Value.end)
 						.Select(d => new TimeSlot {
+							Name = r.Name,
 							StartDateTime = d,
 							EndDateTime = d.Add(r.Duration),
 							Status = r.Status
@@ -116,6 +117,7 @@ namespace Fritz.ResourceManagement.Scheduling
         return scheduleItems
         .Where(i => i.StartDateTime < endTime && i.EndDateTime > startTime)
         .Select(i => new TimeSlot() {
+						Name = i.Name,
             StartDateTime = i.StartDateTime,
             EndDateTime = i.EndDateTime,
             Status = i.Status

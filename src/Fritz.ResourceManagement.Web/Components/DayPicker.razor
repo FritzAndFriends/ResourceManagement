@@ -1,57 +1,88 @@
-﻿<div class="monthpicker">
+﻿@using Fritz.ResourceManagement.Domain
+@inject Data.ScheduleState MyScheduleState
+@inject Data.ExpandedSchedule ExpandedSchedule
+<div class="monthpicker">
 
 	<button id="prevMonth" onclick="@PrevMonth">&lt;</button>
-	<div id="name">@StartDate.ToString("MMMM yyyy")</div>
+	<div id="name">@SelectedDate.ToString("MMMM yyyy")</div>
 	<button id="nextMonth" onclick="@NextMonth">&gt;</button>
 
-	<span class="day">Su</span>
-	<span class="day">M</span>
-	<span class="day">Tu</span>
-	<span class="day">W</span>
-	<span class="day">Th</span>
-	<span class="day">F</span>
-	<span class="day">Sa</span>
+	<span class="dow">Su</span>
+	<span class="dow">M</span>
+	<span class="dow">Tu</span>
+	<span class="dow">W</span>
+	<span class="dow">Th</span>
+	<span class="dow">F</span>
+	<span class="dow">Sa</span>
 
-	@for (var i=0; i<FirstDayOfMonthDoW; i++)
+	@for (var i = 0; i < FirstDayOfMonthDoW; i++)
 	{
 		<span></span>
 	}
 
-	@for (var i=1; i<=LastDayOfMonth; i++)
+	@for (var i = 1; i <= LastDayOfMonth; i++)
 	{
-		<span>@i</span>
+
+		var thisDay = new DateTime(SelectedDate.Year, SelectedDate.Month, i);
+		var today = (thisDay.Date == DateTime.Today.Date) ?
+			"today" : null;
+		var todayTitle = (string.IsNullOrEmpty(today)) ? null : "Today!";
+		var hasAppt = ExpandedSchedule.TimeSlots.Any(i => i.StartDateTime.Date == thisDay.Date) ?
+			"appt" : null;
+
+		<span class="@today @hasAppt day" title="@todayTitle" onclick="@(() => MyScheduleState.SelectDate(thisDay))">@i</span>
 	}
 
 </div>
+<button id="gotoToday" onclick="@GotoToday">Today</button>
 
+<span>Selected Date is: @SelectedDate</span>
 
 @functions {
 
-	[Parameter]
-	DateTime StartDate { get; set; } = DateTime.Today;
+	DateTime SelectedDate {
+		get { return MyScheduleState.SelectedDate; }
+		set { MyScheduleState.SelectDate(value); }
+	}
 
-	int FirstDayOfMonthDoW {  get {
+	Schedule MySchedule {
+		get { return MyScheduleState.Schedule; }
+	}
 
-			var first = new DateTime(StartDate.Year, StartDate.Month, 1);
+	int FirstDayOfMonthDoW
+	{
+		get
+		{
+
+			var first = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
 			return (int)first.DayOfWeek;
 
-		} }
+		}
+	}
 
-	int LastDayOfMonth { get
+	int LastDayOfMonth
+	{
+		get
 		{
-			return new DateTime(StartDate.Year, StartDate.Month, 1).AddMonths(1).AddDays(-1).Day;
-		} }
+			return new DateTime(SelectedDate.Year, SelectedDate.Month, 1).AddMonths(1).AddDays(-1).Day;
+		}
+	}
 
 	void PrevMonth()
 	{
-		StartDate = StartDate.AddMonths(-1);
-		StartDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+		SelectedDate = SelectedDate.AddMonths(-1);
+		SelectedDate = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
 	}
 
 	void NextMonth()
 	{
-		StartDate = StartDate.AddMonths(1);
-		StartDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+		SelectedDate = SelectedDate.AddMonths(1);
+		SelectedDate = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
+	}
+
+	void GotoToday()
+	{
+		SelectedDate = DateTime.Today;
 	}
 
 }

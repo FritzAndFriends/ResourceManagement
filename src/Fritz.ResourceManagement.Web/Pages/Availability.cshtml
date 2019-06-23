@@ -7,16 +7,4 @@
 
 <h1>Availability</h1>
 
-<div id="Availability" style="display: inline-block">
-	@(await Html.RenderComponentAsync<Availability>())
-</div>
-
-<div id="MySchedule" style="display: inline-block">
-	<h3>My Schedule</h3>
-	@(await Html.RenderComponentAsync<DayPicker>())
-
-	@(await Html.RenderComponentAsync<DayView>(new { SelectedDate = DateTime.Today}))
-
-</div>
-
-
+@(await Html.RenderComponentAsync<Availability>())

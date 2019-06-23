@@ -1,45 +1,70 @@
 @using Fritz.ResourceManagement.Domain
 @using Microsoft.EntityFrameworkCore
+@using Fritz.ResourceManagement.Scheduling
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject Models.MyDbContext DbContext
+@inject Data.ScheduleState MyScheduleState
+@inject Data.ExpandedSchedule ExpandedSchedule
 
-<h3>Set the availability for @CurrentUser.Identity.Name</h3>
+<div id="Availability" style="display: inline-block; vertical-align: top;">
 
-<div class="row">
+	<h3>Set the availability for @CurrentUser.Identity.Name</h3>
 
-	<div class="col-md-4">
-		<h4>Scheduled Appointments</h4>
+	<div>
 
-		<ul>
-			@foreach (var scheduleItem in MySchedule?.ScheduleItems)
-			{
-				<li>@scheduleItem.Name :: @scheduleItem.StartDateTime - @scheduleItem.EndDateTime</li>
-			}
-		</ul>
+		<div style="display: inline-block">
+			<h4>Scheduled Appointments</h4>
 
-		<p>
-			<input type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
-			<input type="datetime-local" name="StartTime" value="@NewScheduleItem.StartDateTime.ToString("s")" placeholder="Start Date and Time" />
-			<input type="datetime-local" name="EndTime" value="@NewScheduleItem.EndDateTime.ToString("s")" placeholder="End Date and Time" />
-		</p>
-		<button onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
+			<p>
+				<input type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
+				<input type="datetime" name="StartTime" bind="@NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
+				<input type="datetime" name="EndTime" bind="@NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
+			</p>
+			<button onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
+
+		</div>
+
+		<div style="display: inline-block">
+			<h4>Create a Recurring Schedule</h4>
+
+		</div>
 
 	</div>
 
+<div id="MySchedule" style="display: inline-block">
+	<h3>My Schedule</h3>
+
+			<DayPicker />
+
+			<DayView />
+
 </div>
+
+
 
 
 @functions {
 
 	// Cheer 500 electrichavoc 07/06/19
 
-	Schedule MySchedule = null;
+	Schedule MySchedule { get; set; } = null;
+
+	DateTime SelectedDate { get; set; } = DateTime.Today;
+
 	ScheduleItem NewScheduleItem;
 
 	protected override void OnInit()
 	{
 		ResetScheduleItem();
 		MySchedule = GetMyAvailability();
+
+		var mgr = new ScheduleManager();
+		var thisMonth = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
+		ExpandedSchedule.TimeSlots.AddRange(mgr.ExpandSchedule(MySchedule, thisMonth.AddMonths(-1), thisMonth.AddMonths(3)));
+
+		MyScheduleState.SelectDate(SelectedDate);
+		MyScheduleState.Schedule = MySchedule;
+
 	}
 
 
@@ -51,6 +76,7 @@
 		var thisPerson = DbContext
 			.Persons
 			.Include(p => p.Schedule)
+			.ThenInclude(s => s.ScheduleItems)
 			.First(p => p.Id == personId);
 
 		return thisPerson.Schedule;
@@ -70,6 +96,8 @@
 		MySchedule.ScheduleItems.Add(NewScheduleItem);
 		DbContext.SaveChanges();
 
+		MyScheduleState.ScheduleUpdated();
+
 		ResetScheduleItem();
 
 	}
@@ -82,6 +110,11 @@
 		NewScheduleItem.EndDateTime = DateTime.Today.AddDays(1);
 
 
+	}
+
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
 	}
 
 }

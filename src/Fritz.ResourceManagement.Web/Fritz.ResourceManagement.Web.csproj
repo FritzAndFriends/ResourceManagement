@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fritz.ResourceManagement.Domain\Fritz.ResourceManagement.Domain.csproj" />
+    <ProjectReference Include="..\Fritz.ResourceManagement.Scheduling\Fritz.ResourceManagement.Scheduling.csproj" />
   </ItemGroup>
 
 </Project>
