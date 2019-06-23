@@ -49,7 +49,6 @@ namespace Fritz.ResourceManagement.Web
 	  services.AddServerSideBlazor();
 
 	  services.AddScoped<ScheduleState>();
-		services.AddScoped<ExpandedSchedule>();
 
 	  //cheer ultramark 31/05/2019 100
 
