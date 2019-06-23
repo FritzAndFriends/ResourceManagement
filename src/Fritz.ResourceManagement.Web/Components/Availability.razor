@@ -1,16 +1,18 @@
 @using Fritz.ResourceManagement.Domain
 @using Microsoft.EntityFrameworkCore
+@using Fritz.ResourceManagement.Scheduling
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject Models.MyDbContext DbContext
 @inject Data.ScheduleState MyScheduleState
+@inject Data.ExpandedSchedule ExpandedSchedule
 
 <div id="Availability" style="display: inline-block; vertical-align: top;">
 
 	<h3>Set the availability for @CurrentUser.Identity.Name</h3>
 
-	<div class="row">
+	<div>
 
-		<div class="col-md-4">
+		<div style="display: inline-block">
 			<h4>Scheduled Appointments</h4>
 
 			<p>
@@ -20,29 +22,22 @@
 			</p>
 			<button onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
 
-			<ul>
-				@foreach (var scheduleItem in MySchedule?.ScheduleItems)
-				{
-					<li>@scheduleItem.Name :: @scheduleItem.StartDateTime - @scheduleItem.EndDateTime</li>
-				}
-			</ul>
+		</div>
+
+		<div style="display: inline-block">
+			<h4>Create a Recurring Schedule</h4>
 
 		</div>
 
 	</div>
 
-</div>
-
 <div id="MySchedule" style="display: inline-block">
 	<h3>My Schedule</h3>
 
-	<CascadingValue Value="MySchedule" Name="MySchedule">
-		<CascadingValue Value="SelectedDate" Name="SelectedDate">
 			<DayPicker />
 
 			<DayView />
-		</CascadingValue>
-	</CascadingValue>
+
 </div>
 
 
@@ -62,6 +57,10 @@
 	{
 		ResetScheduleItem();
 		MySchedule = GetMyAvailability();
+
+		var mgr = new ScheduleManager();
+		var thisMonth = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
+		ExpandedSchedule.TimeSlots.AddRange(mgr.ExpandSchedule(MySchedule, thisMonth.AddMonths(-1), thisMonth.AddMonths(3)));
 
 		MyScheduleState.SelectDate(SelectedDate);
 		MyScheduleState.Schedule = MySchedule;

@@ -1,15 +1,18 @@
-using System;
+﻿using System;
 
 namespace Fritz.ResourceManagement.Domain
 {
   public class TimeSlot {
 
-    public DateTime StartDateTime { get; set; }
+		public string Name { get; set; }
+
+		public DateTime StartDateTime { get; set; }
 
     public DateTime EndDateTime { get; set; }
 
-    public ScheduleStatus Status { get; set; }
+		public TimeSpan Duration { get { return EndDateTime.Subtract(StartDateTime); } }
 
+    public ScheduleStatus Status { get; set; }
 
   }
 
