@@ -12,29 +12,20 @@
 
 			<div>
 
-				<div style="display: inline-block">
+				<div style="display: inline-block" class="form-group">
 					<h4>Scheduled Appointments</h4>
 
-					<p>
-						<input type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
-						<input type="datetime" name="StartTime" bind="@NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
-						<input type="datetime" name="EndTime" bind="@NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
-					</p>
-					<button onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
+					<input class="form-control" type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
+					<input class="form-control" type="datetime" name="StartTime" bind="@NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
+					<input class="form-control" type="datetime" name="EndTime" bind="@NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
+					<button class="btn btn-primary" onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
 
 				</div>
 
-				<div style="display: inline-block">
+				<div style="display: inline-block" class="form-group">
 					<h4>Create a Recurring Schedule</h4>
 
-					<p>
-						<input type="text" name="Name" bind="@NewRecurringSchedule.Name" placeholder="Name of the Recurring Appointment" />
-						<input type="text" name="Pattern" bind="@NewRecurringSchedule.CronPattern" placeholder="CRON Pattern for schedule" />
-						<input type="text" name="Duration" bind="@NewRecurringSchedule.DurationText" placeholder="Duration for each recurring item" />
-						<input type="datetime" name="StartTime" bind="@NewRecurringSchedule.MinStartDateTime" placeholder="Start Date and Time" />
-						<input type="datetime" name="EndTime" bind="@NewRecurringSchedule.MaxEndDateTime" placeholder="End Date and Time" />
-					</p>
-					<button onclick="@(() => AddNewRecurringSchedule())">Add New Recurring Schedule</button>
+					<RecurrenceDataEntry Schedule="@NewRecurringSchedule" OnSave="@AddNewRecurringSchedule" />
 
 				</div>
 
