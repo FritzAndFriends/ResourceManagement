@@ -1,9 +1,9 @@
 @using Fritz.ResourceManagement.Domain
 
 <input class="form-control" type="text" name="Name" bind="@Schedule.Name" placeholder="Name of the Recurring Appointment" />
-<input class="form-control" type="date" name="StartTime" bind="@Schedule.MinStartDateTime" placeholder="Start Date and Time" />
-<input class="form-control" type="date" name="EndTime" bind="@Schedule.MaxEndDateTime" placeholder="End Date and Time" />
-
+<input class="form-control" type="date" name="StartDate" bind="@Schedule.MinStartDateTime" placeholder="Start Date" />
+<input class="form-control" type="date" name="EndDate" bind="@Schedule.MaxEndDateTime" placeholder="End Date" />
+<input class="form-control" type="time" name="StartTime" bind="@StartTime" placeholder="Start time" />
 
 <fieldset>
 
@@ -13,7 +13,7 @@
 		<option value="D">Daily</option>
 		<option value="W">Weekly</option>
 		@*			<option>Fortnightly</option>*@
-		<option value="M">Monthly</option>
+		@*<option value="M">Monthly</option>*@
 	</select>
 
 	@if (Pattern == "W")
@@ -58,6 +58,10 @@
 
 	string Pattern { get; set; }
 
+	string StartTime { get; set; }
+
+	TimeSpan TimeOfDay {  get { return TimeSpan.Parse(StartTime); } }
+
 	HashSet<string> DaysOfTheWeek { get; set; } = new HashSet<string>();
 
 	void DowChange(string day)
@@ -73,7 +77,23 @@
 	public string CalculatedCronPattern {
 		get
 		{
-			return "";
+
+			var sb = new System.Text.StringBuilder();
+			sb.Append($"{TimeOfDay.Minutes} ");
+
+			sb.Append($"{TimeOfDay.Hours} ");
+
+			sb.Append("* * ");
+
+			if (Pattern == "D" || !DaysOfTheWeek.Any())
+			{
+				sb.Append("*");
+			} else
+			{
+				sb.Append(string.Join(",", DaysOfTheWeek.ToArray()));
+			} 
+
+			return sb.ToString();
 		}
 	}
 
