@@ -76,9 +76,8 @@
 		position: absolute;
 		border: 1px solid navy;
 		background-color: papayawhip;
-		grid-column: 2 / auto;
+		grid-column: 2;
 		left: 10px;
 		right: 10px;
-		height: 3em;
 	}
 
