@@ -87,3 +87,10 @@
 		height: 3em;
 	}
 
+	.dayview .starts-before {
+		border-top: 0;
+	}
+
+	.dayview .ends-after {
+		border-bottom: 0;
+	}
