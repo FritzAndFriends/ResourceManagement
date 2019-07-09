@@ -28,8 +28,9 @@
 		var todayTitle = (string.IsNullOrEmpty(today)) ? null : "Today!";
 		var hasAppt = MyScheduleState.TimeSlots.Any(i => i.StartDateTime.Date == thisDay.Date) ?
 			"appt" : null;
+		var selected = (thisDay == SelectedDate) ? "active" : null;
 
-		<span class="@today @hasAppt day" title="@todayTitle" onclick="@(() => MyScheduleState.SelectDate(thisDay))">@i</span>
+		<span class="@today @hasAppt @selected day" title="@todayTitle" onclick="@(() => MyScheduleState.SelectDate(thisDay))">@i</span>
 	}
 
 </div>
