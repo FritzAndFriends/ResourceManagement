@@ -1,26 +1,33 @@
 ﻿@using Fritz.ResourceManagement.Domain
 @inject Data.ScheduleState MyScheduleState
+
 <div class="dayview">
 	@{
 		var currentTime = new DateTimeOffset(2000, 1, 1, 8, 0, 0, TimeSpan.Zero);
 	}
 	@for (var i = 0; i < 24; i++)
 	{
-
-		<span class="grid">
-			@if (i % 2 == 0)
-			{
+		if (i % 2 == 0)
+		{
+			<span class="grid" style="grid-column: 1;">
 				<text>@currentTime.ToString("h:mm tt")</text>
-				currentTime = currentTime.AddHours(1);
-			}
-		</span>
+				@{ currentTime = currentTime.AddHours(1); }
+			</span>
+		}
+		else
+		{
+			<span class="grid" style="grid-column: 2;"></span>
+		}
 	}
 
 	@foreach (var item in MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == SelectedDate.Date))
 	{
-		<span class="scheduleItem" style="top: calc(1.5em * @(item.StartDateTime.Hour-8)); height: calc(1.5em * @(item.Duration.Hours)))">
-			@item.Name  - @item.StartDateTime.ToShortTimeString()
-		</span>
+		if (DisplayItem(item.StartDateTime, item.EndDateTime))
+		{
+			<span class="scheduleItem @ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @ItemStartRow(item.StartDateTime); top: @ItemTopPosition(item.StartDateTime); height: @ItemRowHeight(item.StartDateTime, item.EndDateTime);">
+				@item.Name  - @item.StartDateTime.ToShortTimeString()
+			</span>
+		}
 	}
 
 </div>
@@ -41,6 +48,16 @@ Today is <span>@SelectedDate</span>
 		get { return MyScheduleState.Schedule; }
 	}
 
+	DateTime DayViewStart
+	{
+		get { return MyScheduleState.SelectedDate.AddHours(8); }
+	}
+
+	DateTime DayViewEnd
+	{
+		get { return MyScheduleState.SelectedDate.AddHours(20); }
+	}
+
 	protected override void OnInit()
 	{
 
@@ -58,4 +75,72 @@ Today is <span>@SelectedDate</span>
 		base.OnParametersSet();
 	}
 
+	bool DisplayItem(DateTime start, DateTime end)
+	{
+		if (start >= DayViewEnd || end <= DayViewStart) { return false; }
+		return true;
+	}
+
+	string ItemBorderStyle(DateTime start, DateTime end)
+	{
+		string top = "starts-before";
+		string bottom = "ends-after";
+
+		return String.Format("{0} {1}",
+			(start < DayViewStart) ? top : "",
+			(end > DayViewEnd) ? bottom : "");
+	}
+
+	int ItemStartRow(DateTime start)
+	{
+		if (start.Hour <= DayViewStart.Hour)
+		{
+			return 1;
+		}
+
+		return (start.Hour - DayViewStart.Hour) + 1;
+	}
+
+	string ItemTopPosition(DateTime start)
+	{
+		double top = 0D;
+
+		if (start < DayViewStart)
+		{
+			return "-0.050em";
+		}
+
+		if (start > DayViewStart && start.Minute > 0)
+		{
+			top = 0.025 * start.Minute;
+		}
+		return (top > 0) ? $"{top}em" : "0";
+	}
+
+	string ItemRowHeight(DateTime start, DateTime end)
+	{
+		double height = 0D;
+		double totalMinutes;
+
+		if (end >= DayViewEnd)
+		{
+			end = DayViewEnd;
+		}
+
+		if (start < DayViewStart)
+		{
+			start = DayViewStart;
+			height += 0.050; // Add 2 extra minutes for negative top position
+		}
+
+
+		totalMinutes = end.Subtract(start).TotalMinutes;
+		height += 0.025 * totalMinutes; // 1 minute = 1.25em / 60 = 0.025em
+
+		/* Adjust for row gaps, 1px = 0.063em at base 16px size 
+		 * according to http://pxtoem.com/ */
+		height += 0.063 * (end.Hour - start.Hour);
+
+		return (height > 0) ? $"{height}em" : "0;";
+	}
 }
