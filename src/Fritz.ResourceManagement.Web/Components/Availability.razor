@@ -4,44 +4,47 @@
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
 @inject Models.MyDbContext DbContext
 @inject Data.ScheduleState MyScheduleState
-@inject Data.ExpandedSchedule ExpandedSchedule
 
-<div id="Availability" style="display: inline-block; vertical-align: top;">
+	<div class="row">
+		<div id="Availability" class="col-md-8" style="vertical-align: top; ">
 
-	<h3>Set the availability for @CurrentUser.Identity.Name</h3>
+			<h3>Set the availability for @CurrentUser.Identity.Name</h3>
 
-	<div>
+			<div>
 
-		<div style="display: inline-block">
-			<h4>Scheduled Appointments</h4>
+				<div style="display: inline-block" class="form-group">
+					<h4>Scheduled Appointments</h4>
 
-			<p>
-				<input type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
-				<input type="datetime" name="StartTime" bind="@NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
-				<input type="datetime" name="EndTime" bind="@NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
-			</p>
-			<button onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
+					<input class="form-control" type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
+					<input class="form-control" type="datetime" name="StartTime" bind="@NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
+					<input class="form-control" type="datetime" name="EndTime" bind="@NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
+					<button class="btn btn-primary" onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
+
+				</div>
+
+				<div style="display: inline-block" class="form-group">
+					<h4>Create a Recurring Schedule</h4>
+
+					<RecurrenceDataEntry Schedule="@NewRecurringSchedule" OnSave="@AddNewRecurringSchedule" />
+
+				</div>
+
+			</div>
 
 		</div>
 
-		<div style="display: inline-block">
-			<h4>Create a Recurring Schedule</h4>
+		<div id="MySchedule" class="col-md-4">
+			<h3>My Schedule</h3>
+
+			<DayPicker />
+
+			<DayView DayViewStart="DateTime.Today.AddHours(8)" 
+							 DayViewEnd="DateTime.Today.AddHours(20)"
+							 MyScheduleState="MyScheduleState"/>
 
 		</div>
 
 	</div>
-</div>
-
-<div id="MySchedule" style="display: inline-block">
-	<h3>My Schedule</h3>
-
-			<DayPicker />
-
-			<DayView />
-
-</div>
-
-
 
 
 @functions {
@@ -52,19 +55,20 @@
 
 	DateTime SelectedDate { get; set; } = DateTime.Today;
 
+	DateTime ThisMonth { get { return new DateTime(SelectedDate.Year, SelectedDate.Month, 1); } }
+
+
 	ScheduleItem NewScheduleItem;
+	RecurringSchedule NewRecurringSchedule;
 
 	protected override void OnInit()
 	{
 		ResetScheduleItem();
 		MySchedule = GetMyAvailability();
 
-		var mgr = new ScheduleManager();
-		var thisMonth = new DateTime(SelectedDate.Year, SelectedDate.Month, 1);
-		ExpandedSchedule.TimeSlots.AddRange(mgr.ExpandSchedule(MySchedule, thisMonth.AddMonths(-1), thisMonth.AddMonths(3)));
-
 		MyScheduleState.SelectDate(SelectedDate);
 		MyScheduleState.Schedule = MySchedule;
+		MyScheduleState.ExpandSchedule();
 
 	}
 
@@ -78,6 +82,8 @@
 			.Persons
 			.Include(p => p.Schedule)
 			.ThenInclude(s => s.ScheduleItems)
+			.Include(p => p.Schedule)
+			.ThenInclude(s => s.RecurringSchedules)
 			.First(p => p.Id == personId);
 
 		return thisPerson.Schedule;
@@ -103,12 +109,34 @@
 
 	}
 
+	void AddNewRecurringSchedule()
+	{
+
+		// Cheer 2000 organicIT 23/06/19 
+
+		NewRecurringSchedule.Status = ScheduleStatus.NotAvailable;
+		NewRecurringSchedule.ScheduleId = MySchedule.Id;
+
+		DbContext.Schedules.Update(MySchedule);
+		MySchedule.RecurringSchedules.Add(NewRecurringSchedule);
+		DbContext.SaveChanges();
+
+		MyScheduleState.ScheduleUpdated();
+
+		ResetScheduleItem();
+
+	}
+
 	void ResetScheduleItem()
 	{
 
 		NewScheduleItem = new ScheduleItem();
 		NewScheduleItem.StartDateTime = DateTime.Today;
 		NewScheduleItem.EndDateTime = DateTime.Today.AddDays(1);
+
+		NewRecurringSchedule = new RecurringSchedule();
+		NewRecurringSchedule.MinStartDateTime = DateTime.Today;
+		NewRecurringSchedule.MaxEndDateTime = DateTime.Today.AddDays(7);
 
 
 	}

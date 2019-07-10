@@ -1,6 +1,5 @@
 ﻿@using Fritz.ResourceManagement.Domain
 @inject Data.ScheduleState MyScheduleState
-@inject Data.ExpandedSchedule ExpandedSchedule
 <div class="monthpicker">
 
 	<button id="prevMonth" onclick="@PrevMonth">&lt;</button>
@@ -27,7 +26,7 @@
 		var today = (thisDay.Date == DateTime.Today.Date) ?
 			"today" : null;
 		var todayTitle = (string.IsNullOrEmpty(today)) ? null : "Today!";
-		var hasAppt = ExpandedSchedule.TimeSlots.Any(i => i.StartDateTime.Date == thisDay.Date) ?
+		var hasAppt = MyScheduleState.TimeSlots.Any(i => i.StartDateTime.Date == thisDay.Date) ?
 			"appt" : null;
 		var selected = (thisDay == SelectedDate) ? "active" : null;
 

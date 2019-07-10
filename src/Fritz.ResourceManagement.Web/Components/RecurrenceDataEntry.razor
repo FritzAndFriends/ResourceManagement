@@ -1,0 +1,111 @@
+@using Fritz.ResourceManagement.Domain
+
+<input class="form-control" type="text" name="Name" bind="@Schedule.Name" placeholder="Name of the Recurring Appointment" />
+<input class="form-control" type="date" name="StartDate" bind="@Schedule.MinStartDateTime" placeholder="Start Date" />
+<input class="form-control" type="date" name="EndDate" bind="@Schedule.MaxEndDateTime" placeholder="End Date" />
+<input class="form-control" type="time" name="StartTime" bind="@StartTime" placeholder="Start time" />
+
+<fieldset>
+
+	<legend>Recurrence</legend>
+
+	<select name="pattern" class="form-control" bind="Pattern">
+		<option value="D">Daily</option>
+		<option value="W">Weekly</option>
+		@*			<option>Fortnightly</option>*@
+		@*<option value="M">Monthly</option>*@
+	</select>
+
+	@if (Pattern == "W")
+	{
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="0" onchange="@(() => DowChange("0"))" /><label class="form-check-label" for="dow">Sunday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="1" onchange="@(() => DowChange("1"))" /><label class="form-check-label" for="dow">Monday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="2" onchange="@(() => DowChange("2"))" /><label class="form-check-label" for="dow">Tuesday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="3" onchange="@(() => DowChange("3"))" /><label class="form-check-label" for="dow">Wednesday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="4" onchange="@(() => DowChange("4"))" /><label class="form-check-label" for="dow">Thursday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="5" onchange="@(() => DowChange("5"))" /><label class="form-check-label" for="dow">Friday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="6" onchange="@(() => DowChange("6"))" /><label class="form-check-label" for="dow">Saturday</label>
+		</div>
+			}
+
+	</fieldset>
+
+<input class="form-control" type="text" name="Duration" bind="@Schedule.DurationText" placeholder="Duration for each recurring item" />
+<button class="btn btn-primary" onclick="@Save">Add New Recurring Schedule</button>
+
+@functions {
+
+	// Cheer 1000 cpayette 27/06/19 
+
+	[Parameter]
+	RecurringSchedule Schedule { get; set; }
+
+	[Parameter]
+	EventCallback OnSave { get; set; }
+
+	string Pattern { get; set; }
+
+	string StartTime { get; set; }
+
+	TimeSpan TimeOfDay {  get { return TimeSpan.Parse(StartTime); } }
+
+	HashSet<string> DaysOfTheWeek { get; set; } = new HashSet<string>();
+
+	void DowChange(string day)
+	{
+		if (DaysOfTheWeek.Contains(day))
+		{
+			DaysOfTheWeek.Remove(day);
+		} else {
+			DaysOfTheWeek.Add(day);
+		}
+	}
+
+	public string CalculatedCronPattern {
+		get
+		{
+
+			var sb = new System.Text.StringBuilder();
+			sb.Append($"{TimeOfDay.Minutes} ");
+
+			sb.Append($"{TimeOfDay.Hours} ");
+
+			sb.Append("* * ");
+
+			if (Pattern == "D" || !DaysOfTheWeek.Any())
+			{
+				sb.Append("*");
+			} else
+			{
+				sb.Append(string.Join(",", DaysOfTheWeek.ToArray()));
+			} 
+
+			return sb.ToString();
+		}
+	}
+
+	void Save()
+	{
+		if (OnSave.HasDelegate)
+		{
+
+			Schedule.CronPattern = CalculatedCronPattern;
+
+			OnSave.InvokeAsync(Schedule);
+		}
+	}
+
+}

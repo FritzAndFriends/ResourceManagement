@@ -1,33 +1,35 @@
 ﻿@using Fritz.ResourceManagement.Domain
-@inject Data.ScheduleState MyScheduleState
-@inject Data.ExpandedSchedule ExpandedSchedule
 
 <div class="dayview">
 	@{
-		var currentTime = new DateTimeOffset(2000, 1, 1, 8, 0, 0, TimeSpan.Zero);
-	}
-	@for (var i = 0; i < 24; i++)
-	{
-		if (i % 2 == 0)
+		var currentTime = DayViewStart;
+		var hoursPerDay = DayViewEnd.Subtract(DayViewStart).Hours;
+
+		for (var i = 0; i < hoursPerDay*2; i++)
 		{
-			<span class="grid" style="grid-column: 1;">
-				<text>@currentTime.ToString("h:mm tt")</text>
-				@{ currentTime = currentTime.AddHours(1); }
-			</span>
-		}
-		else
-		{
-			<span class="grid" style="grid-column: 2;"></span>
+			if (i % 2 == 0)
+			{
+				<span class="grid" style="grid-column: 1;">
+					<text>@currentTime.ToString("h:mm tt")</text>
+					@{ currentTime = currentTime.AddHours(1); }
+				</span>
+			}
+			else
+			{
+				<span class="grid" style="grid-column: 2;"></span>
+			}
 		}
 	}
 
-	@foreach (var item in ExpandedSchedule.TimeSlots.Where(s => s.StartDateTime.Date == SelectedDate.Date))
-	{
-		if (DisplayItem(item.StartDateTime, item.EndDateTime))
+	@if (MyScheduleState != null) {
+		foreach (var item in MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == SelectedDate.Date))
 		{
-			<span class="scheduleItem @ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @ItemStartRow(item.StartDateTime); top: @ItemTopPosition(item.StartDateTime); height: @ItemRowHeight(item.StartDateTime, item.EndDateTime);">
-				@item.Name  - @item.StartDateTime.ToShortTimeString()
-			</span>
+			if (DisplayItem(item.StartDateTime, item.EndDateTime))
+			{
+				<span class="scheduleItem @ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @ItemStartRow(item.StartDateTime); top: @ItemTopPosition(item.StartDateTime); height: @ItemRowHeight(item.StartDateTime, item.EndDateTime);">
+					@item.Name  - @item.StartDateTime.ToShortTimeString()
+				</span>
+			}
 		}
 	}
 
@@ -39,33 +41,39 @@ Today is <span>@SelectedDate</span>
 
 @functions {
 
-	DateTime SelectedDate
-	{
-		get { return MyScheduleState.SelectedDate; }
-	}
+		DateTime SelectedDate
+		{
+			get { return MyScheduleState?.SelectedDate ?? DateTime.Today; }
+		}
 
-	Schedule MySchedule
-	{
-		get { return MyScheduleState.Schedule; }
-	}
+		Schedule MySchedule
+		{
+			get { return MyScheduleState.Schedule; }
+		}
 
-	DateTime DayViewStart
-	{
-		get { return MyScheduleState.SelectedDate.AddHours(8); }
-	}
+	// Cheer 701 themichaeljolley 09/07/19 
+	// Cheer 600 cpayette 09/07/19 
+	// Cheer 1500 clintonrocksmith 09/07/19 
 
-	DateTime DayViewEnd
-	{
-		get { return MyScheduleState.SelectedDate.AddHours(20); }
-	}
+	[Parameter]
+	Data.ScheduleState MyScheduleState { get; set; }
+
+	[Parameter]
+	DateTime DayViewStart { get; set; } = DateTime.Today.AddHours(8);
+
+	[Parameter]
+	DateTime DayViewEnd { get; set; } = DateTime.Today.AddHours(20);
 
 	protected override void OnInit()
 	{
 
-		MyScheduleState.OnSelectedDateChanged += (o, args) =>
+		if (MyScheduleState != null)
 		{
-			Invoke(StateHasChanged);
-		};
+			MyScheduleState.OnSelectedDateChanged += (o, args) =>
+			{
+				Invoke(StateHasChanged);
+			};
+		}
 
 		base.OnInit();
 	}

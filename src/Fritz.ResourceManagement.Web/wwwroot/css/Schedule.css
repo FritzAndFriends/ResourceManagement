@@ -94,3 +94,18 @@
 	.dayview .ends-after {
 		border-bottom: 0;
 	}
+
+	.weekview {
+		min-width: 1150px;
+		height: 350px;
+		/*overflow-x: scroll;
+		overflow-y: hidden;*/
+	}
+
+.weekview > span {
+	display: inline-block;
+	width: 150px;
+}
+.weekview .dayview {
+	width: 150px;
+}
