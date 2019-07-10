@@ -1,0 +1,9 @@
+﻿@page
+@using Fritz.ResourceManagement.Web.Components
+@{
+	ViewData["Title"] = "Manager View";
+}
+
+<h1>Manager View</h1>
+
+@(await Html.RenderComponentAsync<ManagerScheduleView>())
