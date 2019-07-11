@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Fritz.ResourceManagement.Domain
 {
+	[DebuggerDisplay("{Name}: {StartDateTime}-{EndDateTime}")]
   public class TimeSlot {
 
 		public string Name { get; set; }
