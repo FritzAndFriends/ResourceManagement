@@ -1,22 +1,22 @@
 ﻿@using Fritz.ResourceManagement.Domain
 
-<div class="dayview">
+<div class="dayview@(ShowTimes ? "" : "_notimes")">
 	@{
 		var currentTime = DayViewStart;
 		var hoursPerDay = DayViewEnd.Subtract(DayViewStart).Hours;
 
 		for (var i = 0; i < hoursPerDay*2; i++)
 		{
-			if (i % 2 == 0)
+			if (ShowTimes && i % 2 == 0)
 			{
 				<span class="grid" style="grid-column: 1;">
 					<text>@currentTime.ToString("h:mm tt")</text>
 					@{ currentTime = currentTime.AddHours(1); }
 				</span>
 			}
-			else
+			else if (i%2==1)
 			{
-				<span class="grid" style="grid-column: 2;"></span>
+				<span class="grid" style="grid-column: @(ShowTimes ? 2 : 1);"></span>
 			}
 		}
 	}
@@ -54,6 +54,9 @@ Today is <span>@SelectedDate</span>
 	// Cheer 701 themichaeljolley 09/07/19 
 	// Cheer 600 cpayette 09/07/19 
 	// Cheer 1500 clintonrocksmith 09/07/19 
+
+	[Parameter]
+	bool ShowTimes { get; set; } = true;
 
 	[Parameter]
 	Data.ScheduleState MyScheduleState { get; set; }

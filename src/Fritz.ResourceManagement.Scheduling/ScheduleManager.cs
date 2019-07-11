@@ -96,7 +96,7 @@ namespace Fritz.ResourceManagement.Scheduling
 					// Console.Out.WriteLine(expandRange.Value.ToString());
 
 					var cts = CrontabSchedule.Parse(r.CronPattern);
-					outList.AddRange(cts.GetNextOccurrences(expandRange.Value.begin, expandRange.Value.end)
+					outList.AddRange(cts.GetNextOccurrences(expandRange.Value.begin.AddSeconds(-1), expandRange.Value.end)
 						.Select(d => new TimeSlot {
 							Name = r.Name,
 							StartDateTime = d,

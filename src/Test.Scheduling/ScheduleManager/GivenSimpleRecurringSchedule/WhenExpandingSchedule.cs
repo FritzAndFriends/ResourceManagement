@@ -145,4 +145,5 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 		}
 
   }
+
 }
