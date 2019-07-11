@@ -1,22 +1,22 @@
 ﻿@using Fritz.ResourceManagement.Domain
 
-<div class="dayview">
+<div class="dayview@(ShowTimes ? "" : "_notimes")">
 	@{
 		var currentTime = DayViewStart;
 		var hoursPerDay = DayViewEnd.Subtract(DayViewStart).Hours;
 
 		for (var i = 0; i < hoursPerDay*2; i++)
 		{
-			if (i % 2 == 0)
+			if (ShowTimes && i % 2 == 0)
 			{
 				<span class="grid" style="grid-column: 1;">
 					<text>@currentTime.ToString("h:mm tt")</text>
 					@{ currentTime = currentTime.AddHours(1); }
 				</span>
 			}
-			else
+			else if (i%2==1)
 			{
-				<span class="grid" style="grid-column: 2;"></span>
+				<span class="grid" style="grid-column: @(ShowTimes ? 2 : 1);"></span>
 			}
 		}
 	}
@@ -41,19 +41,22 @@ Today is <span>@SelectedDate</span>
 
 @functions {
 
-		DateTime SelectedDate
-		{
-			get { return MyScheduleState?.SelectedDate ?? DateTime.Today; }
-		}
+	DateTime SelectedDate
+	{
+		get { return MyScheduleState?.SelectedDate ?? DateTime.Today; }
+	}
 
-		Schedule MySchedule
-		{
-			get { return MyScheduleState.Schedule; }
-		}
+	Schedule MySchedule
+	{
+		get { return MyScheduleState.Schedule; }
+	}
 
 	// Cheer 701 themichaeljolley 09/07/19 
 	// Cheer 600 cpayette 09/07/19 
 	// Cheer 1500 clintonrocksmith 09/07/19 
+
+	[Parameter]
+	bool ShowTimes { get; set; } = true;
 
 	[Parameter]
 	Data.ScheduleState MyScheduleState { get; set; }
@@ -86,7 +89,11 @@ Today is <span>@SelectedDate</span>
 
 	bool DisplayItem(DateTime start, DateTime end)
 	{
-		if (start >= DayViewEnd || end <= DayViewStart) { return false; }
+
+		var startDayView = SelectedDate.Date.Add(DayViewStart.TimeOfDay);
+		var endDayView = SelectedDate.Date.Add(DayViewEnd.TimeOfDay);
+
+		if (start >= endDayView || end <= startDayView) { return false; }
 		return true;
 	}
 
@@ -131,24 +138,42 @@ Today is <span>@SelectedDate</span>
 		double height = 0D;
 		double totalMinutes;
 
-		if (end >= DayViewEnd)
+		TimeSpan startTime;
+		TimeSpan endTime;
+		if (start.TimeOfDay < DayViewStart.TimeOfDay)
 		{
-			end = DayViewEnd;
+			startTime = DayViewStart.TimeOfDay;
+		} else if (start.Date < SelectedDate)
+		{
+			startTime = DayViewStart.TimeOfDay;
+		} else
+		{
+			startTime = start.TimeOfDay;
 		}
 
-		if (start < DayViewStart)
+		if (end.TimeOfDay >= DayViewEnd.TimeOfDay)
 		{
-			start = DayViewStart;
+			endTime = DayViewEnd.TimeOfDay;
+		} else if (end.Date > SelectedDate)
+		{
+			endTime = DayViewEnd.TimeOfDay;
+		} else
+		{
+			endTime = end.TimeOfDay;
+		}
+
+		if (start.TimeOfDay < DayViewStart.TimeOfDay)
+		{
 			height += 0.050; // Add 2 extra minutes for negative top position
 		}
 
 
-		totalMinutes = end.Subtract(start).TotalMinutes;
+		totalMinutes = endTime.Subtract(startTime).TotalMinutes;
 		height += 0.025 * totalMinutes; // 1 minute = 1.25em / 60 = 0.025em
 
 		/* Adjust for row gaps, 1px = 0.063em at base 16px size 
 		 * according to http://pxtoem.com/ */
-		height += 0.063 * (end.Hour - start.Hour);
+		height += 0.063 * (endTime.Subtract(startTime).TotalHours);
 
 		return (height > 0) ? $"{height}em" : "0;";
 	}
