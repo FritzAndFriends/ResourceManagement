@@ -40,7 +40,7 @@ namespace Fritz.ResourceManagement.Domain
 	  var results = new List<ValidationResult>();
 
 	  if (EndDateTime < StartDateTime)
-			results.Add(new ValidationResult("EndDateTime cannot be before StartDateTime", new[] { nameof(StartDateTime), nameof(EndDateTime) }));
+		results.Add(new ValidationResult($"{nameof(EndDateTime)} cannot be before {nameof(StartDateTime)}", new[] { nameof(StartDateTime), nameof(EndDateTime) }));
 
 	  return results;
 
