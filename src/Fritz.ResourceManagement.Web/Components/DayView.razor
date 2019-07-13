@@ -102,9 +102,12 @@ Today is <span>@SelectedDate</span>
 		string top = "starts-before";
 		string bottom = "ends-after";
 
+		var startDayView = SelectedDate.Date.Add(DayViewStart.TimeOfDay);
+		var endDayView = SelectedDate.Date.Add(DayViewEnd.TimeOfDay);
+
 		return String.Format("{0} {1}",
-			(start < DayViewStart) ? top : "",
-			(end > DayViewEnd) ? bottom : "");
+			(start < startDayView) ? top : "",
+			(end > endDayView) ? bottom : "");
 	}
 
 	int ItemStartRow(DateTime start)
@@ -120,13 +123,14 @@ Today is <span>@SelectedDate</span>
 	string ItemTopPosition(DateTime start)
 	{
 		double top = 0D;
+		var startDayView = SelectedDate.Date.Add(DayViewStart.TimeOfDay);
 
-		if (start < DayViewStart)
+		if (start < startDayView)
 		{
 			return "-0.050em";
 		}
 
-		if (start > DayViewStart && start.Minute > 0)
+		if (start > startDayView && start.Minute > 0)
 		{
 			top = 0.025 * start.Minute;
 		}
@@ -164,9 +168,8 @@ Today is <span>@SelectedDate</span>
 
 		if (start.TimeOfDay < DayViewStart.TimeOfDay)
 		{
-			height += 0.050; // Add 2 extra minutes for negative top position
+			height += 0.050; // Add 2 extra minutes for negative top position from ItemTopPosition
 		}
-
 
 		totalMinutes = endTime.Subtract(startTime).TotalMinutes;
 		height += 0.025 * totalMinutes; // 1 minute = 1.25em / 60 = 0.025em
@@ -175,6 +178,6 @@ Today is <span>@SelectedDate</span>
 		 * according to http://pxtoem.com/ */
 		height += 0.063 * (endTime.Subtract(startTime).TotalHours);
 
-		return (height > 0) ? $"{height}em" : "0;";
+		return (height > 0) ? $"{height}em" : "0";
 	}
 }
