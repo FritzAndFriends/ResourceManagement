@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
+using CronEspresso.NETCore.Utils;
 
 namespace Fritz.ResourceManagement.Domain
 {
@@ -31,8 +31,9 @@ namespace Fritz.ResourceManagement.Domain
 
 	  var results = new List<ValidationResult>();
 
-		if(!Regex.IsMatch(CronPattern, @"^((\*|\?|\d+((\/|\-){0,1}(\d+))*)\s*){6}$"))
-			results.Add(new ValidationResult($"{nameof(CronPattern)} is not a valid cron pattern", new[] { nameof(CronPattern) }));
+	  var cronValidationResult = CronHelpers.ValidateCron(CronPattern);
+	  if (!cronValidationResult.IsValidCron)
+			results.Add(new ValidationResult($"{nameof(CronPattern) } is not a valid Cron pattern,  {cronValidationResult.ValidationMessage}", new[] { nameof(CronPattern) }));
 
 	  if (string.IsNullOrWhiteSpace(Name))
 			results.Add(new ValidationResult($"{nameof(Name)} cannot be null, empty or consist of only whitespace", new[] { nameof(Name) }));
