@@ -1,39 +1,55 @@
 ﻿@using Fritz.ResourceManagement.Domain
 
-<div class="dayview@(ShowTimes ? "" : "_notimes")">
-	@{
-		var currentTime = DayViewStart;
-		var hoursPerDay = DayViewEnd.Subtract(DayViewStart).Hours;
+@{ 
 
-		for (var i = 0; i < hoursPerDay*2; i++)
-		{
-			if (ShowTimes && i % 2 == 0)
+	var currentTime = DayViewStart;
+	var hoursPerDay = DayViewEnd.Subtract(DayViewStart).Hours;
+
+}
+
+	<div class="dayview" style="grid-template-columns: 4.3em repeat(@DayCount,1fr); grid-template-rows: repeat(@hoursPerDay, 1.5em);">
+		@{
+
+			if (DayDisplay)
+			{
+				<span class="grid" style="grid-column: 1;"></span>
+				for (int columnCounter = 2; columnCounter < 2 + DayCount; columnCounter++)
+				{
+				<span class="grid" style="grid-column: @columnCounter; text-align: center;">
+					@MyScheduleState.DisplayBeginDate.AddDays(columnCounter-2).ToString("ddd MMM d")
+				</span>
+				}
+			}
+
+			for (var i = 0; i < hoursPerDay; i++)
 			{
 				<span class="grid" style="grid-column: 1;">
 					<text>@currentTime.ToString("h:mm tt")</text>
 					@{ currentTime = currentTime.AddHours(1); }
 				</span>
-			}
-			else if (i%2==1)
-			{
-				<span class="grid" style="grid-column: @(ShowTimes ? 2 : 1);"></span>
+
+				for (int columnCounter = 2; columnCounter < 2 + DayCount; columnCounter++)
+				{
+					<span class="grid" style="grid-column: @columnCounter"></span>
+				}
+
 			}
 		}
-	}
 
-	@if (MyScheduleState != null) {
-		foreach (var item in MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == SelectedDate.Date))
+		@if (MyScheduleState != null)
 		{
-			if (DisplayItem(item.StartDateTime, item.EndDateTime))
+			foreach (var item in MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == SelectedDate.Date))
 			{
-				<span class="scheduleItem @ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @ItemStartRow(item.StartDateTime); top: @ItemTopPosition(item.StartDateTime); height: @ItemRowHeight(item.StartDateTime, item.EndDateTime);">
-					@item.Name  - @item.StartDateTime.ToShortTimeString()
-				</span>
+				if (DisplayItem(item.StartDateTime, item.EndDateTime))
+				{
+					<span class="scheduleItem @ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @ItemStartRow(item.StartDateTime); top: @ItemTopPosition(item.StartDateTime); height: @ItemRowHeight(item.StartDateTime, item.EndDateTime);">
+						@item.Name  - @item.StartDateTime.ToShortTimeString()
+					</span>
+				}
 			}
 		}
-	}
 
-</div>
+	</div>
 
 @*
 Today is <span>@SelectedDate</span>
@@ -56,9 +72,6 @@ Today is <span>@SelectedDate</span>
 	// Cheer 1500 clintonrocksmith 09/07/19 
 
 	[Parameter]
-	bool ShowTimes { get; set; } = true;
-
-	[Parameter]
 	Data.ScheduleState MyScheduleState { get; set; }
 
 	[Parameter]
@@ -66,6 +79,17 @@ Today is <span>@SelectedDate</span>
 
 	[Parameter]
 	DateTime DayViewEnd { get; set; } = DateTime.Today.AddHours(20);
+
+	// Cheer 110 copperbeardy 14/07/19 
+
+	[Parameter]
+	int DayCount { get; set; } = 1;
+
+	/// <summary>
+	/// Should we display the dates above the grid
+	/// </summary>
+	[Parameter]
+	bool DayDisplay { get; set; } = false;
 
 	protected override void OnInit()
 	{

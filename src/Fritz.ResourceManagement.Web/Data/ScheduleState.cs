@@ -15,6 +15,10 @@ namespace Fritz.ResourceManagement.Web.Data
 
 		public DateTime SelectedDate { get; private set; }
 
+		public DateTime DisplayBeginDate { get; set; }
+
+		public DateTime DisplayEndDate { get; set; }
+
 		public void SelectDate(DateTime newDate)
 		{
 			SelectedDate = newDate;

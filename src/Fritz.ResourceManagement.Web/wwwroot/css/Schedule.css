@@ -62,32 +62,20 @@
 .dayview {
 	display: grid;
 	position: relative;
-	grid-template-columns: 1.5fr 2fr;
-	grid-template-rows: repeat(12, 1.5em);
 	grid-column-gap: 1px;
 	grid-row-gap: 1px;
 	background-color: grey;
 	border: 1px solid grey;
 }
 
-.dayview_notimes {
-	display: grid;
-	position: relative;
-	grid-template-rows: repeat(12, 1.5em);
-	grid-column-gap: 1px;
-	grid-row-gap: 1px;
-	background-color: grey;
-	border: 1px solid grey;
-}
-
-.dayview span.grid, .dayview_notimes span.grid {
+.dayview span.grid {
 	background-color: #fff;
 	font-size: 0.8em;
 	text-align: right;
 	padding: 2px;
 }
 
-.dayview .scheduleItem, .dayview_notimes .scheduleItem {
+.dayview .scheduleItem  {
 	position: absolute;
 	border: 1px solid navy;
 	background-color: papayawhip;
@@ -97,25 +85,10 @@
 	height: 3em;
 }
 
-.dayview .starts-before, .dayview_notimes .starts-before {
+.dayview .starts-before  {
 	border-top: 0;
 }
 
-.dayview .ends-after, .dayview_notimes .ends-after {
+.dayview .ends-after  {
 	border-bottom: 0;
-}
-
-	.weekview {
-		min-width: 1150px;
-		height: 350px;
-		/*overflow-x: scroll;
-		overflow-y: hidden;*/
-	}
-
-.weekview > span {
-	display: inline-block;
-	width: 150px;
-}
-.weekview .dayview {
-	width: 150px;
 }

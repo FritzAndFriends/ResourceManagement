@@ -1,15 +1,41 @@
 <h3>Schedule View</h3>
+@inject Data.ScheduleState MyScheduleState
 
-<div class="weekview">
-	<span><DayView ShowTimes="true"></DayView></span>
-	<span><DayView ShowTimes="false"></DayView></span>
-	<span><DayView ShowTimes="false"></DayView></span>
-	<span><DayView ShowTimes="false"></DayView></span>
-	<span><DayView ShowTimes="false"></DayView></span>
-	<span><DayView ShowTimes="false"></DayView></span>
-	<span><DayView ShowTimes="false"></DayView></span>
+
+<div id="weekSelector">
+
+	@{ 
+		MyScheduleState.DisplayBeginDate = SelectedDate.Subtract(TimeSpan.FromDays((int)SelectedDate.DayOfWeek));
+		MyScheduleState.DisplayEndDate = MyScheduleState.DisplayBeginDate.AddDays(7);
+	}
+
+	<a href="" onclick="@(() => ChangeDate(-7))">&lt;</a>
+	@MyScheduleState.DisplayBeginDate.ToShortDateString() - @MyScheduleState.DisplayEndDate.AddDays(-1).ToShortDateString()
+	<a href="" onclick="@(() => ChangeDate(7))">&gt;</a>
+
 </div>
 
+<div id="MyScheduleContainer">
+	<DayView DayCount="7" DayDisplay="true" MyScheduleState="MyScheduleState"></DayView>
+</div>
+
+
 @functions {
+
+	[Parameter]
+	DateTime SelectedDate { get; set; } = DateTime.Today;
+
+	protected override Task OnInitAsync()
+	{
+
+
+
+		return base.OnInitAsync();
+	}
+
+	void ChangeDate(int daysToChange)
+	{
+		SelectedDate = SelectedDate.AddDays(daysToChange);
+	}
 
 }
