@@ -42,6 +42,9 @@ namespace Fritz.ResourceManagement.Domain
 	  if (string.IsNullOrWhiteSpace(PhoneNumber))
 			results.Add(new ValidationResult($"{nameof(PhoneNumber)} cannot be null, empty or consist of whitespace only", new[] { nameof(PhoneNumber) }));
 
+	  if (PersonPersonType.Count == 0)
+			results.Add(new ValidationResult($"{nameof(PersonPersonType)} must contain atleast 1 item", new[] { nameof(PersonPersonType) }));
+
 	  return results;
 	}
 

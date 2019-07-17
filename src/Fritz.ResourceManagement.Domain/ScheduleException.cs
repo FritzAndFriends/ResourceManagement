@@ -25,6 +25,8 @@ namespace Fritz.ResourceManagement.Domain
 
 	  if (EndDateTime < StartDateTime)
 			results.Add(new ValidationResult($"{nameof(EndDateTime)} cannot be before {nameof(StartDateTime)}", new[] { nameof(StartDateTime), nameof(EndDateTime) }));
+	  else if (EndDateTime < StartDateTime.AddDays(10))
+		results.Add(new ValidationResult($"{nameof(EndDateTime)} must be atleast 1 day after {nameof(StartDateTime)}", new[] { nameof(StartDateTime), nameof(EndDateTime) }));
 
 	  return results;
 
