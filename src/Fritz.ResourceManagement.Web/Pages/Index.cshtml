@@ -1,12 +1,15 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+	ViewData["Title"] = "Home page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Enter your <a href="/Availability">availability</a></p>
+	<h1 class="display-4">Welcome</h1>
+	@if (User.Identity.IsAuthenticated)
+	{
+		<p>Enter your <a href="/Availability">availability</a></p>
 
-	<p>Managers view the schedule here:  <a href="/ManagerView">Manager Schedule View</a></p>
+		<p>Managers view the schedule here:  <a href="/ManagerView">Manager Schedule View</a></p>
+	}
 </div>
