@@ -12,7 +12,7 @@ namespace Fritz.ResourceManagement.Scheduling.Extensions
 	/// <summary>
 	/// Returns 'true' if  DateTime's date is the same as <c>date</c>
 	/// </summary>
-	public static bool IsOnDate(this DateTime value, DateTime date)
+	public static bool IsOn(this DateTime value, DateTime date)
 	{
 	  return value.Date == date.Date;
 	}
@@ -28,7 +28,7 @@ namespace Fritz.ResourceManagement.Scheduling.Extensions
 	/// <summary>
 	/// Returns 'true' if this DateTime's date is before <c>date</c>
 	/// </summary>
-	public static bool IsBeforeDate(this DateTime value, DateTime date)
+	public static bool IsBefore(this DateTime value, DateTime date)
 	{
 	  return value.Date < date.Date;
 	}
@@ -36,17 +36,17 @@ namespace Fritz.ResourceManagement.Scheduling.Extensions
 	/// <summary>
 	/// Returns 'true' if this DateTime's date is same as or after <c>date</c>
 	/// </summary>
-	public static bool IsOnOrAfterDate(this DateTime value, DateTime date)
+	public static bool IsOnOrAfter(this DateTime value, DateTime date)
 	{
-	  return value.IsOnDate(date) || value.IsAfterDate(date);
+	  return value.IsOn(date) || value.IsAfterDate(date);
 	}
 
 	/// <summary>
 	/// Returns 'true' if this DateTime's date is same as or before <c>date</c>
 	/// </summary>
-	public static bool IsOnOrBeforeDate(this DateTime value, DateTime date)
+	public static bool IsOnOrBefore(this DateTime value, DateTime date)
 	{
-	  return value.IsOnDate(date) || value.IsBeforeDate(date);
+	  return value.IsOn(date) || value.IsBefore(date);
 	}
 
 	/// <summary>
@@ -57,43 +57,7 @@ namespace Fritz.ResourceManagement.Scheduling.Extensions
 	  if (firstDate.IsAfterDate(secondDate))
 		return value.IsBetweenDates(secondDate, firstDate);
 
-	  return value.IsOnOrAfterDate(firstDate) && value.IsBeforeDate(secondDate);
-	}
-
-	#endregion
-
-	#region extensions for dateTime 
-
-	/// <summary>
-	/// Returns 'true' if this <c>DateTime</c> is after <c>dateTime</c>
-	/// </summary>
-	public static bool IsAfter(this DateTime value, DateTime dateTime)
-	{
-	  return value > dateTime;
-	}
-
-	/// <summary>
-	/// Returns 'true' if this <c>DateTime</c> is same as or after <c>dateTime</c>
-	/// </summary>
-	public static bool IsSameOrAfter(this DateTime value, DateTime dateTime)
-	{
-	  return value >= dateTime;
-	}
-
-	/// <summary>
-	/// Returns 'true' if this <c>DateTime</c> is same as or before <c>dateTime</c>
-	/// </summary>
-	public static bool IsSameOrBefore(this DateTime value, DateTime dateTime)
-	{
-	  return value <= dateTime;
-	}
-
-	/// <summary>
-	/// Returns 'true' if this <c>DateTime</c> is before <c>dateTime</c>
-	/// </summary>
-	public static bool IsBefore(this DateTime value, DateTime dateTime)
-	{
-	  return value < dateTime;
+	  return value.IsOnOrAfter(firstDate) && value.IsBefore(secondDate);
 	}
 
 	#endregion
