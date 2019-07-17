@@ -32,23 +32,29 @@ namespace Fritz.ResourceManagement.Domain
 
 	  var results = new List<ValidationResult>();
 
-	  if (string.IsNullOrWhiteSpace(CronPattern))
-			results.Add(new ValidationResult($"{nameof(CronPattern)} is required", new[] { nameof(CronPattern) }));
-	  else
-	  {
-			var cronValidationResult = CronHelpers.ValidateCron(CronPattern);
-			if (!cronValidationResult.IsValidCron)
-				results.Add(new ValidationResult($"{nameof(CronPattern) } is not a valid Cron pattern,  {cronValidationResult.ValidationMessage}", new[] { nameof(CronPattern) }));
-	  }
-
 	  if (string.IsNullOrWhiteSpace(Name))
 		results.Add(new ValidationResult($"{nameof(Name)} cannot be null, empty or consist of only whitespace", new[] { nameof(Name) }));
 
-	  if (MaxEndDateTime < MinStartDateTime)
-		results.Add(new ValidationResult($"{nameof(MaxEndDateTime)} cannot be before {nameof(MinStartDateTime)}", new[] { nameof(MaxEndDateTime), nameof(MinStartDateTime) }));
+	  if (string.IsNullOrWhiteSpace(CronPattern))
+		results.Add(new ValidationResult($"{nameof(CronPattern)} is required", new[] { nameof(CronPattern) }));
+	  else
+	  {
+		var cronValidationResult = CronHelpers.ValidateCron(CronPattern);
+		if (!cronValidationResult.IsValidCron)
+		  results.Add(new ValidationResult($"{nameof(CronPattern) } is not a valid Cron pattern,  {cronValidationResult.ValidationMessage}", new[] { nameof(CronPattern) }));
+	  }
 
 	  if (Duration.TotalMinutes < 30)
 		results.Add(new ValidationResult($"{nameof(Duration)} must be atleast 30 minutes", new[] { nameof(Duration) }));
+
+	  if (MinStartDateTime == default)
+		results.Add(new ValidationResult($"{nameof(MinStartDateTime)} is required", new[] { nameof(MinStartDateTime) }));
+
+	  if (MaxEndDateTime == default)
+		results.Add(new ValidationResult($"{nameof(MaxEndDateTime)} is required", new[] { nameof(MaxEndDateTime) }));
+
+	  if (MaxEndDateTime < MinStartDateTime)
+		results.Add(new ValidationResult($"{nameof(MaxEndDateTime)} cannot be before {nameof(MinStartDateTime)}", new[] { nameof(MaxEndDateTime), nameof(MinStartDateTime) }));
 
 	  return results;
 	}
