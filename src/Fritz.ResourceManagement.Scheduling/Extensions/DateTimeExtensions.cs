@@ -9,9 +9,9 @@ namespace Fritz.ResourceManagement.Scheduling.Extensions
   public static class DateTimeExtensions
   {
 	#region extensions for date only
-		/// <summary>
-		/// Returns 'true' if Date is the same as object
-		/// </summary>
+	/// <summary>
+	/// Returns 'true' if  DateTime's date is the same as <c>date</c>
+	/// </summary>
 	public static bool IsOnDate(this DateTime value, DateTime date)
 	{
 	  return value.Date == date.Date;
