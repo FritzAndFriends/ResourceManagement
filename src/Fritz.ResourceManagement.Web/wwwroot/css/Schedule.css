@@ -83,6 +83,7 @@
 	left: 10px;
 	right: 10px;
 	height: 3em;
+	overflow: hidden;
 }
 
 .dayview .starts-before  {
