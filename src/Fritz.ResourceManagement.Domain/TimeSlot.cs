@@ -16,6 +16,13 @@ namespace Fritz.ResourceManagement.Domain
 
     public ScheduleStatus Status { get; set; }
 
+		public bool Overlaps(TimeSlot ts2)
+		{
+
+			return this.StartDateTime <= ts2.EndDateTime && this.EndDateTime >= ts2.StartDateTime;
+
+		}
+
   }
 
 }

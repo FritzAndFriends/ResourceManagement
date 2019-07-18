@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Fritz.ResourceManagement.Domain;
 using Xunit;
+using Xunit.Sdk;
 using SCHEDULING = Fritz.ResourceManagement.Scheduling;
 
 namespace Test.Scheduling.ScheduleManager.GivenEmployeeSchedules
@@ -12,23 +13,61 @@ namespace Test.Scheduling.ScheduleManager.GivenEmployeeSchedules
 	public class WhenCalculatingTotalAvailability
 	{
 
-		[Fact]
-		public void ThenShouldReportAtTheGrainRequested()
+		// TODO: Convert to a theory with various grains submitted
+		[Theory()]
+		[InlineData(AvailabilityTimeUnit.HalfHour)]
+		[InlineData(AvailabilityTimeUnit.Hour)]
+		[InlineData(AvailabilityTimeUnit.Day)]
+		public void ThenShouldReportAtTheGrainRequested(AvailabilityTimeUnit timeUnit)
 		{
 
 			// arrange
 			var mySchedules = new List<Schedule>();
 			var startDate = new DateTime(2019, 7, 14);
-			var endDate = new DateTime(2019, 7, 21);
-			var startHour = 8;
-			var endHour = 17;
-
-			// assert
-			var results = new SCHEDULING.ScheduleManager().CalculateAvailability(mySchedules, startDate, endDate, startHour, endHour, TimeUnit.Hour);
+			var endDate = new DateTime(2019, 7, 20);
+			byte startHour = 8;
+			byte endHour = 17;
 
 			// act
-			Assert.Equal(56, results.Count());
+			var results = new SCHEDULING.ScheduleManager().CalculateAvailability(mySchedules, startDate, endDate, startHour, endHour, timeUnit);
 
+			// assert
+			Assert.Equal(AvailabilityTimeUnit.Hour, timeUnit);
+			Assert.Equal(63, results.Count());
+
+		}
+
+		[Fact]
+		public void ThenShouldCalculateAvailabilityForEachTimeSlotReturned()
+		{
+
+			// arrange
+			var startDate = new DateTime(2019, 7, 14);
+			var endDate = new DateTime(2019, 7, 15);
+			byte startHour = 8;
+			byte endHour = 17;
+			var mySchedules = new List<Schedule>
+			{
+				new Schedule
+				{
+					ScheduleItems = new ScheduleItem[]
+					{
+						new ScheduleItem
+						{
+							Name = "Available all day",
+							StartDateTime = startDate.Date.AddHours(7),
+							EndDateTime = startDate.AddHours(22),
+							Status = ScheduleStatus.Available
+						}
+					}
+				}
+			};
+
+			// act
+			var results = new SCHEDULING.ScheduleManager().CalculateAvailability(mySchedules, startDate, endDate, startHour, endHour, AvailabilityTimeUnit.Hour);
+
+			// assert
+			Assert.Equal(1, results.First().Count);
 
 		}
 

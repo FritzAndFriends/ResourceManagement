@@ -1,10 +1,10 @@
 ﻿namespace Fritz.ResourceManagement.Domain
 {
-	public enum TimeUnit
+	public enum AvailabilityTimeUnit
 	{
-			HalfHour,
-			Hour,
-			Day
+			HalfHour = 1,
+			Hour = 2,
+			Day = 48
 	}
 
 }

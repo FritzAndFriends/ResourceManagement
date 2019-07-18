@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Fritz.ResourceManagement.Domain;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -30,9 +32,48 @@ namespace Fritz.ResourceManagement.Scheduling
 
 		}
 
-		public IEnumerable<TimeSlotAvailability> CalculateAvailability(List<Schedule> mySchedules, DateTime startDate, DateTime endDate, byte startHour, byte endHour, TimeUnit grain)
+		public IEnumerable<TimeSlotAvailability> CalculateAvailability(List<Schedule> mySchedules, DateTime startDate, DateTime endDate, byte startHour, byte endHour, AvailabilityTimeUnit grain)
 		{
-			return new TimeSlotAvailability[] { };
+
+			var workingTimeSlots = new ConcurrentBag<TimeSlot>();
+
+			var startDateTime = startDate.Date.AddHours(startHour);
+			var endDateTime = endDate.Date;
+
+			Parallel.ForEach(mySchedules, s =>
+			{
+				var theseTimeSlots = ExpandSchedule(s, startDateTime, endDateTime);
+				foreach (var ts in theseTimeSlots)
+				{
+					workingTimeSlots.Add(ts);
+				}
+			});
+
+			var outAvailability = new List<TimeSlotAvailability>();
+			for (var dateCounter = 0; dateCounter <= endDate.Date.Subtract(startDate.Date).Days; dateCounter++)
+			{
+
+				for (var hourCounter = startHour; hourCounter < endHour; hourCounter++)
+				{
+
+					var thisAvailability = new TimeSlotAvailability()
+					{
+						StartDateTime = startDate.Date.AddDays(dateCounter).AddHours(hourCounter),
+						EndDateTime = startDate.Date.AddDays(dateCounter).AddHours(hourCounter + 1),
+						Count = 0
+					};
+
+					// CALCULATE
+					thisAvailability.Count = workingTimeSlots
+						.Count(t => t.Overlaps(thisAvailability) && t.Status == ScheduleStatus.Available);
+
+					outAvailability.Add(thisAvailability);
+				}
+
+			}
+
+
+			return outAvailability;
 		}
 
 		private void ApplyScheduleExceptions(Schedule schedule, DateTime startDate, DateTime endDate, List<TimeSlot> outSchedule)
@@ -44,8 +85,8 @@ namespace Fritz.ResourceManagement.Scheduling
 			foreach (var scheduleException in theExceptions)
 			{
 
-					outSchedule.RemoveAll(t => t.StartDateTime <= scheduleException.EndDateTime &&
-						t.EndDateTime >= scheduleException.StartDateTime);
+				outSchedule.RemoveAll(t => t.StartDateTime <= scheduleException.EndDateTime &&
+					t.EndDateTime >= scheduleException.StartDateTime);
 
 			}
 
