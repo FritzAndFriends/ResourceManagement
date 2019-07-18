@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using FluentAssertions;
 using Fritz.ResourceManagement.Domain;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -45,9 +46,9 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 			var results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 6, 24), new DateTime(2019, 6, 26), testLogger);
 
 			// assert
-			Assert.Equal(2, results.Count());
-			Assert.Equal(0, results.First().StartDateTime.Hour);
-			Assert.Equal(0, results.First().EndDateTime.Hour);
+			results.Should().HaveCount(2);
+			results.First().StartDateTime.Hour.Should().Be(0);
+			results.First().EndDateTime.Hour.Should().Be(0);
 
 		}
 
