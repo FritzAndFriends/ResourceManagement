@@ -55,8 +55,11 @@ namespace Fritz.ResourceManagement.Web
 	  services.AddHttpContextAccessor();
 	  services.AddScoped<ClaimsPrincipal>(context => context.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.User);
 
-
-	  services.AddRazorPages()
+	  services.AddRazorPages(options =>
+	  {
+			options.Conventions.AuthorizePage("/Availability");
+			options.Conventions.AuthorizePage("/ManagerView");
+	  })
 		  .AddNewtonsoftJson();
 	}
 
