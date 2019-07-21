@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CronEspresso" Version="3.0.0" />
+  </ItemGroup>
+
 </Project>
