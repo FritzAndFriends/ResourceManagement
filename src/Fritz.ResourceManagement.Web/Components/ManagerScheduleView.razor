@@ -1,13 +1,9 @@
 <h3>Schedule View</h3>
 @inject Data.ScheduleState MyScheduleState
+@inject IScheduleRepository ScheduleRepository
 
 
 <div id="weekSelector">
-
-	@{ 
-		MyScheduleState.DisplayBeginDate = SelectedDate.Subtract(TimeSpan.FromDays((int)SelectedDate.DayOfWeek));
-		MyScheduleState.DisplayEndDate = MyScheduleState.DisplayBeginDate.AddDays(7);
-	}
 
 	<a href="" onclick="@(() => ChangeDate(-7))">&lt;</a>
 	@MyScheduleState.DisplayBeginDate.ToShortDateString() - @MyScheduleState.DisplayEndDate.AddDays(-1).ToShortDateString()
@@ -23,14 +19,22 @@
 @functions {
 
 	[Parameter]
-	DateTime SelectedDate { get; set; } = DateTime.Today;
+	DateTime SelectedDate {
+		get { return MyScheduleState.SelectedDate; }
+		set { MyScheduleState.SelectDate(value); }
+	}
 
-	protected override Task OnInitAsync()
+	IEnumerable<Schedule> Schedules;
+
+	protected override async Task OnParametersSetAsync()
 	{
 
+		MyScheduleState.DisplayBeginDate = SelectedDate.Subtract(TimeSpan.FromDays((int)SelectedDate.DayOfWeek));
+		MyScheduleState.DisplayEndDate = MyScheduleState.DisplayBeginDate.AddDays(7);
+
+		Schedules = await ScheduleRepository.GetSchedulesAsync(MyScheduleState.DisplayBeginDate, MyScheduleState.DisplayEndDate);
 
 
-		return base.OnInitAsync();
 	}
 
 	void ChangeDate(int daysToChange)

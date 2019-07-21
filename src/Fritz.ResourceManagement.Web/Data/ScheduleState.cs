@@ -13,7 +13,7 @@ namespace Fritz.ResourceManagement.Web.Data
 
 		public Schedule Schedule { get; set; }
 
-		public DateTime SelectedDate { get; private set; }
+		public DateTime SelectedDate { get; private set; } = DateTime.Today;
 
 		public DateTime DisplayBeginDate { get; set; }
 
