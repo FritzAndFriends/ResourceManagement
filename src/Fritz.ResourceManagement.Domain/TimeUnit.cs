@@ -2,9 +2,9 @@
 {
 	public enum AvailabilityTimeUnit
 	{
-			HalfHour = 1,
-			Hour = 2,
-			Day = 48
+			HalfHour = 30,
+			Hour = 60,
+			Day = 1440
 	}
 
 }

@@ -32,8 +32,13 @@ namespace Test.Scheduling.ScheduleManager.GivenEmployeeSchedules
 			var results = new SCHEDULING.ScheduleManager().CalculateAvailability(mySchedules, startDate, endDate, startHour, endHour, timeUnit);
 
 			// assert
-			Assert.Equal(AvailabilityTimeUnit.Hour, timeUnit);
-			Assert.Equal(63, results.Count());
+			var expectedResults = new Dictionary<AvailabilityTimeUnit, int> {
+				{ AvailabilityTimeUnit.HalfHour, 126 },
+				{ AvailabilityTimeUnit.Hour, 63 },
+				{ AvailabilityTimeUnit.Day, 7 }
+			};
+
+			Assert.Equal(expectedResults[timeUnit], results.Count());
 
 		}
 

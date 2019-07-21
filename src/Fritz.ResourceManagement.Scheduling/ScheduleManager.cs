@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Fritz.ResourceManagement.Domain;
 using Microsoft.Extensions.Logging;
@@ -50,16 +51,18 @@ namespace Fritz.ResourceManagement.Scheduling
 			});
 
 			var outAvailability = new List<TimeSlotAvailability>();
+			var timeStep = TimeSpan.FromMinutes((int)grain);
+			if (grain == AvailabilityTimeUnit.Day) timeStep = TimeSpan.FromHours(endHour - startHour);
 			for (var dateCounter = 0; dateCounter <= endDate.Date.Subtract(startDate.Date).Days; dateCounter++)
 			{
 
-				for (var hourCounter = startHour; hourCounter < endHour; hourCounter++)
+				for (var timeCounter = TimeSpan.FromHours(startHour); timeCounter < TimeSpan.FromHours(endHour); timeCounter = timeCounter.Add(timeStep))
 				{
 
 					var thisAvailability = new TimeSlotAvailability()
 					{
-						StartDateTime = startDate.Date.AddDays(dateCounter).AddHours(hourCounter),
-						EndDateTime = startDate.Date.AddDays(dateCounter).AddHours(hourCounter + 1),
+						StartDateTime = startDate.Date.AddDays(dateCounter).Add(timeCounter),
+						EndDateTime = startDate.Date.AddDays(dateCounter).Add(timeCounter).Add(timeStep),
 						Count = 0
 					};
 
