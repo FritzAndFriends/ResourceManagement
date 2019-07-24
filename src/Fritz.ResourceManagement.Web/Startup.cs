@@ -37,13 +37,12 @@ namespace Fritz.ResourceManagement.Web
 			});
 
 			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseNpgsql(
-					Configuration.GetConnectionString("db")));
+				options.UseSqlite("Data Source=resourcemgmt.db"));
 			services.AddDefaultIdentity<MyUser>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
 			services.AddDbContext<Models.MyDbContext>(options =>
-				options.UseNpgsql(Configuration.GetConnectionString("db")));
+				options.UseSqlite("Data Source=resourcemgmt.db"));
 
 			services.AddSignalR();
 			services.AddServerSideBlazor();

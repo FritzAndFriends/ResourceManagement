@@ -15,17 +15,17 @@
 				<div style="display: inline-block" class="form-group">
 					<h4>Scheduled Appointments</h4>
 
-					<input class="form-control" type="text" name="Name" bind="@NewScheduleItem.Name" placeholder="Name of the Appointment" />
-					<input class="form-control" type="datetime" name="StartTime" bind="@NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
-					<input class="form-control" type="datetime" name="EndTime" bind="@NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
-					<button class="btn btn-primary" onclick="@(() => AddNewScheduleItem())">Add New Schedule Item</button>
+					<input class="form-control" type="text" name="Name" @bind="NewScheduleItem.Name" placeholder="Name of the Appointment" />
+					<input class="form-control" type="datetime" name="StartTime" @bind="NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
+					<input class="form-control" type="datetime" name="EndTime" @bind="NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
+					<button class="btn btn-primary" @onclick="() => AddNewScheduleItem()">Add New Schedule Item</button>
 
 				</div>
 
 				<div style="display: inline-block" class="form-group">
 					<h4>Create a Recurring Schedule</h4>
 
-					<RecurrenceDataEntry Schedule="@NewRecurringSchedule" OnSave="@AddNewRecurringSchedule" />
+					<RecurrenceDataEntry Schedule="NewRecurringSchedule" OnSave="AddNewRecurringSchedule" />
 
 				</div>
 
@@ -47,7 +47,7 @@
 	</div>
 
 
-@functions {
+@code {
 
 	// Cheer 500 electrichavoc 07/06/19
 

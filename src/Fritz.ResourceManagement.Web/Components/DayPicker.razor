@@ -2,9 +2,9 @@
 @inject Data.ScheduleState MyScheduleState
 <div class="monthpicker">
 
-	<button id="prevMonth" onclick="@PrevMonth">&lt;</button>
+	<button id="prevMonth" @onclick="PrevMonth">&lt;</button>
 	<div id="name">@SelectedDate.ToString("MMMM yyyy")</div>
-	<button id="nextMonth" onclick="@NextMonth">&gt;</button>
+	<button id="nextMonth" @onclick="NextMonth">&gt;</button>
 
 	<span class="dow">Su</span>
 	<span class="dow">M</span>
@@ -30,15 +30,15 @@
 			"appt" : null;
 		var selected = (thisDay == SelectedDate) ? "active" : null;
 
-		<span class="@today @hasAppt @selected day" title="@todayTitle" onclick="@(() => MyScheduleState.SelectDate(thisDay))">@i</span>
+		<span class="@today @hasAppt @selected day" title="@todayTitle" @onclick="() => MyScheduleState.SelectDate(thisDay)">@i</span>
 	}
 
 </div>
-<button id="gotoToday" onclick="@GotoToday">Today</button>
+<button id="gotoToday" @onclick="GotoToday">Today</button>
 
 <span>Selected Date is: @SelectedDate.ToShortDateString()</span>
 
-@functions {
+@code {
 
 	DateTime SelectedDate {
 		get { return MyScheduleState.SelectedDate; }

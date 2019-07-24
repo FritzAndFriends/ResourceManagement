@@ -1,9 +1,9 @@
 @using Fritz.ResourceManagement.Domain
 
-<input class="form-control" type="text" name="Name" bind="@Schedule.Name" placeholder="Name of the Recurring Appointment" />
-<input class="form-control" type="date" name="StartDate" bind="@Schedule.MinStartDateTime" placeholder="Start Date" />
-<input class="form-control" type="date" name="EndDate" bind="@Schedule.MaxEndDateTime" placeholder="End Date" />
-<input class="form-control" type="time" name="StartTime" bind="@StartTime" placeholder="Start time" />
+<input class="form-control" type="text" name="Name" @bind="Schedule.Name" placeholder="Name of the Recurring Appointment" />
+<input class="form-control" type="date" name="StartDate" @bind="Schedule.MinStartDateTime" placeholder="Start Date" />
+<input class="form-control" type="date" name="EndDate" @bind="Schedule.MaxEndDateTime" placeholder="End Date" />
+<input class="form-control" type="time" name="StartTime" @bind="StartTime" placeholder="Start time" />
 
 <fieldset>
 
@@ -43,10 +43,10 @@
 
 	</fieldset>
 
-<input class="form-control" type="text" name="Duration" bind="@Schedule.DurationText" placeholder="Duration for each recurring item" />
-<button class="btn btn-primary" onclick="@Save">Add New Recurring Schedule</button>
+<input class="form-control" type="text" name="Duration" @bind="Schedule.DurationText" placeholder="Duration for each recurring item" />
+<button class="btn btn-primary" @onclick="Save">Add New Recurring Schedule</button>
 
-@functions {
+@code {
 
 	// Cheer 1000 cpayette 27/06/19 
 

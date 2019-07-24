@@ -5,9 +5,9 @@
 
 <div id="weekSelector">
 
-	<a href="" onclick="@(() => ChangeDate(-7))">&lt;</a>
+	<a href="" @onclick="() => ChangeDate(-7)">&lt;</a>
 	@MyScheduleState.DisplayBeginDate.ToShortDateString() - @MyScheduleState.DisplayEndDate.AddDays(-1).ToShortDateString()
-	<a href="" onclick="@(() => ChangeDate(7))">&gt;</a>
+	<a href="" @onclick="() => ChangeDate(7)">&gt;</a>
 
 </div>
 
@@ -16,7 +16,7 @@
 </div>
 
 
-@functions {
+@code {
 
 	[Parameter]
 	DateTime SelectedDate {
