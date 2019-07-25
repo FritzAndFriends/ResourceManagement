@@ -20,12 +20,16 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0-preview7.19362.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0-preview6-19319-03" />
-		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.0-preview5" />
+		<!--<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.0-ci.20190725.6" />-->
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Fritz.ResourceManagement.Domain\Fritz.ResourceManagement.Domain.csproj" />
     <ProjectReference Include="..\Fritz.ResourceManagement.Scheduling\Fritz.ResourceManagement.Scheduling.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
