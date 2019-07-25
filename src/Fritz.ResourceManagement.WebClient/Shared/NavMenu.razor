@@ -1,0 +1,29 @@
+﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+	<div class="container">
+		<a class="navbar-brand" href="">Fritz.ResourceManagement.Web</a>
+		<button class="navbar-toggler" @onclick="ToggleNavMenu">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+			@** Login *@
+			<ul class="navbar-nav flex-grow-1">
+				<li class="nav-item">
+					<NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+</nav>
+
+
+@code {
+	bool collapseNavMenu = true;
+
+	string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+	void ToggleNavMenu()
+	{
+		collapseNavMenu = !collapseNavMenu;
+	}
+}

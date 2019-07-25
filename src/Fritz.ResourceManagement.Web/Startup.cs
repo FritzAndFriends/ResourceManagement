@@ -15,6 +15,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Rewrite;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 
 namespace Fritz.ResourceManagement.Web
 {
@@ -50,26 +52,41 @@ namespace Fritz.ResourceManagement.Web
 			services.AddScoped<ScheduleState>();
 			services.AddScoped<IScheduleRepository, ScheduleRepository>();
 
-			//cheer ultramark 31/05/2019 100
+			// Cheer 100 ultramark 31/05/2019 
+			// Cheer 400 cpayette 24/07/19 
+			// Cheer 100 pharewings 25/07/19 
 
 			services.AddHttpContextAccessor();
 			services.AddScoped<ClaimsPrincipal>(context => context.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.User);
 
+			services.AddMvc().AddNewtonsoftJson();
 			services.AddRazorPages(options =>
 			{
 				options.Conventions.AuthorizePage("/Availability");
 				options.Conventions.AuthorizePage("/ManagerView");
 			})
 				.AddNewtonsoftJson();
+
+			services.AddResponseCompression(opts =>
+			{
+				opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+						new[] { "application/octet-stream" });
+			});
+
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
+
+			app.UseResponseCompression();
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
 				app.UseDatabaseErrorPage();
+				app.UseBlazorDebugging();
 			}
 			else
 			{
@@ -80,20 +97,23 @@ namespace Fritz.ResourceManagement.Web
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
+			app.UseClientSideBlazorFiles<WebClient.Startup>();
 
 			app.UseCookiePolicy();
 
 			app.UseRouting();
 
+			// TODO: Remove?
 			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{
+				// TODO: Remove?
 				endpoints.MapRazorPages();
 
-				endpoints.MapBlazorHub();
-				endpoints.MapFallbackToPage("/_Host");
+				endpoints.MapDefaultControllerRoute();
+				endpoints.MapFallbackToClientSideBlazor<WebClient.Startup>("index.html");
 
 			});
 		}

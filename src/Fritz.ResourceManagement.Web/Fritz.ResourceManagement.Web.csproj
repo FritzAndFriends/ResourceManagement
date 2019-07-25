@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0-preview7.19365.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Blazor.Server" Version="3.0.0-preview7.19365.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.0.0-preview7.19365.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0-preview7.19365.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.0.0-preview7.19365.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0-preview7.19365.7" />
@@ -26,10 +27,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Fritz.ResourceManagement.Domain\Fritz.ResourceManagement.Domain.csproj" />
     <ProjectReference Include="..\Fritz.ResourceManagement.Scheduling\Fritz.ResourceManagement.Scheduling.csproj" />
+    <ProjectReference Include="..\Fritz.ResourceManagement.WebClient\Fritz.ResourceManagement.WebClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
 </Project>
