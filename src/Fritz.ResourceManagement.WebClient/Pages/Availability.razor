@@ -1,9 +1,7 @@
 @using Fritz.ResourceManagement.Domain
-@using Microsoft.EntityFrameworkCore
-@using Fritz.ResourceManagement.Scheduling
 @inject System.Security.Claims.ClaimsPrincipal CurrentUser
-@inject Models.MyDbContext DbContext
 @inject Data.ScheduleState MyScheduleState
+@inject HttpClient HttpClient
 
 	<div class="row">
 		<div id="Availability" class="col-md-8" style="vertical-align: top; ">
@@ -61,10 +59,10 @@
 	ScheduleItem NewScheduleItem;
 	RecurringSchedule NewRecurringSchedule;
 
-	protected override void OnInit()
+	protected override async Task OnInitAsync()
 	{
 		ResetScheduleItem();
-		MySchedule = GetMyAvailability();
+		MySchedule = await GetMyAvailability();
 
 		MyScheduleState.SelectDate(SelectedDate);
 		MyScheduleState.Schedule = MySchedule;
@@ -73,24 +71,14 @@
 	}
 
 
-	Schedule GetMyAvailability()
+	async Task<Schedule> GetMyAvailability()
 	{
 
-		var personId = CurrentUser.GetPersonId();
-
-		var thisPerson = DbContext
-			.Persons
-			.Include(p => p.Schedule)
-			.ThenInclude(s => s.ScheduleItems)
-			.Include(p => p.Schedule)
-			.ThenInclude(s => s.RecurringSchedules)
-			.First(p => p.Id == personId);
-
-		return thisPerson.Schedule;
+		return await HttpClient.GetJsonAsync<Schedule>($"schedule/{MyScheduleState.ScheduleId}");
 
 	}
 
-	void AddNewScheduleItem()
+	async Task AddNewScheduleItem()
 	{
 
 		// Cheer 200 ultramark 07/06/19
@@ -98,10 +86,9 @@
 
 		NewScheduleItem.Status = ScheduleStatus.NotAvailable;
 		NewScheduleItem.ScheduleId = MySchedule.Id;
-
-		DbContext.Schedules.Update(MySchedule);
 		MySchedule.ScheduleItems.Add(NewScheduleItem);
-		DbContext.SaveChanges();
+
+		await HttpClient.PutJsonAsync($"schedule/{MySchedule.Id}", MySchedule);
 
 		MyScheduleState.ScheduleUpdated();
 
@@ -109,17 +96,16 @@
 
 	}
 
-	void AddNewRecurringSchedule()
+	async Task AddNewRecurringSchedule()
 	{
 
 		// Cheer 2000 organicIT 23/06/19 
 
 		NewRecurringSchedule.Status = ScheduleStatus.NotAvailable;
 		NewRecurringSchedule.ScheduleId = MySchedule.Id;
-
-		DbContext.Schedules.Update(MySchedule);
 		MySchedule.RecurringSchedules.Add(NewRecurringSchedule);
-		DbContext.SaveChanges();
+
+		await HttpClient.PutJsonAsync($"schedule/{MySchedule.Id}", MySchedule);
 
 		MyScheduleState.ScheduleUpdated();
 

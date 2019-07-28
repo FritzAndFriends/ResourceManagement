@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Fritz.ResourceManagement.Domain;
-using Fritz.ResourceManagement.Scheduling;
 
-namespace Fritz.ResourceManagement.Web.Data
+namespace Fritz.ResourceManagement.WebClient.Data
 {
 
 	public class ScheduleState
 	{
 
 		public Schedule Schedule { get; set; }
+
+		public int ScheduleId { get; set; }
 
 		public DateTime SelectedDate { get; private set; } = DateTime.Today;
 
@@ -42,9 +43,13 @@ namespace Fritz.ResourceManagement.Web.Data
 
 		public void ExpandSchedule(DateTime minStartDate, DateTime maxEndDate)
 		{
-			var mgr = new ScheduleManager();
-			TimeSlots.Clear();
-			TimeSlots.AddRange(mgr.ExpandSchedule(Schedule, minStartDate, maxEndDate));
+
+			throw new NotImplementedException();
+
+			// TODO: Move to server controller
+			//var mgr = new ScheduleManager();
+			//TimeSlots.Clear();
+			//TimeSlots.AddRange(mgr.ExpandSchedule(Schedule, minStartDate, maxEndDate));
 		}
 
 		public event EventHandler<SelectedDateChangedArgs> OnSelectedDateChanged;

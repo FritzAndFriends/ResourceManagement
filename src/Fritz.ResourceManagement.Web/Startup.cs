@@ -49,9 +49,6 @@ namespace Fritz.ResourceManagement.Web
 			services.AddSignalR();
 			services.AddServerSideBlazor();
 
-			services.AddScoped<ScheduleState>();
-			services.AddScoped<IScheduleRepository, ScheduleRepository>();
-
 			// Cheer 100 ultramark 31/05/2019 
 			// Cheer 400 cpayette 24/07/19 
 			// Cheer 100 pharewings 25/07/19 

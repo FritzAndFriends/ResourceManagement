@@ -1,6 +1,6 @@
 <h3>Schedule View</h3>
 @inject Data.ScheduleState MyScheduleState
-@inject IScheduleRepository ScheduleRepository
+@inject HttpClient  HttpClient
 
 
 <div id="weekSelector">
@@ -32,8 +32,7 @@
 		MyScheduleState.DisplayBeginDate = SelectedDate.Subtract(TimeSpan.FromDays((int)SelectedDate.DayOfWeek));
 		MyScheduleState.DisplayEndDate = MyScheduleState.DisplayBeginDate.AddDays(7);
 
-		Schedules = await ScheduleRepository.GetSchedulesAsync(MyScheduleState.DisplayBeginDate, MyScheduleState.DisplayEndDate);
-
+		Schedules = await HttpClient.GetJsonAsync<Schedule[]>($"schedule/forrange/{MyScheduleState.DisplayBeginDate.ToShortDateString()}/{MyScheduleState.DisplayEndDate.ToShortDateString()}");
 
 	}
 
