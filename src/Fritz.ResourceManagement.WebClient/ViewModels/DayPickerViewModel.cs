@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Fritz.ResourceManagement.Domain;
 using Fritz.ResourceManagement.WebClient.Data;
 
@@ -28,6 +29,21 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			}
 		}
 		
+		public DayOfMonthDisplayInfo DisplayDayOfMonth(int dayOfMonth)
+		{
+			var thisDay = new DateTime(this.SelectedDate.Year, this.SelectedDate.Month, dayOfMonth);
+			var today = (thisDay.Date == DateTime.Today.Date) ? "today" : null;
+
+			return new DayOfMonthDisplayInfo()
+			{
+				ThisDay = thisDay,
+				Today = today,
+				HasAppointment = this.MyScheduleState.TimeSlots.Any(x => x.StartDateTime.Date == thisDay.Date) ? "appt" : null,
+				IsSelected = (thisDay == this.SelectedDate) ? "active" : null,
+				Title = (string.IsNullOrEmpty(today)) ? null : "Today!"
+			};
+		}
+		
 		public ScheduleState MyScheduleState { get; private set; }
 
 		// TODO: Simon G - I think this was dead code from the razor code block and can probably be removed.
@@ -55,6 +71,15 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		{
 			this.SelectedDate = this.SelectedDate.AddMonths(1);
 			this.SelectedDate = new DateTime(this.SelectedDate.Year, this.SelectedDate.Month, 1);
+		}
+
+		public struct DayOfMonthDisplayInfo
+		{
+			public DateTime ThisDay;
+			public string Today;
+			public string HasAppointment;
+			public string IsSelected;
+			public string Title;
 		}
 	}
 }
