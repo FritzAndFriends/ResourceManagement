@@ -15,6 +15,9 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		public RecurringSchedule NewRecurringSchedule { get; private set; }
 		public ScheduleState MyScheduleState { get; private set; }
 
+		public DateTime DayViewStart => DateTime.Today.AddHours(8);
+		public DateTime DayViewEnd => DateTime.Today.AddHours(20);
+
 		private Schedule MySchedule { get; set; } = null;
 		private DateTime SelectedDate { get; set; } = DateTime.Today;
 
