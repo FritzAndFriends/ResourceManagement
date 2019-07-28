@@ -1,103 +1,81 @@
-﻿@using Fritz.ResourceManagement.Domain
+﻿@inject ViewModels.DayViewViewModel Model
 
-@{ 
+<div class="dayview" style="grid-template-columns: 4.3em repeat(@Model.DayCount,1fr); grid-template-rows: repeat(@Model.HoursPerDay, 1.5em);">
+	@{
 
-	var currentTime = DayViewStart;
-	var hoursPerDay = DayViewEnd.Subtract(DayViewStart).Hours;
-
-}
-
-	<div class="dayview" style="grid-template-columns: 4.3em repeat(@DayCount,1fr); grid-template-rows: repeat(@hoursPerDay, 1.5em);">
-		@{
-
-			if (DayDisplay)
-			{
-				<span class="grid" style="grid-column: 1;"></span>
-				for (int columnCounter = 2; columnCounter < 2 + DayCount; columnCounter++)
-				{
-				<span class="grid" style="grid-column: @columnCounter; text-align: center;">
-					@MyScheduleState.DisplayBeginDate.AddDays(columnCounter-2).ToString("ddd MMM d")
-				</span>
-				}
-			}
-
-			for (var i = 0; i < hoursPerDay; i++)
-			{
-				<span class="grid" style="grid-column: 1;">
-					<text>@currentTime.ToString("h:mm tt")</text>
-					@{ currentTime = currentTime.AddHours(1); }
-				</span>
-
-				for (int columnCounter = 2; columnCounter < 2 + DayCount; columnCounter++)
-				{
-					<span class="grid" style="grid-column: @columnCounter"></span>
-				}
-
-			}
-		}
-
-		@if (MyScheduleState != null)
+		if (Model.DayDisplay)
 		{
-			foreach (var item in MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == SelectedDate.Date))
+			<span class="grid" style="grid-column: 1;"></span>
+			for (int columnCounter = 2; columnCounter < 2 + Model.DayCount; columnCounter++)
 			{
-				if (DisplayItem(item.StartDateTime, item.EndDateTime))
-				{
-					<span class="scheduleItem @ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @ItemStartRow(item.StartDateTime); top: @ItemTopPosition(item.StartDateTime); height: @ItemRowHeight(item.StartDateTime, item.EndDateTime);">
-						@item.Name  - @item.StartDateTime.ToShortTimeString()
-					</span>
-				}
+				<span class="grid" style="grid-column: @columnCounter; text-align: center;">
+					@Model.MyScheduleState.DisplayBeginDate.AddDays(columnCounter - 2).ToString("ddd MMM d")
+				</span>
 			}
 		}
 
-	</div>
+		var currentTime = Model.DayViewStart;
+
+		for (var i = 0; i < Model.HoursPerDay; i++)
+		{
+			<span class="grid" style="grid-column: 1;">
+				<text>@currentTime.ToString("h:mm tt")</text>
+				@{ currentTime = currentTime.AddHours(1); }
+			</span>
+
+			for (int columnCounter = 2; columnCounter < 2 + Model.DayCount; columnCounter++)
+			{
+				<span class="grid" style="grid-column: @columnCounter"></span>
+			}
+		}
+	}
+
+	@if (Model.MyScheduleState != null)
+	{
+		foreach (var item in Model.MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == Model.SelectedDate.Date))
+		{
+			if (Model.DisplayItem(item.StartDateTime, item.EndDateTime))
+			{
+				<span class="scheduleItem @Model.ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @Model.ItemStartRow(item.StartDateTime); top: @Model.ItemTopPosition(item.StartDateTime); height: @Model.ItemRowHeight(item.StartDateTime, item.EndDateTime);">
+					@item.Name  - @item.StartDateTime.ToShortTimeString()
+				</span>
+			}
+		}
+	}
+
+</div>
 
 @code {
 
-	DateTime SelectedDate
-	{
-		get { return MyScheduleState?.SelectedDate ?? DateTime.Today; }
-	}
+	// TODO: Simon G - Work out if it is possible to make the Model a property with a Parameter attribute and pass the whole thing in from the parent rather than using DI, there may be a timing DI vs Paramater state being set, which might be offset by component composition.
 
-	Schedule MySchedule
-	{
-		get { return MyScheduleState.Schedule; }
-	}
-
-	// Cheer 701 themichaeljolley 09/07/19 
-	// Cheer 600 cpayette 09/07/19 
-	// Cheer 1500 clintonrocksmith 09/07/19 
+	// Cheer 701 themichaeljolley 09/07/19
+	// Cheer 600 cpayette 09/07/19
+	// Cheer 1500 clintonrocksmith 09/07/19
 
 	[Parameter]
-	Data.ScheduleState MyScheduleState { get; set; }
+	Data.ScheduleState MyScheduleState => Model.MyScheduleState;
 
 	[Parameter]
-	DateTime DayViewStart { get; set; } = DateTime.Today.AddHours(8);
+	DateTime DayViewStart => Model.DayViewStart;
 
 	[Parameter]
-	DateTime DayViewEnd { get; set; } = DateTime.Today.AddHours(20);
+	DateTime DayViewEnd => Model.DayViewEnd;
 
-	// Cheer 110 copperbeardy 14/07/19 
+	// Cheer 110 copperbeardy 14/07/19
 
 	[Parameter]
-	int DayCount { get; set; } = 1;
+	int DayCount => Model.DayCount;
 
-	/// <summary>
-	/// Should we display the dates above the grid
-	/// </summary>
 	[Parameter]
-	bool DayDisplay { get; set; } = false;
+	bool DayDisplay => Model.DayDisplay;
 
 	protected override void OnInit()
 	{
-
-		if (MyScheduleState != null)
+		if (Model.MyScheduleState != null)
 		{
-			MyScheduleState.OnSelectedDateChanged += (o, args) =>
-			{
-				Invoke(StateHasChanged);
-			};
+			Model.MyScheduleState.OnSelectedDateChanged += (o, args) => { Invoke(StateHasChanged); };
 		}
-
 		base.OnInit();
 	}
 
@@ -105,99 +83,5 @@
 	{
 		this.StateHasChanged();
 		base.OnParametersSet();
-	}
-
-	bool DisplayItem(DateTime start, DateTime end)
-	{
-
-		var startDayView = SelectedDate.Date.Add(DayViewStart.TimeOfDay);
-		var endDayView = SelectedDate.Date.Add(DayViewEnd.TimeOfDay);
-
-		if (start >= endDayView || end <= startDayView) { return false; }
-		return true;
-	}
-
-	string ItemBorderStyle(DateTime start, DateTime end)
-	{
-		string top = "starts-before";
-		string bottom = "ends-after";
-
-		var startDayView = SelectedDate.Date.Add(DayViewStart.TimeOfDay);
-		var endDayView = SelectedDate.Date.Add(DayViewEnd.TimeOfDay);
-
-		return String.Format("{0} {1}",
-			(start < startDayView) ? top : "",
-			(end > endDayView) ? bottom : "");
-	}
-
-	int ItemStartRow(DateTime start)
-	{
-		if (start.Hour <= DayViewStart.Hour)
-		{
-			return 1;
-		}
-
-		return (start.Hour - DayViewStart.Hour) + 1;
-	}
-
-	string ItemTopPosition(DateTime start)
-	{
-		double top = 0D;
-		var startDayView = SelectedDate.Date.Add(DayViewStart.TimeOfDay);
-
-		if (start < startDayView)
-		{
-			return "-0.050em";
-		}
-
-		if (start > startDayView && start.Minute > 0)
-		{
-			top = 0.025 * start.Minute;
-		}
-		return (top > 0) ? $"{top}em" : "0";
-	}
-
-	string ItemRowHeight(DateTime start, DateTime end)
-	{
-		double height = 0D;
-		double totalMinutes;
-
-		TimeSpan startTime;
-		TimeSpan endTime;
-		if (start.TimeOfDay < DayViewStart.TimeOfDay)
-		{
-			startTime = DayViewStart.TimeOfDay;
-		} else if (start.Date < SelectedDate)
-		{
-			startTime = DayViewStart.TimeOfDay;
-		} else
-		{
-			startTime = start.TimeOfDay;
-		}
-
-		if (end.TimeOfDay >= DayViewEnd.TimeOfDay)
-		{
-			endTime = DayViewEnd.TimeOfDay;
-		} else if (end.Date > SelectedDate)
-		{
-			endTime = DayViewEnd.TimeOfDay;
-		} else
-		{
-			endTime = end.TimeOfDay;
-		}
-
-		if (start.TimeOfDay < DayViewStart.TimeOfDay)
-		{
-			height += 0.050; // Add 2 extra minutes for negative top position from ItemTopPosition
-		}
-
-		totalMinutes = endTime.Subtract(startTime).TotalMinutes;
-		height += 0.025 * totalMinutes; // 1 minute = 1.25em / 60 = 0.025em
-
-		/* Adjust for row gaps, 1px = 0.063em at base 16px size 
-		 * according to http://pxtoem.com/ */
-		height += 0.063 * (endTime.Subtract(startTime).TotalHours);
-
-		return (height > 0) ? $"{height}em" : "0";
 	}
 }
