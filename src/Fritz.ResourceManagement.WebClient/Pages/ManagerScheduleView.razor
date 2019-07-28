@@ -1,0 +1,44 @@
+<h3>Schedule View</h3>
+@inject Data.ScheduleState MyScheduleState
+@inject HttpClient  HttpClient
+
+
+<div id="weekSelector">
+
+	<a href="" @onclick="() => ChangeDate(-7)">&lt;</a>
+	@MyScheduleState.DisplayBeginDate.ToShortDateString() - @MyScheduleState.DisplayEndDate.AddDays(-1).ToShortDateString()
+	<a href="" @onclick="() => ChangeDate(7)">&gt;</a>
+
+</div>
+
+<div id="MyScheduleContainer">
+	<DayView DayCount="7" DayDisplay="true" MyScheduleState="MyScheduleState"></DayView>
+</div>
+
+
+@code {
+
+	[Parameter]
+	DateTime SelectedDate {
+		get { return MyScheduleState.SelectedDate; }
+		set { MyScheduleState.SelectDate(value); }
+	}
+
+	IEnumerable<Schedule> Schedules;
+
+	protected override async Task OnParametersSetAsync()
+	{
+
+		MyScheduleState.DisplayBeginDate = SelectedDate.Subtract(TimeSpan.FromDays((int)SelectedDate.DayOfWeek));
+		MyScheduleState.DisplayEndDate = MyScheduleState.DisplayBeginDate.AddDays(7);
+
+		Schedules = await HttpClient.GetJsonAsync<Schedule[]>($"schedule/forrange/{MyScheduleState.DisplayBeginDate.ToShortDateString()}/{MyScheduleState.DisplayEndDate.ToShortDateString()}");
+
+	}
+
+	void ChangeDate(int daysToChange)
+	{
+		SelectedDate = SelectedDate.AddDays(daysToChange);
+	}
+
+}

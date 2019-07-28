@@ -1,0 +1,135 @@
+@using Fritz.ResourceManagement.Domain
+@inject System.Security.Claims.ClaimsPrincipal CurrentUser
+@inject Data.ScheduleState MyScheduleState
+@inject HttpClient HttpClient
+
+	<div class="row">
+		<div id="Availability" class="col-md-8" style="vertical-align: top; ">
+
+			<h3>Set the availability for @CurrentUser.Identity.Name</h3>
+
+			<div>
+
+				<div style="display: inline-block" class="form-group">
+					<h4>Scheduled Appointments</h4>
+
+					<input class="form-control" type="text" name="Name" @bind="NewScheduleItem.Name" placeholder="Name of the Appointment" />
+					<input class="form-control" type="datetime" name="StartTime" @bind="NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
+					<input class="form-control" type="datetime" name="EndTime" @bind="NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
+					<button class="btn btn-primary" @onclick="() => AddNewScheduleItem()">Add New Schedule Item</button>
+
+				</div>
+
+				<div style="display: inline-block" class="form-group">
+					<h4>Create a Recurring Schedule</h4>
+
+					<RecurrenceDataEntry Schedule="NewRecurringSchedule" OnSave="AddNewRecurringSchedule" />
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<div id="MySchedule" class="col-md-4">
+			<h3>My Schedule</h3>
+
+			<DayPicker />
+
+			<DayView DayViewStart="DateTime.Today.AddHours(8)" 
+							 DayViewEnd="DateTime.Today.AddHours(20)"
+							 MyScheduleState="MyScheduleState"/>
+
+		</div>
+
+	</div>
+
+
+@code {
+
+	// Cheer 500 electrichavoc 07/06/19
+
+	Schedule MySchedule { get; set; } = null;
+
+	DateTime SelectedDate { get; set; } = DateTime.Today;
+
+	DateTime ThisMonth { get { return new DateTime(SelectedDate.Year, SelectedDate.Month, 1); } }
+
+
+	ScheduleItem NewScheduleItem;
+	RecurringSchedule NewRecurringSchedule;
+
+	protected override async Task OnInitAsync()
+	{
+		ResetScheduleItem();
+		MySchedule = await GetMyAvailability();
+
+		MyScheduleState.SelectDate(SelectedDate);
+		MyScheduleState.Schedule = MySchedule;
+		MyScheduleState.ExpandSchedule();
+
+	}
+
+
+	async Task<Schedule> GetMyAvailability()
+	{
+
+		return await HttpClient.GetJsonAsync<Schedule>($"schedule/{MyScheduleState.ScheduleId}");
+
+	}
+
+	async Task AddNewScheduleItem()
+	{
+
+		// Cheer 200 ultramark 07/06/19
+		// Cheer 100 TheMichaelJolley 07/06/19
+
+		NewScheduleItem.Status = ScheduleStatus.NotAvailable;
+		NewScheduleItem.ScheduleId = MySchedule.Id;
+		MySchedule.ScheduleItems.Add(NewScheduleItem);
+
+		await HttpClient.PutJsonAsync($"schedule/{MySchedule.Id}", MySchedule);
+
+		MyScheduleState.ScheduleUpdated();
+
+		ResetScheduleItem();
+
+	}
+
+	async Task AddNewRecurringSchedule()
+	{
+
+		// Cheer 2000 organicIT 23/06/19 
+
+		NewRecurringSchedule.Status = ScheduleStatus.NotAvailable;
+		NewRecurringSchedule.ScheduleId = MySchedule.Id;
+		MySchedule.RecurringSchedules.Add(NewRecurringSchedule);
+
+		await HttpClient.PutJsonAsync($"schedule/{MySchedule.Id}", MySchedule);
+
+		MyScheduleState.ScheduleUpdated();
+
+		ResetScheduleItem();
+
+	}
+
+	void ResetScheduleItem()
+	{
+
+		NewScheduleItem = new ScheduleItem();
+		NewScheduleItem.StartDateTime = DateTime.Today;
+		NewScheduleItem.EndDateTime = DateTime.Today.AddDays(1);
+
+		NewRecurringSchedule = new RecurringSchedule();
+		NewRecurringSchedule.MinStartDateTime = DateTime.Today;
+		NewRecurringSchedule.MaxEndDateTime = DateTime.Today.AddDays(7);
+
+
+	}
+
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+	}
+
+}
