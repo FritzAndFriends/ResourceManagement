@@ -8,6 +8,7 @@ namespace Fritz.ResourceManagement.WebClient
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddTransient<ViewModels.AvailabilityViewModel>();
+			services.AddTransient<ViewModels.DayPickerViewModel>();
 		}
 
 		public void Configure(IComponentsApplicationBuilder app)
