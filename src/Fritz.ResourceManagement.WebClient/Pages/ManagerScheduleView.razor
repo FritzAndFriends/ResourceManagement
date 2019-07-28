@@ -20,5 +20,5 @@
 	[Parameter]
 	DateTime SelectedDate => Model.SelectedDate;
 
-	protected override async Task OnParametersSetAsync() => await this.Model.InitializeAsync();
+	protected override async Task OnParametersSetAsync() => await this.Model.OnParametersSetAsync();
 }

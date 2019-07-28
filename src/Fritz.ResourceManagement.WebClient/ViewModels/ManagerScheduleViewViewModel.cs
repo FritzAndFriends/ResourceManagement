@@ -31,7 +31,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			this.SelectedDate = this.SelectedDate.AddDays(daysToChange);
 		}
 
-		public async Task InitializeAsync()
+		public async Task OnParametersSetAsync()
 		{
 			this.MyScheduleState.DisplayBeginDate = this.SelectedDate.Subtract(TimeSpan.FromDays((int)this.SelectedDate.DayOfWeek));
 			this.MyScheduleState.DisplayEndDate = this.MyScheduleState.DisplayBeginDate.AddDays(7);
