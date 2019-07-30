@@ -1,29 +1,50 @@
-﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+﻿<BSNavbar IsDark="false" Color="Color.Light" Class="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
 	<div class="container">
-		<a class="navbar-brand" href="">Fritz.ResourceManagement.Web</a>
-		<button class="navbar-toggler" @onclick="ToggleNavMenu">
+		<BSNavbarBrand Href="#">Fritz.ResourceManagement.Web</BSNavbarBrand>
+		<BSNavbarToggler onclick="onclick" />
+		<BSCollapse isOpen="@IsOpen" IsNavbar="true">
+			<BSNav IsList="true" Class="mr-auto" IsNavbar="true">
+				<BSNavItem>
+					<BSNavLink IsActive="true" Href="#">Home</BSNavLink>
+				</BSNavItem>
+			</BSNav>
+		</BSCollapse>
+	</div>
+</BSNavbar>
+
+@*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+	<div class="container">
+		<a class="navbar-brand" href="">fritz.resourcemanagement.web</a>
+		<button class="navbar-toggler" @onclick="togglenavmenu">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-			@** Login *@
+			* login 
 			<ul class="navbar-nav flex-grow-1">
 				<li class="nav-item">
-					<NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+					<navlink class="nav-link text-dark" href="" match="navlinkmatch.all">home</navlink>
 				</li>
 			</ul>
 		</div>
 
 	</div>
-</nav>
+</nav>*@
 
 
 @code {
-	bool collapseNavMenu = true;
+	//bool collapseNavMenu = true;
 
-	string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+	//string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-	void ToggleNavMenu()
+	//void ToggleNavMenu()
+	//{
+	//	collapseNavMenu = !collapseNavMenu;
+	//}
+
+	bool IsOpen { get; set; } = false;
+	void onclick(UIMouseEventArgs e)
 	{
-		collapseNavMenu = !collapseNavMenu;
+		IsOpen = !IsOpen;
+		StateHasChanged();
 	}
 }
