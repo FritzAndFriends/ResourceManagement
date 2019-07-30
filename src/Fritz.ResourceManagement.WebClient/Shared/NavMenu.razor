@@ -1,17 +1,15 @@
-﻿@inject ViewModels.NavMenuViewModel Model
+@inject ViewModels.NavMenuViewModel Model
 
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+<BSNavbar IsDark="false" Color="Color.Light" Class="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
 	<div class="container">
-		<a class="navbar-brand" href="">Fritz.ResourceManagement.Web</a>
-		<button class="navbar-toggler" @onclick="Model.ToggleNavMenu">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-			<ul class="navbar-nav flex-grow-1">
-				<li class="nav-item">
-					<NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
-				</li>
-			</ul>
-		</div>
+		<BSNavbarBrand Href="#">Fritz.ResourceManagement.Web</BSNavbarBrand>
+		<BSNavbarToggler onclick="Model.ToggleNavMenu" />
+		<BSCollapse isOpen="@IsOpen" IsNavbar="true">
+			<BSNav IsList="true" Class="mr-auto" IsNavbar="true">
+				<BSNavItem>
+					<BSNavLink IsActive="true" Href="#">Home</BSNavLink>
+				</BSNavItem>
+			</BSNav>
+		</BSCollapse>
 	</div>
-</nav>
+</BSNavbar>
