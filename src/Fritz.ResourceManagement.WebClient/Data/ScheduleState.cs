@@ -44,7 +44,9 @@ namespace Fritz.ResourceManagement.WebClient.Data
 		public void ExpandSchedule(DateTime minStartDate, DateTime maxEndDate)
 		{
 
+#if DEBUG
 			throw new NotImplementedException();
+#endif
 
 			// TODO: Move to server controller
 			//var mgr = new ScheduleManager();
