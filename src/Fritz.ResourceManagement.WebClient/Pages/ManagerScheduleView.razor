@@ -1,44 +1,24 @@
 <h3>Schedule View</h3>
-@inject Data.ScheduleState MyScheduleState
-@inject HttpClient  HttpClient
-
+@inject ViewModels.ManagerScheduleViewViewModel Model
 
 <div id="weekSelector">
-
-	<a href="" @onclick="() => ChangeDate(-7)">&lt;</a>
-	@MyScheduleState.DisplayBeginDate.ToShortDateString() - @MyScheduleState.DisplayEndDate.AddDays(-1).ToShortDateString()
-	<a href="" @onclick="() => ChangeDate(7)">&gt;</a>
+	@{ 
+		// TODO: Simon G - Do we really need the onclick="() => Model.ChangeDate(-7)" syntax ? Would this not work as onclick="Model.ChangeDate(-7)"?
+	}
+	<a href="" @onclick="() => Model.OnChangeDate(-7)">&lt;</a>
+	@Model.MyScheduleState.DisplayBeginDate.ToShortDateString() - @Model.MyScheduleState.DisplayEndDate.AddDays(-1).ToShortDateString()
+	<a href="" @onclick="() => Model.OnChangeDate(7)">&gt;</a>
 
 </div>
 
 <div id="MyScheduleContainer">
-	<DayView DayCount="7" DayDisplay="true" MyScheduleState="MyScheduleState"></DayView>
+	<DayView DayCount="7" DayDisplay="true" MyScheduleState="Model.MyScheduleState"></DayView>
 </div>
-
 
 @code {
 
 	[Parameter]
-	DateTime SelectedDate {
-		get { return MyScheduleState.SelectedDate; }
-		set { MyScheduleState.SelectDate(value); }
-	}
+	DateTime SelectedDate => Model.SelectedDate;
 
-	IEnumerable<Schedule> Schedules;
-
-	protected override async Task OnParametersSetAsync()
-	{
-
-		MyScheduleState.DisplayBeginDate = SelectedDate.Subtract(TimeSpan.FromDays((int)SelectedDate.DayOfWeek));
-		MyScheduleState.DisplayEndDate = MyScheduleState.DisplayBeginDate.AddDays(7);
-
-		Schedules = await HttpClient.GetJsonAsync<Schedule[]>($"schedule/forrange/{MyScheduleState.DisplayBeginDate.ToShortDateString()}/{MyScheduleState.DisplayEndDate.ToShortDateString()}");
-
-	}
-
-	void ChangeDate(int daysToChange)
-	{
-		SelectedDate = SelectedDate.AddDays(daysToChange);
-	}
-
+	protected override async Task OnParametersSetAsync() => await this.Model.OnParametersSetAsync();
 }
