@@ -13,6 +13,7 @@ namespace Fritz.ResourceManagement.Web.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize]
 	public class ScheduleController : ControllerBase
 	{
 		private readonly MyDbContext _DbContext;

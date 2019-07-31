@@ -11,5 +11,16 @@ namespace Fritz.ResourceManagement.Domain
 
     public string Name { get; set; }
 
-  }
+		public int ScheduleId { get; set; }
+
+		public static class Claims
+		{
+
+			public const string PERSONID = "personid";
+
+			public const string SCHEDULEID = "scheduleid";
+
+		}
+
+	}
 }

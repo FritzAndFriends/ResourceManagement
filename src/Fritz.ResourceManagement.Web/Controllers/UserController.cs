@@ -1,6 +1,8 @@
 ﻿using Fritz.ResourceManagement.Domain;
+using Fritz.ResourceManagement.Web.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic.ApplicationServices;
 using System;
@@ -16,12 +18,29 @@ namespace Fritz.ResourceManagement.Web.Controllers
   {
 
     private static readonly UserInfo _LoggedOutUser = new UserInfo { IsAuthenticated = false };
+		private readonly UserManager<MyUser> _UserManager;
+
+		public UserController(UserManager<MyUser> userManager)
+		{
+			_UserManager = userManager;
+		}
 
     [HttpGet("user")]
-    public UserInfo GetUser()
+    public async Task<UserInfo> GetUserAsync()
     {
-      return User.Identity.IsAuthenticated
-          ? new UserInfo { Name = User.Identity.Name, IsAuthenticated = true }
+
+			// Cheer 1500 clintonrocksmith 30/07/19 
+
+			// TODO: Fetch the schedule id appropriately
+			var theUser = await _UserManager.GetUserAsync(User);
+
+
+			return User.Identity.IsAuthenticated
+					? new UserInfo { 
+						Name = User.Identity.Name, 
+						IsAuthenticated = true, 
+						ScheduleId = theUser.ScheduleId.Value 
+					}
           : _LoggedOutUser;
     }
 
@@ -33,11 +52,12 @@ namespace Fritz.ResourceManagement.Web.Controllers
         redirectUri = "/";
       }
 
-			// TODO: Challenge appropriately for our authentication scheme
-      //await HttpContext.ChallengeAsync(
-      //    TwitterDefaults.AuthenticationScheme,
-      //    new AuthenticationProperties { RedirectUri = redirectUri });
-    }
+			// Cheer 700 cpayette 31/07/19 
+
+			await HttpContext.ChallengeAsync(
+					new AuthenticationProperties { RedirectUri = redirectUri });
+
+		}
 
     [HttpGet("user/signout")]
     public async Task<IActionResult> SignOut()

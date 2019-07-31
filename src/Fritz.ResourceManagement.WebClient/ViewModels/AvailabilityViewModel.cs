@@ -25,6 +25,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		private DateTime ThisMonth { get { return new DateTime(SelectedDate.Year, SelectedDate.Month, 1); } }
 		
 		private readonly HttpClient httpClient;
+		private ClaimsPrincipal _User;
 
 		public AvailabilityViewModel(
 			//ClaimsPrincipal currentUser, 
@@ -35,12 +36,15 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 			// TODO: Remove mocked schedulestate
 			//this.MyScheduleState = myScheduleState;
-			this.MyScheduleState = new ScheduleState { ScheduleId = 1 };
 			this.httpClient = httpClient;
 		}
 
-		public async Task OnInitAsync()
+		public async Task OnInitAsync(ClaimsPrincipal user)
 		{
+
+			_User = user;
+			this.MyScheduleState = new ScheduleState { ScheduleId = _User.GetClaimValueAsInt(UserInfo.Claims.SCHEDULEID).Value };
+
 			this.ResetScheduleItem();
 			this.MySchedule = await GetMyAvailability();
 
