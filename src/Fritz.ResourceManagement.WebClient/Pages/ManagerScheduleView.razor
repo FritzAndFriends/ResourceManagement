@@ -1,5 +1,7 @@
-<h3>Schedule View</h3>
+@page "/manager"
 @inject ViewModels.ManagerScheduleViewViewModel Model
+
+<h3>Schedule View</h3>
 
 <div id="weekSelector">
 	@{ 
@@ -18,7 +20,11 @@
 @code {
 
 	[Parameter]
-	DateTime SelectedDate => Model.SelectedDate;
+	DateTime SelectedDate
+	{
+		get { return Model.SelectedDate; }
+		set { Model.SelectedDate = value; }
+	}
 
 	protected override async Task OnParametersSetAsync() => await this.Model.OnParametersSetAsync();
 }

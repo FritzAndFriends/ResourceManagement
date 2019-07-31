@@ -7,6 +7,9 @@ namespace Fritz.ResourceManagement.WebClient
 	{
 		public void ConfigureServices(IServiceCollection services)
 		{
+
+			services.AddScoped<Data.ScheduleState>();
+
 			services.AddViewModels();
 		}
 

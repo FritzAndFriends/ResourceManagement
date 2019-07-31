@@ -49,11 +49,18 @@
 
 @code {
 
-	// Cheer 1000 cpayette 27/06/19 
+		// Cheer 1000 cpayette 27/06/19 
 
 	[Parameter]
-	RecurringSchedule Schedule => Model.Schedule;
+	RecurringSchedule Schedule {
+		get { return Model.Schedule; }
+		set { Model.Schedule = value; }
+	}
 
 	[Parameter]
-	EventCallback OnSave => Model.OnSave;
+	EventCallback OnSave {
+		get { return Model.OnSave; }
+		set { Model.OnSave = value; }
+	}
+
 }

@@ -36,7 +36,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			this.MyScheduleState.DisplayBeginDate = this.SelectedDate.Subtract(TimeSpan.FromDays((int)this.SelectedDate.DayOfWeek));
 			this.MyScheduleState.DisplayEndDate = this.MyScheduleState.DisplayBeginDate.AddDays(7);
 
-			this.Schedules = await HttpClient.GetJsonAsync<Schedule[]>($"schedule/forrange/{this.MyScheduleState.DisplayBeginDate.ToShortDateString()}/{this.MyScheduleState.DisplayEndDate.ToShortDateString()}");
+			//this.Schedules = await HttpClient.GetJsonAsync<Schedule[]>($"api/schedule/forrange/{this.MyScheduleState.DisplayBeginDate.ToShortDateString()}/{this.MyScheduleState.DisplayEndDate.ToShortDateString()}");
 		}
 	}
 }

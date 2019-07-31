@@ -10,10 +10,10 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 {
 	public class AvailabilityViewModel
 	{
-		public ClaimsPrincipal CurrentUser { get; private set; }
-		public ScheduleItem NewScheduleItem { get; private set; }
-		public RecurringSchedule NewRecurringSchedule { get; private set; }
-		public ScheduleState MyScheduleState { get; private set; }
+		public object CurrentUser { get; set; }
+		public ScheduleItem NewScheduleItem { get; set; } = new ScheduleItem() { };
+		public RecurringSchedule NewRecurringSchedule { get; set; }
+		public ScheduleState MyScheduleState { get; set; }
 
 		public DateTime DayViewStart => DateTime.Today.AddHours(8);
 		public DateTime DayViewEnd => DateTime.Today.AddHours(20);
@@ -27,12 +27,15 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		private readonly HttpClient httpClient;
 
 		public AvailabilityViewModel(
-			ClaimsPrincipal currentUser, 
+			//ClaimsPrincipal currentUser, 
 			ScheduleState myScheduleState,
 			HttpClient httpClient)
 		{
-			this.CurrentUser = currentUser;
-			this.MyScheduleState = myScheduleState;
+			//this.CurrentUser = currentUser;
+
+			// TODO: Remove mocked schedulestate
+			//this.MyScheduleState = myScheduleState;
+			this.MyScheduleState = new ScheduleState { ScheduleId = 1 };
 			this.httpClient = httpClient;
 		}
 
@@ -54,7 +57,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			this.NewRecurringSchedule.ScheduleId = MySchedule.Id;
 			this.MySchedule.RecurringSchedules.Add(NewRecurringSchedule);
 
-			await this.httpClient.PutJsonAsync($"schedule/{MySchedule.Id}", MySchedule);
+			await this.httpClient.PutJsonAsync($"api/schedule/{MySchedule.Id}", MySchedule);
 
 			this.MyScheduleState.ScheduleUpdated();
 
@@ -63,7 +66,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 		private async Task<Schedule> GetMyAvailability()
 		{
-			return await this.httpClient.GetJsonAsync<Schedule>($"schedule/{MyScheduleState.ScheduleId}");
+			return await this.httpClient.GetJsonAsync<Schedule>($"api/schedule/{MyScheduleState.ScheduleId}");
 		}
 
 		public async Task AddNewScheduleItem()
@@ -75,7 +78,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			this.NewScheduleItem.ScheduleId = MySchedule.Id;
 			this.MySchedule.ScheduleItems.Add(NewScheduleItem);
 
-			await this.httpClient.PutJsonAsync($"schedule/{MySchedule.Id}", MySchedule);
+			await this.httpClient.PutJsonAsync($"api/schedule/{MySchedule.Id}", MySchedule);
 
 			this.MyScheduleState.ScheduleUpdated();
 

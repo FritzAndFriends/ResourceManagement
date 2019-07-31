@@ -37,7 +37,7 @@ namespace Fritz.ResourceManagement.WebClient.Data
 		public void ExpandSchedule()
 		{
 
-			ExpandSchedule(SelectedDate.AddMonths(-2), SelectedDate.AddMonths(3));
+			// ExpandSchedule(SelectedDate.AddMonths(-2), SelectedDate.AddMonths(3));
 
 		}
 
