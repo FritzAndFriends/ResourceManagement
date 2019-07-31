@@ -1,9 +1,11 @@
+@page "/availability"
+@attribute [Authorize]
 @inject ViewModels.AvailabilityViewModel Model
 
 	<div class="row">
 		<div id="Availability" class="col-md-8" style="vertical-align: top; ">
 
-			<h3>Set the availability for @Model.CurrentUser.Identity.Name</h3>
+			<h3>Set the availability for </h3>
 
 			<div>
 
@@ -41,6 +43,11 @@
 
 @code {
 
+	[CascadingParameter] Task<AuthenticationState> Context { get; set; }
+
 	// Cheer 500 electrichavoc 07/06/19
-	protected override async Task OnInitAsync() => await Model.OnInitAsync();
+	protected override async Task OnInitAsync() {
+		var state = await Context; 
+		await Model.OnInitAsync(state.User);
+	}
 }

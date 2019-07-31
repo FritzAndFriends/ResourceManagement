@@ -2,13 +2,13 @@
 {
 	public class NavMenuViewModel
 	{
-		private bool collapseNavMenu { get; set; } = true;
+		public bool CollapseNavMenu { get; set; } = false;
 
-		public string NavMenuCssClass => this.collapseNavMenu ? "collapse" : null;
+		public string NavMenuCssClass => this.CollapseNavMenu ? "collapse" : null;
 
 		public void ToggleNavMenu()
 		{
-			this.collapseNavMenu = !this.collapseNavMenu;
+			this.CollapseNavMenu = !this.CollapseNavMenu;
 		}
 	}
 }

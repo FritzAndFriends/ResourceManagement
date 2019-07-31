@@ -4,10 +4,19 @@
 	<div class="container">
 		<BSNavbarBrand Href="#">Fritz.ResourceManagement.Web</BSNavbarBrand>
 		<BSNavbarToggler onclick="Model.ToggleNavMenu" />
-		<BSCollapse isOpen="@IsOpen" IsNavbar="true">
+		<BSCollapse isOpen="Model.CollapseNavMenu" IsNavbar="true">
 			<BSNav IsList="true" Class="mr-auto" IsNavbar="true">
 				<BSNavItem>
 					<BSNavLink IsActive="true" Href="#">Home</BSNavLink>
+				</BSNavItem>
+				<BSNavItem>
+					<BSNavLink IsActive="true" Href="/availability">Availability</BSNavLink>
+				</BSNavItem>
+				<BSNavItem>
+					<BSNavLink IsActive="true" Href="/manager">Management Report</BSNavLink>
+				</BSNavItem>
+				<BSNavItem>
+					<Login />
 				</BSNavItem>
 			</BSNav>
 		</BSCollapse>

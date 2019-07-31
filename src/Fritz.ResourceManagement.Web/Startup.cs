@@ -46,22 +46,14 @@ namespace Fritz.ResourceManagement.Web
 			services.AddDbContext<Models.MyDbContext>(options =>
 				options.UseMyDatabase(Configuration));
 
-			services.AddSignalR();
-			services.AddServerSideBlazor();
+			//services.AddSignalR();
 
 			// Cheer 100 ultramark 31/05/2019 
 			// Cheer 400 cpayette 24/07/19 
 			// Cheer 100 pharewings 25/07/19 
 
-			services.AddHttpContextAccessor();
-			services.AddScoped<ClaimsPrincipal>(context => context.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.User);
-
 			services.AddMvc().AddNewtonsoftJson();
-			services.AddRazorPages(options =>
-			{
-				options.Conventions.AuthorizePage("/Availability");
-				options.Conventions.AuthorizePage("/ManagerView");
-			})
+			services.AddRazorPages()
 				.AddNewtonsoftJson();
 
 			services.AddResponseCompression(opts =>
@@ -94,7 +86,6 @@ namespace Fritz.ResourceManagement.Web
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
-			app.UseClientSideBlazorFiles<WebClient.Startup>();
 
 			app.UseCookiePolicy();
 
@@ -103,10 +94,11 @@ namespace Fritz.ResourceManagement.Web
 			// TODO: Remove?
 			app.UseAuthentication();
 			app.UseAuthorization();
+			app.UseClientSideBlazorFiles<WebClient.Startup>();
 
 			app.UseEndpoints(endpoints =>
 			{
-				// TODO: Remove?
+				//// TODO: Remove?
 				endpoints.MapRazorPages();
 
 				endpoints.MapDefaultControllerRoute();
