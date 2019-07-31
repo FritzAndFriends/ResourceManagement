@@ -94,7 +94,6 @@ namespace Fritz.ResourceManagement.Web
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
-			app.UseClientSideBlazorFiles<WebClient.Startup>();
 
 			app.UseCookiePolicy();
 
@@ -103,11 +102,12 @@ namespace Fritz.ResourceManagement.Web
 			// TODO: Remove?
 			app.UseAuthentication();
 			app.UseAuthorization();
+			app.UseClientSideBlazorFiles<WebClient.Startup>();
 
 			app.UseEndpoints(endpoints =>
 			{
-				// TODO: Remove?
-				endpoints.MapRazorPages();
+				//// TODO: Remove?
+				//endpoints.MapRazorPages();
 
 				endpoints.MapDefaultControllerRoute();
 				endpoints.MapFallbackToClientSideBlazor<WebClient.Startup>("index.html");

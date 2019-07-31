@@ -33,9 +33,10 @@ namespace Fritz.ResourceManagement.Web.Controllers
         redirectUri = "/";
       }
 
-      await HttpContext.ChallengeAsync(
-          TwitterDefaults.AuthenticationScheme,
-          new AuthenticationProperties { RedirectUri = redirectUri });
+			// TODO: Challenge appropriately for our authentication scheme
+      //await HttpContext.ChallengeAsync(
+      //    TwitterDefaults.AuthenticationScheme,
+      //    new AuthenticationProperties { RedirectUri = redirectUri });
     }
 
     [HttpGet("user/signout")]

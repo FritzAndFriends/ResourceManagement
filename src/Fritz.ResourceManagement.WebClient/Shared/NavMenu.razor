@@ -1,29 +1,21 @@
-﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+@inject ViewModels.NavMenuViewModel Model
+
+<BSNavbar IsDark="false" Color="Color.Light" Class="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
 	<div class="container">
-		<a class="navbar-brand" href="">Fritz.ResourceManagement.Web</a>
-		<button class="navbar-toggler" @onclick="ToggleNavMenu">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-			@** Login *@
-			<ul class="navbar-nav flex-grow-1">
-				<li class="nav-item">
-					<NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
-				</li>
-			</ul>
-		</div>
-
+		<BSNavbarBrand Href="#">Fritz.ResourceManagement.Web</BSNavbarBrand>
+		<BSNavbarToggler onclick="Model.ToggleNavMenu" />
+		<BSCollapse isOpen="Model.CollapseNavMenu" IsNavbar="true">
+			<BSNav IsList="true" Class="mr-auto" IsNavbar="true">
+				<BSNavItem>
+					<BSNavLink IsActive="true" Href="#">Home</BSNavLink>
+				</BSNavItem>
+				<BSNavItem>
+					<BSNavLink IsActive="true" Href="/availability">Availability</BSNavLink>
+				</BSNavItem>
+				<BSNavItem>
+					<BSNavLink IsActive="true" Href="/manager">Management Report</BSNavLink>
+				</BSNavItem>
+			</BSNav>
+		</BSCollapse>
 	</div>
-</nav>
-
-
-@code {
-	bool collapseNavMenu = true;
-
-	string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-	void ToggleNavMenu()
-	{
-		collapseNavMenu = !collapseNavMenu;
-	}
-}
+</BSNavbar>
