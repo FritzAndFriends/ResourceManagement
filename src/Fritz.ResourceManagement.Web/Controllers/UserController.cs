@@ -19,10 +19,12 @@ namespace Fritz.ResourceManagement.Web.Controllers
 
     private static readonly UserInfo _LoggedOutUser = new UserInfo { IsAuthenticated = false };
 		private readonly UserManager<MyUser> _UserManager;
+		private readonly SignInManager<MyUser> _SignInManager;
 
-		public UserController(UserManager<MyUser> userManager)
+		public UserController(UserManager<MyUser> userManager, SignInManager<MyUser> signInManager)
 		{
 			_UserManager = userManager;
+			_SignInManager = signInManager;
 		}
 
     [HttpGet("user")]
@@ -53,7 +55,6 @@ namespace Fritz.ResourceManagement.Web.Controllers
       }
 
 			// Cheer 700 cpayette 31/07/19 
-
 			await HttpContext.ChallengeAsync(
 					new AuthenticationProperties { RedirectUri = redirectUri });
 
@@ -62,7 +63,7 @@ namespace Fritz.ResourceManagement.Web.Controllers
     [HttpGet("user/signout")]
     public async Task<IActionResult> SignOut()
     {
-      await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			await _SignInManager.SignOutAsync();
       return Redirect("~/");
     }
 
