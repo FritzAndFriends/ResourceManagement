@@ -31,7 +31,7 @@ namespace Fritz.ResourceManagement.Domain
 			set { Duration = TimeSpan.Parse(value); }
 		}
 
-    public DateTime MinStartDateTime { get; set; }
+	public DateTime MinStartDateTime { get; set; }
 
 	public DateTime MaxEndDateTime { get; set; }
 
@@ -66,7 +66,5 @@ namespace Fritz.ResourceManagement.Domain
 
 	  return results;
 	}
-
-	}
-
+  }
 }

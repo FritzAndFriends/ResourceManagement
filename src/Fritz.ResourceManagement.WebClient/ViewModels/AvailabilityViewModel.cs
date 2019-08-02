@@ -50,7 +50,19 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 			this.MyScheduleState.SelectDate(SelectedDate);
 			this.MyScheduleState.Schedule = MySchedule;
-			this.MyScheduleState.ExpandSchedule();
+			await ExpandSchedule();
+		}
+
+		private async Task ExpandSchedule()
+		{
+
+			// Cheer 142 cpayette 01/08/19 
+			// Cheer 5000 fixterjake 01/08/19 
+
+			MyScheduleState.TimeSlots.AddRange(
+				await httpClient.GetJsonAsync<TimeSlot[]>($"api/timeslot/{MyScheduleState.ScheduleId}/{DateTime.Today.AddMonths(-1).ToShortDateString().Replace('/','.')}/{DateTime.Today.AddMonths(2).ToShortDateString().Replace('/', '.')}"));
+
+
 		}
 
 		public async Task AddNewRecurringSchedule()

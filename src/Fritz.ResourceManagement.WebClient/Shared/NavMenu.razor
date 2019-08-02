@@ -12,13 +12,30 @@
 				<BSNavItem>
 					<BSNavLink IsActive="true" Href="#">Home</BSNavLink>
 				</BSNavItem>
+@if (Context != null && Context.User.Identity.IsAuthenticated)
+{
 				<BSNavItem>
 					<BSNavLink IsActive="false" Href="/availability">Availability</BSNavLink>
 				</BSNavItem>
 				<BSNavItem>
 					<BSNavLink IsActive="false" Href="/manager">Management Report</BSNavLink>
 				</BSNavItem>
+}
 			</BSNav>
 		</BSCollapse>
 	</div>
 </BSNavbar>
+
+@code {
+
+	[CascadingParameter] Task<AuthenticationState> ContextAsync { get; set; }
+
+	AuthenticationState Context { get; set; }
+
+	protected override async Task OnInitAsync() {
+
+		Context = await ContextAsync;
+
+	}
+
+}
