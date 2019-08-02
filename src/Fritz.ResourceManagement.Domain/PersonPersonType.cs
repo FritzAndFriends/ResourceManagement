@@ -1,4 +1,4 @@
-namespace Fritz.ResourceManagement.Domain
+﻿namespace Fritz.ResourceManagement.Domain
 {
   public class PersonPersonType {
 

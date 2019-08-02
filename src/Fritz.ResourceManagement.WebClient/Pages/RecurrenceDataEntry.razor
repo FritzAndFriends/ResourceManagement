@@ -1,0 +1,66 @@
+@inject ViewModels.RecurrenceDataEntryViewModel Model
+
+<input class="form-control" type="text" name="Name" @bind="Model.Schedule.Name" placeholder="Name of the Recurring Appointment" />
+<input class="form-control" type="date" name="StartDate" @bind="Model.Schedule.MinStartDateTime" placeholder="Start Date" />
+<input class="form-control" type="date" name="EndDate" @bind="Model.Schedule.MaxEndDateTime" placeholder="End Date" />
+<input class="form-control" type="time" name="StartTime" @bind="Model.StartTime" placeholder="Start time" />
+
+<fieldset>
+
+	<legend>Recurrence</legend>
+
+	<select name="pattern" class="form-control" bind="Pattern">
+		<option value="D">Daily</option>
+		<option value="W">Weekly</option>
+		@*			<option>Fortnightly</option>*@
+		@*<option value="M">Monthly</option>*@
+	</select>
+
+	@if (Model.Pattern == "W")
+	{
+		// TODO: Simon G - Do we really need the onchange='() => Model.OnDOWChange("xx")' syntax ? Would this not work as onchange='Model.OnDOWChange("xx")'?
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="0" @onchange='() => Model.OnDOWChange("0")' /><label class="form-check-label" for="dow">Sunday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="1" @onchange='() => Model.OnDOWChange("1")' /><label class="form-check-label" for="dow">Monday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="2" @onchange='() => Model.OnDOWChange("2")' /><label class="form-check-label" for="dow">Tuesday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="3" @onchange='() => Model.OnDOWChange("3")' /><label class="form-check-label" for="dow">Wednesday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="4" @onchange='() => Model.OnDOWChange("4")' /><label class="form-check-label" for="dow">Thursday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="5" @onchange='() => Model.OnDOWChange("5")' /><label class="form-check-label" for="dow">Friday</label>
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" name="dow" value="6" @onchange='() => Model.OnDOWChange("6")' /><label class="form-check-label" for="dow">Saturday</label>
+		</div>
+	}
+
+</fieldset>
+
+<input class="form-control" type="text" name="Duration" @bind="Model.Schedule.DurationText" placeholder="Duration for each recurring item" />
+<button class="btn btn-primary" @onclick="Model.Save">Add New Recurring Schedule</button>
+
+@code {
+
+		// Cheer 1000 cpayette 27/06/19 
+
+	[Parameter]
+	RecurringSchedule Schedule {
+		get { return Model.Schedule; }
+		set { Model.Schedule = value; }
+	}
+
+	[Parameter]
+	EventCallback OnSave {
+		get { return Model.OnSave; }
+		set { Model.OnSave = value; }
+	}
+
+}

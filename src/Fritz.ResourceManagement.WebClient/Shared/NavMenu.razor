@@ -1,0 +1,24 @@
+@inject ViewModels.NavMenuViewModel Model
+
+<BSNavbar IsDark="false" Color="Color.Light" Class="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
+	<div class="container">
+		<BSNavbarBrand Href="#">Fritz.ResourceManagement.Web</BSNavbarBrand>
+		<BSNavbarToggler onclick="Model.ToggleNavMenu" />
+		<BSCollapse isOpen="Model.CollapseNavMenu" IsNavbar="true" Class="d-sm-inline-flex flex-sm-row-reverse">
+			<BSNav IsList="true" IsNavbar="true">
+				<Login />
+			</BSNav>
+			<BSNav IsList="true" Class="flex-grow-1" IsNavbar="true">
+				<BSNavItem>
+					<BSNavLink IsActive="true" Href="#">Home</BSNavLink>
+				</BSNavItem>
+				<BSNavItem>
+					<BSNavLink IsActive="false" Href="/availability">Availability</BSNavLink>
+				</BSNavItem>
+				<BSNavItem>
+					<BSNavLink IsActive="false" Href="/manager">Management Report</BSNavLink>
+				</BSNavItem>
+			</BSNav>
+		</BSCollapse>
+	</div>
+</BSNavbar>

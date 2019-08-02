@@ -1,0 +1,53 @@
+@page "/availability"
+@attribute [Authorize]
+@inject ViewModels.AvailabilityViewModel Model
+
+	<div class="row">
+		<div id="Availability" class="col-md-8" style="vertical-align: top; ">
+
+			<h3>Set the availability for </h3>
+
+			<div>
+
+				<div style="display: inline-block" class="form-group">
+					<h4>Scheduled Appointments</h4>
+
+					<input class="form-control" type="text" name="Name" @bind="Model.NewScheduleItem.Name" placeholder="Name of the Appointment" />
+					<input class="form-control" type="datetime" name="StartTime" @bind="Model.NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
+					<input class="form-control" type="datetime" name="EndTime" @bind="Model.NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
+					<button class="btn btn-primary" @onclick="() => Model.AddNewScheduleItem()">Add New Schedule Item</button>
+
+				</div>
+
+				<div style="display: inline-block" class="form-group">
+					<h4>Create a Recurring Schedule</h4>
+
+					<RecurrenceDataEntry Schedule="Model.NewRecurringSchedule" OnSave="Model.AddNewRecurringSchedule" />
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<div id="MySchedule" class="col-md-4">
+			<h3>My Schedule</h3>
+
+			<DayPicker />
+
+			<DayView DayViewStart="Model.DayViewStart" DayViewEnd="Model.DayViewEnd" MyScheduleState="Model.MyScheduleState"/>
+
+		</div>
+
+	</div>
+
+@code {
+
+	[CascadingParameter] Task<AuthenticationState> Context { get; set; }
+
+	// Cheer 500 electrichavoc 07/06/19
+	protected override async Task OnInitAsync() {
+		var state = await Context; 
+		await Model.OnInitAsync(state.User);
+	}
+}
