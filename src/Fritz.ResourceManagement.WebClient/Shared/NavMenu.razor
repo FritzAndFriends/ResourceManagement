@@ -1,41 +1,22 @@
 @inject ViewModels.NavMenuViewModel Model
 
-<BSNavbar IsDark="false" Color="Color.Light" Class="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
 	<div class="container">
-		<BSNavbarBrand Href="#">Fritz.ResourceManagement.Web</BSNavbarBrand>
-		<BSNavbarToggler onclick="Model.ToggleNavMenu" />
-		<BSCollapse isOpen="Model.CollapseNavMenu" IsNavbar="true" Class="d-sm-inline-flex flex-sm-row-reverse">
-			<BSNav IsList="true" IsNavbar="true">
+		<a class="navbar-brand" href="">Fritz.ResourceManagement.Web</a>
+		<button class="navbar-toggler" aria-label="Toggle navigation" @onclick="() => Model.ToggleNavMenu()">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="@Model.NavMenuCssClass navbar-collapse">
+			<ul class="nav navbar-nav flex-grow-1">
+				<li class="nav-item">
+					<NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+				</li>
+				<AuthenticatedNavPartial />
+			</ul>
+			<ul class="nav navbar-nav">
 				<Login />
-			</BSNav>
-			<BSNav IsList="true" Class="flex-grow-1" IsNavbar="true">
-				<BSNavItem>
-					<BSNavLink IsActive="true" Href="#">Home</BSNavLink>
-				</BSNavItem>
-@if (Context != null && Context.User.Identity.IsAuthenticated)
-{
-				<BSNavItem>
-					<BSNavLink IsActive="false" Href="/availability">Availability</BSNavLink>
-				</BSNavItem>
-				<BSNavItem>
-					<BSNavLink IsActive="false" Href="/manager">Management Report</BSNavLink>
-				</BSNavItem>
-}
-			</BSNav>
-		</BSCollapse>
+			</ul>
+		</div>
 	</div>
-</BSNavbar>
-
-@code {
-
-	[CascadingParameter] Task<AuthenticationState> ContextAsync { get; set; }
-
-	AuthenticationState Context { get; set; }
-
-	protected override async Task OnInitAsync() {
-
-		Context = await ContextAsync;
-
-	}
-
-}
+</nav>
