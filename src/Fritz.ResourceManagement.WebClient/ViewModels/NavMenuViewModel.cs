@@ -2,7 +2,7 @@
 {
 	public class NavMenuViewModel
 	{
-		public bool CollapseNavMenu { get; set; } = false;
+		public bool CollapseNavMenu { get; set; } = true;
 
 		public string NavMenuCssClass => this.CollapseNavMenu ? "collapse" : null;
 
