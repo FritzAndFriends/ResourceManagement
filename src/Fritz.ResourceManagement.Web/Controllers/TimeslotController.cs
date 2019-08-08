@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,13 +26,21 @@ namespace Fritz.ResourceManagement.Web.Controllers
 		}
 
 		[HttpGet("{scheduleId}/{startDate}/{endDate}")]
-		public async Task<IActionResult> GetForSchedule([FromRoute]int scheduleId, [FromRoute]DateTime startDate, [FromRoute]DateTime endDate)
+		public async Task<IActionResult> GetForSchedule([FromRoute]int scheduleId, [FromRoute]string startDate, [FromRoute]string endDate)
 		{
 
-			var theSchedule = await _MyDbContext.Schedules.FirstOrDefaultAsync(s => s.Id == scheduleId);
+			var theStartDate = DateTime.ParseExact(startDate, "MM.dd.yyyy", CultureInfo.InvariantCulture);
+			var theEndDate = DateTime.ParseExact(endDate, "MM.dd.yyyy", CultureInfo.InvariantCulture);
+
+
+			var theSchedule = await _MyDbContext.Schedules
+				.Include(s => s.ScheduleItems)
+				.Include(s => s.RecurringSchedules)
+				.Include(s => s.ScheduleExceptions)
+				.FirstOrDefaultAsync(s => s.Id == scheduleId);
 			if (theSchedule == null) return NotFound();
 
-			var timeSlots = _ScheduleManager.ExpandSchedule(theSchedule, startDate, endDate);
+			var timeSlots = _ScheduleManager.ExpandSchedule(theSchedule, theStartDate, theEndDate);
 
 			return Ok(timeSlots.ToArray());
 

@@ -34,23 +34,20 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			var thisDay = new DateTime(this.SelectedDate.Year, this.SelectedDate.Month, dayOfMonth);
 			var today = (thisDay.Date == DateTime.Today.Date) ? "today" : null;
 
+			var hasAppt = this.MyScheduleState.TimeSlots.Any(x => x.StartDateTime.Date == thisDay.Date) ? "appt" : null;
+			Console.WriteLine($"{MyScheduleState.TimeSlots.Count}");
+
 			return new DayOfMonthDisplayInfo()
 			{
 				ThisDay = thisDay,
 				Today = today,
-				HasAppointment = this.MyScheduleState.TimeSlots.Any(x => x.StartDateTime.Date == thisDay.Date) ? "appt" : null,
+				HasAppointment = hasAppt,
 				IsSelected = (thisDay == this.SelectedDate) ? "active" : null,
 				Title = (string.IsNullOrEmpty(today)) ? null : "Today!"
 			};
 		}
 		
 		public ScheduleState MyScheduleState { get; private set; }
-
-		// TODO: Simon G - I think this was dead code from the razor code block and can probably be removed.
-		public Schedule MySchedule
-		{
-			get { return this.MyScheduleState.Schedule; }
-		}
 
 		public DayPickerViewModel(ScheduleState myScheduleState)
 		{

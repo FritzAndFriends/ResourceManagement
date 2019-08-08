@@ -61,9 +61,11 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 			// Cheer 142 cpayette 01/08/19 
 			// Cheer 5000 fixterjake 01/08/19 
+			// Cheer 500 cpayette 08/08/19 
 
-			MyScheduleState.TimeSlots.AddRange(
-				await httpClient.GetJsonAsync<TimeSlot[]>($"api/timeslot/{MyScheduleState.ScheduleId}/{DateTime.Today.AddMonths(-1).ToShortDateString().Replace('/','.')}/{DateTime.Today.AddMonths(2).ToShortDateString().Replace('/', '.')}"));
+			var fetchedTimeslots = await httpClient.GetJsonAsync<TimeSlot[]>($"api/timeslot/{MyScheduleState.ScheduleId}/{DateTime.Today.AddMonths(-1).ToString("MM.dd.yyyy")}/{DateTime.Today.AddMonths(2).ToString("MM.dd.yyyy")}");
+			Console.WriteLine($"Fetched {fetchedTimeslots.Length} timeslots");
+			MyScheduleState.TimeSlots.AddRange(fetchedTimeslots);
 
 
 		}

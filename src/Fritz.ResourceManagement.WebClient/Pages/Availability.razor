@@ -53,5 +53,6 @@
 	protected override async Task OnInitAsync() {
 		var state = await Context; 
 		await Model.OnInitAsync(state.User);
+		StateHasChanged();
 	}
 }
