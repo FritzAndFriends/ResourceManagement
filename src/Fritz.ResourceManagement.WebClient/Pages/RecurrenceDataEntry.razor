@@ -1,15 +1,31 @@
 @inject ViewModels.RecurrenceDataEntryViewModel Model
 
 <input class="form-control" type="text" name="Name" @bind="Model.Schedule.Name" placeholder="Name of the Recurring Appointment" />
-<input class="form-control" type="date" name="StartDate" @bind="Model.Schedule.MinStartDateTime" placeholder="Start Date" />
-<input class="form-control" type="date" name="EndDate" @bind="Model.Schedule.MaxEndDateTime" placeholder="End Date" />
-<input class="form-control" type="time" name="StartTime" @bind="Model.StartTime" placeholder="Start time" />
+
+<div class="form-group row">
+	<label for="StartDate" class="col-sm-4">Start Date:</label>
+	<input class="form-control col-sm-8" type="date" id="StartDate" @bind-value="Model.Schedule.MinStartDateTime" @bind-value:format="yyyy-MM-dd" />
+</div>
+<div class="form-group row">
+	<label for="EndDate" class="col-sm-4">End Date:</label>
+	<input class="form-control col-sm-8" type="date" id="EndDate" @bind-value="Model.Schedule.MaxEndDateTime" @bind-value:format="yyyy-MM-dd" />
+</div>
+
+<div class="form-group row">
+	<label for="StartTime" class="col-sm-4">Start Time:</label>
+	<input class="form-control col-sm-8" type="time" id="StartTime" @bind-value="Model.TimeOfDay"  @bind-value:event="TimeChanged"/>
+</div>
+
+<div class="form-group row">
+	<label for="EndTime" class="col-sm-4">Ending Time:</label>
+	<input class="form-control col-sm-8" type="time" id="EndTime" @bind-value="EndTime" @bind-value:event="TimeChanged" />
+</div>
 
 <fieldset>
 
 	<legend>Recurrence</legend>
 
-	<select name="pattern" class="form-control" bind="Pattern">
+	<select name="pattern" class="form-control" @bind="Model.Pattern">
 		<option value="D">Daily</option>
 		<option value="W">Weekly</option>
 		@*			<option>Fortnightly</option>*@
@@ -44,23 +60,39 @@
 
 </fieldset>
 
-<input class="form-control" type="text" name="Duration" @bind="Model.Schedule.DurationText" placeholder="Duration for each recurring item" />
 <button class="btn btn-primary" @onclick="Model.Save">Add New Recurring Schedule</button>
 
 @code {
 
-		// Cheer 1000 cpayette 27/06/19 
+	// Cheer 1000 cpayette 27/06/19
+	// Cheer 500 cpayette 8/08/19
 
 	[Parameter]
-	RecurringSchedule Schedule {
+	RecurringSchedule Schedule
+	{
 		get { return Model.Schedule; }
 		set { Model.Schedule = value; }
 	}
 
 	[Parameter]
-	EventCallback OnSave {
+	EventCallback OnSave
+	{
 		get { return Model.OnSave; }
 		set { Model.OnSave = value; }
 	}
+
+	TimeSpan EndTime { get; set; }
+
+	async Task TimeChanged(UIChangeEventArgs args) {
+
+		if (EndTime != null) return;
+
+		if (Model.TimeOfDay > EndTime) {
+			EndTime = EndTime.Add(TimeSpan.FromDays(1));
+		}
+		Model.Schedule.Duration = EndTime.Subtract(Model.TimeOfDay);
+
+	}
+
 
 }

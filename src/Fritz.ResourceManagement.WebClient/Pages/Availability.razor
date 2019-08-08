@@ -9,22 +9,26 @@
 
 			<div>
 
-				<div style="display: inline-block" class="form-group">
-					<h4>Scheduled Appointments</h4>
+				<EditForm Model="Model">
 
-					<input class="form-control" type="text" name="Name" @bind="Model.NewScheduleItem.Name" placeholder="Name of the Appointment" />
-					<input class="form-control" type="datetime" name="StartTime" @bind="Model.NewScheduleItem.StartDateTime" placeholder="Start Date and Time" />
-					<input class="form-control" type="datetime" name="EndTime" @bind="Model.NewScheduleItem.EndDateTime" placeholder="End Date and Time" />
-					<button class="btn btn-primary" @onclick="() => Model.AddNewScheduleItem()">Add New Schedule Item</button>
+					<div style="display: inline-block" class="form-group">
+						<h4>Scheduled Appointments</h4>
 
-				</div>
+						<input class="form-control" type="text" name="Name" @bind="Model.NewScheduleItem.Name" placeholder="Name of the Appointment" />
+						<DateTimeInput Value="Model.NewScheduleItem.StartDateTime"></DateTimeInput>
+						<DateTimeInput Value="Model.NewScheduleItem.EndDateTime"></DateTimeInput>
+						<button class="btn btn-primary" @onclick="() => Model.AddNewScheduleItem()">Add New Schedule Item</button>
 
-				<div style="display: inline-block" class="form-group">
-					<h4>Create a Recurring Schedule</h4>
+					</div>
 
-					<RecurrenceDataEntry Schedule="Model.NewRecurringSchedule" OnSave="Model.AddNewRecurringSchedule" />
+					<div style="display: inline-block" class="form-group">
+						<h4>Create a Recurring Schedule</h4>
 
-				</div>
+						<RecurrenceDataEntry Schedule="Model.NewRecurringSchedule" OnSave="Model.AddNewRecurringSchedule" />
+
+					</div>
+
+				</EditForm>
 
 			</div>
 

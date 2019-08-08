@@ -2,6 +2,7 @@
 using Fritz.ResourceManagement.WebClient.Data;
 using Microsoft.AspNetCore.Components;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		public ScheduleItem NewScheduleItem { get; set; } = new ScheduleItem() { };
 		public RecurringSchedule NewRecurringSchedule { get; set; }
 		public ScheduleState MyScheduleState { get; set; }
+
+		public ScheduleItemViewModel ItemViewModel { get; set; }
 
 		public DateTime DayViewStart => DateTime.Today.AddHours(8);
 		public DateTime DayViewEnd => DateTime.Today.AddHours(20);
@@ -114,5 +117,24 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			  MaxEndDateTime = DateTime.Today.AddDays(7),
 			};
 		}
+
+		public class ScheduleItemViewModel
+		{
+
+			// Cheer 142 cpayette 06/08/19 
+			// Cheer 100 alternativecorn 06/08/19 
+
+			[Required]
+			public string Name { get; set; }
+
+			[Required]
+			public string StartDateTime { get; set; }
+
+			[Required]
+			public string EndDateTime { get; set; }
+
+		}
+
+
 	}
 }
