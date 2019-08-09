@@ -102,3 +102,70 @@ header {
         display: block;
     }
 }
+
+/** Availability Data Entry */
+#availabityDataEntry {
+	display: grid;
+	grid-template-columns: 200px 1fr 1fr 1fr;
+	grid-template-rows: 100px 1fr 1fr 1fr;
+	grid-column-gap: 5px;
+	grid-row-gap: 5px;
+}
+#availabilityHead {
+	grid-area: 1 / 1 / 2 / 4;
+}
+
+#MySchedule {
+	grid-area: 1 / 4/ 4 / 5;
+}
+
+.availabilityTabBar {
+	grid-area: 2 / 1 / 4 / 2;
+}
+
+.availabilityCenter {
+	grid-area: 2 / 2 / 4 / 4;
+	padding-right: 10px;
+}
+
+.div5 {
+	grid-area: 4 / 1 / 5 / 5;
+}
+
+/** Schedule Item */
+#ScheduleItem {
+	display: grid;
+	grid-template-columns: 10em 1fr;
+	grid-template-rows: 100px 1fr 1fr 1fr;
+	grid-column-gap: 5px;
+	grid-row-gap: 5px;
+}
+	#ScheduleItem > .head {
+		grid-area: 1 / 1 / 2 / 3;
+	}
+
+#ScheduleItem > .label1 {
+	grid-area: 2 / 1 / 3 / 2;
+}
+
+	#ScheduleItem > .startTime {
+		grid-area: 2 / 2 / 3 / 3;
+	}
+
+	#ScheduleItem > .label2 {
+		grid-area: 3 / 1 / 4 / 2;
+	}
+
+	#ScheduleItem > .endTime {
+		grid-area: 3 / 2 / 4 / 3;
+	}
+
+	#ScheduleItem > .foot {
+		grid-area: 4 / 1 / 5 / 3;
+	}
+
+	#ScheduleItem > .foot > button {
+		margin: 2px auto;
+		display: block;
+	}
+

@@ -11,6 +11,15 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 {
 	public class AvailabilityViewModel
 	{
+
+		// Cheer 342 cpayette 09/8/19 
+		public enum Tabs {
+			Single,
+			Recurring
+		}
+
+		public Tabs SelectedTab { get; set; } = Tabs.Single;
+
 		public object CurrentUser { get; set; }
 		public ScheduleItem NewScheduleItem { get; set; } = new ScheduleItem() { };
 		public RecurringSchedule NewRecurringSchedule { get; set; }
@@ -28,7 +37,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		private DateTime ThisMonth { get { return new DateTime(SelectedDate.Year, SelectedDate.Month, 1); } }
 		
 		private readonly HttpClient httpClient;
-		private ClaimsPrincipal _User;
+		public ClaimsPrincipal _User;
 
 		public AvailabilityViewModel(
 			//ClaimsPrincipal currentUser, 
@@ -118,6 +127,12 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			  MinStartDateTime = DateTime.Today,
 			  MaxEndDateTime = DateTime.Today.AddDays(7),
 			};
+		}
+
+		public void ClickTab(Tabs tab) {
+
+			SelectedTab = tab;
+
 		}
 
 		public class ScheduleItemViewModel

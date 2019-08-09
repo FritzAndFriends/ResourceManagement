@@ -1,11 +1,15 @@
 ﻿<input type="datetime-local" 
 	class="form-control" 
 	name="StartTime" 
+	@attributes="Attributes" 
 	@bind-Value="Value" 
 	@bind-Value:format="yyyy-MM-ddTHH:mm"
 	@bind-Value:event="ChangeHandler" /> 
 
 @code {
+
+	[Parameter(CaptureUnmatchedValues = true)]
+  Dictionary<string, object> Attributes { get; set; }
 
 	[Parameter]
 	DateTime Value { get; set; }
