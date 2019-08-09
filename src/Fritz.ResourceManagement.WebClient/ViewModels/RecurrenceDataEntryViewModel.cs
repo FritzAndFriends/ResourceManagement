@@ -14,9 +14,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 		public string Pattern { get; set; }
 
-		public string StartTime { get; set; }
-
-		public TimeSpan TimeOfDay { get { return TimeSpan.Parse(this.StartTime); } }
+		public TimeSpan TimeOfDay { get; set; }
 
 		public HashSet<string> DaysOfTheWeek { get; set; } = new HashSet<string>();
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fritz.ResourceManagement.Scheduling.Extensions
+namespace System
 {
   public static class DateTimeExtensions
   {

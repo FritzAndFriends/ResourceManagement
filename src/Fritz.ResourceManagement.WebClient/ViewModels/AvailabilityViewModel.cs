@@ -2,6 +2,7 @@
 using Fritz.ResourceManagement.WebClient.Data;
 using Microsoft.AspNetCore.Components;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,10 +11,21 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 {
 	public class AvailabilityViewModel
 	{
+
+		// Cheer 342 cpayette 09/8/19 
+		public enum Tabs {
+			Single,
+			Recurring
+		}
+
+		public Tabs SelectedTab { get; set; } = Tabs.Single;
+
 		public object CurrentUser { get; set; }
 		public ScheduleItem NewScheduleItem { get; set; } = new ScheduleItem() { };
 		public RecurringSchedule NewRecurringSchedule { get; set; }
 		public ScheduleState MyScheduleState { get; set; }
+
+		public ScheduleItemViewModel ItemViewModel { get; set; }
 
 		public DateTime DayViewStart => DateTime.Today.AddHours(8);
 		public DateTime DayViewEnd => DateTime.Today.AddHours(20);
@@ -25,7 +37,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		private DateTime ThisMonth { get { return new DateTime(SelectedDate.Year, SelectedDate.Month, 1); } }
 		
 		private readonly HttpClient httpClient;
-		private ClaimsPrincipal _User;
+		public ClaimsPrincipal _User;
 
 		public AvailabilityViewModel(
 			//ClaimsPrincipal currentUser, 
@@ -58,9 +70,11 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 			// Cheer 142 cpayette 01/08/19 
 			// Cheer 5000 fixterjake 01/08/19 
+			// Cheer 500 cpayette 08/08/19 
 
-			MyScheduleState.TimeSlots.AddRange(
-				await httpClient.GetJsonAsync<TimeSlot[]>($"api/timeslot/{MyScheduleState.ScheduleId}/{DateTime.Today.AddMonths(-1).ToShortDateString().Replace('/','.')}/{DateTime.Today.AddMonths(2).ToShortDateString().Replace('/', '.')}"));
+			var fetchedTimeslots = await httpClient.GetJsonAsync<TimeSlot[]>($"api/timeslot/{MyScheduleState.ScheduleId}/{DateTime.Today.AddMonths(-1).ToString("MM.dd.yyyy")}/{DateTime.Today.AddMonths(2).ToString("MM.dd.yyyy")}");
+			Console.WriteLine($"Fetched {fetchedTimeslots.Length} timeslots");
+			MyScheduleState.TimeSlots.AddRange(fetchedTimeslots);
 
 
 		}
@@ -114,5 +128,30 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			  MaxEndDateTime = DateTime.Today.AddDays(7),
 			};
 		}
+
+		public void ClickTab(Tabs tab) {
+
+			SelectedTab = tab;
+
+		}
+
+		public class ScheduleItemViewModel
+		{
+
+			// Cheer 142 cpayette 06/08/19 
+			// Cheer 100 alternativecorn 06/08/19 
+
+			[Required]
+			public string Name { get; set; }
+
+			[Required]
+			public string StartDateTime { get; set; }
+
+			[Required]
+			public string EndDateTime { get; set; }
+
+		}
+
+
 	}
 }

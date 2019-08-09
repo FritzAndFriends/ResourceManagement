@@ -17,6 +17,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
+using Fritz.ResourceManagement.Scheduling;
 
 namespace Fritz.ResourceManagement.Web
 {
@@ -46,7 +47,7 @@ namespace Fritz.ResourceManagement.Web
 			services.AddDbContext<Models.MyDbContext>(options =>
 				options.UseMyDatabase(Configuration));
 
-			//services.AddSignalR();
+			services.AddTransient<ScheduleManager>();
 
 			// Cheer 100 ultramark 31/05/2019 
 			// Cheer 400 cpayette 24/07/19 
