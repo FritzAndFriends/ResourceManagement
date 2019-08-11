@@ -4,7 +4,7 @@
 @inject VM Model
 
 
-<div id="availabityDataEntry">
+<div id="availabilityDataEntry">
 
 	<div id="availabilityHead">
 		<h3>Set the availability for @Model._User.Identity.Name</h3>
@@ -12,12 +12,12 @@
 
 	<div class="availabilityTabBar">
 
-		<div class="btn-group-vertical" role="group" aria-label="Button group to choose availability data entry mode">
+		<div class="btn-group-vertical" role="group" aria-label="Choose Single or Recurring Event To Add To Your Schedule">
 
-			<button type="button" class="btn @(Model.SelectedTab == VM.Tabs.Single ? "btn-primary" : "btn-outline-primary")" href="availability" @onclick="(() => Model.ClickTab(VM.Tabs.Single))">
+			<button type="button" class="btn @(Model.SelectedTab == VM.Tabs.Single ? "btn-primary" : "btn-outline-primary")" @onclick="(() => Model.ClickTab(VM.Tabs.Single))">
 	Single Event</button>
 
-			<button type="button" class="btn @(Model.SelectedTab == VM.Tabs.Recurring ? "btn-primary" : "btn-outline-primary")" href="availability" @onclick="(() => Model.ClickTab(VM.Tabs.Recurring))">Recurring Events</button>
+			<button type="button" class="btn @(Model.SelectedTab == VM.Tabs.Recurring ? "btn-primary" : "btn-outline-primary")" @onclick="(() => Model.ClickTab(VM.Tabs.Recurring))">Recurring Events</button>
 
 		</div>
 
@@ -27,28 +27,25 @@
 
 		<EditForm Model="Model">
 
-			<div id="ScheduleItem" class="form-group" style="@(Model.SelectedTab != VM.Tabs.Single ? "display: none;" :"")">
+			<div id="ScheduleItem" class="schedule-form-group form-group" style="@(Model.SelectedTab != VM.Tabs.Single ? "display: none;" :"")">
 
-				<div class="head">
-					<h4>Scheduled Appointments</h4>
+				<h4 class="head">Schedule One Time Appointments</h4>
+				<label for="appointment-name" class="appointment-name-label">Appointment Name: </label>
+				<input class="form-control appointment-name" type="text" name="Name" id="scheduled-appointment-name" @bind="Model.NewScheduleItem.Name" placeholder="Name of the Appointment" />
+				<label class="label1" for="scheduled-appointment-start-time">Start Time:</label>
+				<DateTimeInput class="form-control startTime" Value="Model.NewScheduleItem.StartDateTime" id="scheduled-appointment-start-time"></DateTimeInput>
 
-					<input class="form-control" type="text" name="Name" @bind="Model.NewScheduleItem.Name" placeholder="Name of the Appointment" />
-				</div>
-
-				<label class="label1">Start Time:</label>
-				<DateTimeInput class="form-control startTime" Value="Model.NewScheduleItem.StartDateTime"></DateTimeInput>
-
-				<label class="label2">End Time:</label>
-				<DateTimeInput class="form-control endTime" Value="Model.NewScheduleItem.EndDateTime"></DateTimeInput>
+				<label class="label2" for="scheduled-appointment-end-time">End Time:</label>
+				<DateTimeInput class="form-control endTime" Value="Model.NewScheduleItem.EndDateTime" id="scheduled-appointment-end-time"></DateTimeInput>
 
 				<div class="foot">
-					<button class="btn btn-primary" @onclick="() => Model.AddNewScheduleItem()">Add New Schedule Item</button>
+					<button class="schedule-item-button btn btn-primary" @onclick="() => Model.AddNewScheduleItem()">Add New Schedule Item</button>
 				</div>
 
 			</div>
 
-			<div id="RecurringSchedule" class="form-group" style="@(Model.SelectedTab != VM.Tabs.Recurring ? "display: none;" :"")">
-				<h4>Create a Recurring Schedule</h4>
+			<div id="RecurringSchedule" class="schedule-form-group form-group" style="@(Model.SelectedTab != VM.Tabs.Recurring ? "display: none;" :"")">
+				<h4 class="head">Create a Recurring Schedule</h4>
 
 				<RecurrenceDataEntry Schedule="Model.NewRecurringSchedule" OnSave="Model.AddNewRecurringSchedule" />
 
