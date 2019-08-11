@@ -1,50 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 
 namespace Fritz.ResourceManagement.Domain
 {
-	[DebuggerDisplay("{Name}: {StartDateTime}-{EndDateTime}")]
-	public class TimeSlot
+  public class TimeSlot
+  {
+
+	public DateTime StartDateTime { get; set; }
+
+	public DateTime EndDateTime { get; set; }
+
+	public ScheduleStatus Status { get; set; }
+
+	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
 	{
 
-		public string Name { get; set; }
+	  var results = new List<ValidationResult>();
 
-		public DateTime StartDateTime { get; set; }
+	  if (Status == default)
+		results.Add(new ValidationResult($"{nameof(Status)} cannot have the default value of {default(ScheduleStatus)}", new[] { nameof(Status) }));
 
-		public DateTime EndDateTime { get; set; }
+	  if (StartDateTime == default)
+		results.Add(new ValidationResult($"{nameof(StartDateTime)} is required", new[] { nameof(StartDateTime) }));
 
-		public TimeSpan Duration { get { return EndDateTime.Subtract(StartDateTime); } }
+	  if (EndDateTime == default)
+		results.Add(new ValidationResult($"{nameof(EndDateTime)} is required", new[] { nameof(EndDateTime) }));
 
-		public ScheduleStatus Status { get; set; }
+	  if (EndDateTime < StartDateTime)
+			results.Add(new ValidationResult($"{nameof(EndDateTime)} cannot be before {nameof(StartDateTime)}", new[] { nameof(StartDateTime), nameof(EndDateTime) }));
 
-		public bool Overlaps(TimeSlot ts2)
-		{
+	  return results;
 
-			return this.StartDateTime <= ts2.EndDateTime && this.EndDateTime >= ts2.StartDateTime;
-
-		}
-
-		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-		{
-
-			var results = new List<ValidationResult>();
-
-			if (Status == default)
-				results.Add(new ValidationResult($"{nameof(Status)} cannot have the default value of {default(ScheduleStatus)}", new[] { nameof(Status) }));
-
-			if (StartDateTime == default)
-				results.Add(new ValidationResult($"{nameof(StartDateTime)} is required", new[] { nameof(StartDateTime) }));
-
-			if (EndDateTime == default)
-				results.Add(new ValidationResult($"{nameof(EndDateTime)} is required", new[] { nameof(EndDateTime) }));
-
-			if (EndDateTime < StartDateTime)
-				results.Add(new ValidationResult($"{nameof(EndDateTime)} cannot be before {nameof(StartDateTime)}", new[] { nameof(StartDateTime), nameof(EndDateTime) }));
-
-			return results;
-
-		}
 	}
+  }
 }

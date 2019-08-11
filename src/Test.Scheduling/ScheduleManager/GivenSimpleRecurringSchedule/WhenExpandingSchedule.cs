@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FluentAssertions;
 using Fritz.ResourceManagement.Domain;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -11,8 +10,8 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 {
 	public class WhenExpandingSchedule
 	{
-		private readonly ILoggerFactory _LoggerFactory;
-		private Schedule _MySchedule = new Schedule {
+    private readonly ILoggerFactory _LoggerFactory;
+    private Schedule _MySchedule = new Schedule {
 			RecurringSchedules = new List<RecurringSchedule> {
 				new RecurringSchedule {
 					MinStartDateTime = new DateTime(2019, 5, 1),
@@ -23,8 +22,8 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 			}
 		};
 		private Schedule _MyMultipleRecurringSchedule = new Schedule
-		{
-		RecurringSchedules = new List<RecurringSchedule>
+	{
+	  RecurringSchedules = new List<RecurringSchedule>
 					{
 							new RecurringSchedule
 							{
@@ -41,7 +40,7 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 								Duration = TimeSpan.FromHours(1)
 							}
 					}
-		};
+	};
 
 		public WhenExpandingSchedule()
 		{
@@ -64,8 +63,8 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 			var results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 1, 1), new DateTime(2019, 12, 31));
 
 			// assert
-			results.Count().Should().Be(4);
-			results.First().StartDateTime.Hour.Should().Be(15);
+			Assert.Equal(4, results.Count());
+			Assert.Equal(15, results.First().StartDateTime.Hour);
 
 		}
 
@@ -80,8 +79,8 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 			var results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 5, 1), new DateTime(2019, 5, 15), _LoggerFactory.CreateLogger("test"));
 
 			// assert
-			results.Should().HaveCount(2);
-			results.First().StartDateTime.Hour.Should().Be(15);
+			Assert.Equal(2, results.Count());
+			Assert.Equal(15, results.First().StartDateTime.Hour);
 
 		}
 
@@ -95,7 +94,7 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 			var results = sut.ExpandSchedule(_MyMultipleRecurringSchedule, new DateTime(2019, 5, 1), new DateTime(2019, 5, 15), _LoggerFactory.CreateLogger("test"));
 
 			// assert
-			results.Should().BeEmpty();
+			Assert.Empty(results);
 		}
 		[Fact]
 		public void ShouldExpandWithinRequestedDatesOnly_Scenario4()
@@ -107,8 +106,8 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 			var results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 4, 1), new DateTime(2019, 6, 1), _LoggerFactory.CreateLogger("test"));
 
 			// assert
-			results.Should().HaveCount(4);
-			results.First().StartDateTime.Hour.Should().Be(15);
+			Assert.Equal(4, results.Count());
+			Assert.Equal(15, results.First().StartDateTime.Hour);
 
 		}
 		[Fact]
@@ -119,12 +118,12 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 			var sut = new Fritz.ResourceManagement.Scheduling.ScheduleManager();
 			var results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 5, 27), new DateTime(2019, 6, 30), _LoggerFactory.CreateLogger("test"));
 			//assert
-			results.Should().ContainSingle();
-			results.First().StartDateTime.Hour.Should().Be(15);
+			Assert.Single(results);
+			Assert.Equal(15, results.First().StartDateTime.Hour);
 
 			results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 5, 1), new DateTime(2019, 6, 30), _LoggerFactory.CreateLogger("test"));
-			results.Should().HaveCount(4);
-			results.First().StartDateTime.Hour.Should().Be(15);
+			Assert.Equal(4, results.Count());
+			Assert.Equal(15, results.First().StartDateTime.Hour);
 
 		}
 
@@ -136,15 +135,14 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleRecurringSchedule
 			var sut = new Fritz.ResourceManagement.Scheduling.ScheduleManager();
 			var results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 4, 27), new DateTime(2019, 5, 24), _LoggerFactory.CreateLogger("test"));
 			//assert
-			results.Should().HaveCount(3);
-			results.First().StartDateTime.Hour.Should().Be(15);
+			Assert.Equal(3, results.Count());
+			Assert.Equal(15, results.First().StartDateTime.Hour);
 
 			results = sut.ExpandSchedule(_MySchedule, new DateTime(2019, 4, 27), new DateTime(2019, 5, 31), _LoggerFactory.CreateLogger("test"));
-			results.Should().HaveCount(4);
-			results.First().StartDateTime.Hour.Should().Be(15);
+			Assert.Equal(4, results.Count());
+			Assert.Equal(15, results.First().StartDateTime.Hour);
 
 		}
 
-	}
-
+  }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using Fritz.ResourceManagement.Domain;
 using Fritz.ResourceManagement.Scheduling;
 using Xunit;
@@ -50,8 +49,9 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleSchedule
 			var results = sut.ExpandSchedule(_MySimpleSchedule, new DateTime(2019, 1, 1), new DateTime(2019, 12, 31));
 
 			// assert
-			results.Should().NotBeEmpty();
-			results.First().StartDateTime.Hour.Should().Be(15);
+			Assert.NotEmpty(results);
+			Assert.Equal(15, results.First().StartDateTime.Hour);
+
 		}
 
 		[Fact]
@@ -65,10 +65,10 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleSchedule
 			var results = sut.ExpandSchedule(_MyMultipleItemSchedule, new DateTime(2019, 1, 1), new DateTime(2019, 12, 31));
 
 			// assert
-			results.Should().NotBeEmpty();
-			results.Should().HaveCount(2);
-			results.First().StartDateTime.Hour.Should().Be(15);
-			results.Skip(1).First().StartDateTime.Hour.Should().Be(17);
+			Assert.NotEmpty(results);
+			Assert.Equal(2, results.Count());
+			Assert.Equal(15, results.First().StartDateTime.Hour);
+			Assert.Equal(17, results.Skip(1).First().StartDateTime.Hour);
 
 		}
 
@@ -83,7 +83,7 @@ namespace Test.Scheduling.ScheduleManager.GivenSimpleSchedule
 			var results = sut.ExpandSchedule(_MyMultipleItemSchedule, new DateTime(2019, 1, 1), new DateTime(2019, 5, 18));
 
 			// assert
-			results.Should().ContainSingle();
+			Assert.Single(results);
 
 		}
 
