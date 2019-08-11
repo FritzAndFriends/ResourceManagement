@@ -1,12 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Fritz.ResourceManagement.Domain;
 using Fritz.ResourceManagement.WebClient.Data;
+using Microsoft.AspNetCore.Components;
 
 namespace Fritz.ResourceManagement.WebClient.ViewModels
 {
-	public class DayPickerViewModel
+	public class DayPickerViewModel : ComponentBase
 	{
+
+		protected override void OnInit()
+		{
+			Console.WriteLine($"MyScheduleState: {MyScheduleState.GetHashCode()}");
+			base.OnInit();
+		}
+
 		public DateTime SelectedDate
 		{
 			get { return this.MyScheduleState.SelectedDate; }
@@ -34,8 +43,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			var thisDay = new DateTime(this.SelectedDate.Year, this.SelectedDate.Month, dayOfMonth);
 			var today = (thisDay.Date == DateTime.Today.Date) ? "today" : null;
 
-			var hasAppt = this.MyScheduleState.TimeSlots.Any(x => x.StartDateTime.Date == thisDay.Date) ? "appt" : null;
-			Console.WriteLine($"{MyScheduleState.TimeSlots.Count}");
+			var hasAppt = MyScheduleState.TimeSlots.Any(x => x.StartDateTime.Date == thisDay.Date) ? "appt" : null;
 
 			return new DayOfMonthDisplayInfo()
 			{
@@ -47,12 +55,8 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			};
 		}
 		
+		[Inject]
 		public ScheduleState MyScheduleState { get; private set; }
-
-		public DayPickerViewModel(ScheduleState myScheduleState)
-		{
-			this.MyScheduleState = myScheduleState;
-		}
 
 		public void GotoToday()
 		{
