@@ -1,0 +1,233 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+html,
+body {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+app {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+header {
+	flex: 1 100%;
+}
+
+.top-row {
+	height: 3.5rem;
+	display: flex;
+	align-items: center;
+}
+
+.main {
+	flex: 1;
+}
+
+.main .top-row {
+	background-color: #e6e6e6;
+	border-bottom: 1px solid #d6d5d5;
+}
+
+.sidebar {
+	background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+}
+
+.sidebar .top-row {
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.sidebar .navbar-brand {
+	font-size: 1.1rem;
+}
+
+.sidebar .oi {
+	width: 2rem;
+	font-size: 1.1rem;
+	vertical-align: text-top;
+	top: -2px;
+}
+
+.content {
+	padding-top: 1.1rem;
+}
+
+.navbar-toggler {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.valid.modified:not([type='checkbox']) {
+	outline: 1px solid #26b050;
+}
+
+.invalid {
+	outline: 1px solid red;
+}
+
+.validation-message {
+	color: red;
+}
+
+@media (max-width: 767.98px) {
+	.main .top-row {
+		display: none;
+	}
+}
+
+@media (min-width: 768px) {
+	app {
+		flex-direction: row;
+	}
+
+	.sidebar {
+		width: 250px;
+		height: 100vh;
+		position: sticky;
+		top: 0;
+	}
+
+	.main .top-row {
+		position: sticky;
+		top: 0;
+	}
+
+	.main > div {
+		padding-left: 2rem !important;
+		padding-right: 1.5rem !important;
+	}
+
+	.sidebar .collapse {
+		/* Never collapse the sidebar for wide screens */
+		display: block;
+	}
+}
+
+
+/** Availability Data Entry */
+/*#region Availability Data Entry sm*/
+
+/*Sets the base styles for availability data entry*/
+/*These are also the mobile styles*/
+#availabilityDataEntry {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: auto;
+	max-width: 60ch;
+}
+
+#availabilityHead {
+	margin-bottom: 1rem;
+}
+
+.availabilityTabBar {
+	margin-bottom: 1rem;
+}
+
+.availabilityCenter {
+	margin-bottom: 1rem;
+}
+
+.schedule-form-group > input,
+.schedule-form-group > label,
+.schedule-form-group > fieldset {
+	margin-bottom: 0.75rem;
+	max-width: 40ch;
+}
+
+.schedule-item-button {
+	display: block;
+	margin: .2rem auto;
+	grid-column: 1 / -1;
+}
+
+/*#endregion*/
+@media (min-width: 576px) {
+	#availabilityDataEntry {
+		display: grid;
+		grid-template-columns: 200px 1fr 1fr 1fr;
+		grid-template-rows: 100px 1fr 1fr 1fr;
+		grid-column-gap: 5px;
+		grid-row-gap: 5px;
+		margin: unset;
+		max-width: unset;
+	}
+
+	#availabilityHead {
+		grid-area: 1 / 1 / 2 / 4;
+		margin-bottom: unset;
+	}
+
+	#MySchedule {
+		grid-area: 1 / 4/ 4 / 5;
+		margin-bottom: unset;
+		align-self: start;
+	}
+
+	.availabilityTabBar {
+		grid-column: 1 / 2;
+		margin-bottom: unset;
+		align-self: start;
+	}
+
+	.availabilityCenter {
+		grid-column: 2 / 4;
+		padding-right: 10px;
+		margin-bottom: unset;
+	}
+
+	.div5 {
+		grid-area: 4 / 1 / 5 / 5;
+	}
+
+	/** Schedule Item */
+	.schedule-form-group {
+		display: grid;
+		grid-template-columns: 9em minmax(min-content, 20rem);
+		grid-column-gap: 5px;
+		grid-row-gap: 5px;
+		margin-bottom: unset;
+	}
+	.schedule-form-group > .head {
+		grid-column: 1 / -1;
+		margin: 10px auto;
+	}
+
+	.schedule-form-group> label {
+		grid-column: 1;
+	}
+
+	.schedule-form-group > input {
+		grid-column: 2;
+		max-width: 30ch;
+		margin-left: .4rem;
+	}
+
+	.schedule-form-group > .appointment-name {
+		max-width: 45ch;
+	}
+
+	.schedule-form-group > fieldset {
+		grid-column: 1 / -1;
+		max-width: unset;
+	}
+
+	.schedule-form-group > select {
+		max-width: 30ch;
+		grid-column: 1 / -1;
+	}
+
+	.schedule-form-group > .full-row-label {
+		grid-column: 1 / -1;
+	}
+
+	.schedule-form-group > .foot {
+		grid-column: 1 / -1;
+	}
+
+	.schedule-form-group > .form-check {
+		grid-column: 1 / -1;
+	}
+}
