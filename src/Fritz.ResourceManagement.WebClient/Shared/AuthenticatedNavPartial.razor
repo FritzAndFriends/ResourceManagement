@@ -1,0 +1,13 @@
+﻿<AuthorizeView>
+	<Authorizing></Authorizing>
+	<Authorized>
+		<li class="nav-item">
+			<NavLink class="nav-link" href="/availability" Match="NavLinkMatch.All">Availability</NavLink>
+		</li>
+		@* TODO: wcShaun - Use claims to enforce only managers (and administrators?) see Manager Report *@
+		<li class="nav-item">
+			<NavLink class="nav-link" href="/manager" Match="NavLinkMatch.All">Manager Report</NavLink>
+		</li>
+	</Authorized>
+	<NotAuthorized></NotAuthorized>
+</AuthorizeView>
