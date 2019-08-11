@@ -1,9 +1,9 @@
-﻿@inject ViewModels.DayPickerViewModel Model
+﻿@inherits ViewModels.DayPickerViewModel 
 <div class="monthpicker">
 
-	<button id="prevMonth" @onclick="Model.PrevMonth">&lt;</button>
-	<div id="name">@Model.SelectedDate.ToString("MMMM yyyy")</div>
-	<button id="nextMonth" @onclick="Model.NextMonth">&gt;</button>
+	<button id="prevMonth" @onclick="PrevMonth">&lt;</button>
+	<div id="name">@SelectedDate.ToString("MMMM yyyy")</div>
+	<button id="nextMonth" @onclick="NextMonth">&gt;</button>
 
 	<span class="dow">Su</span>
 	<span class="dow">M</span>
@@ -13,20 +13,19 @@
 	<span class="dow">F</span>
 	<span class="dow">Sa</span>
 
-	@for (var i = 0; i < Model.FirstDayOfMonthDoW; i++)
+	@for (var i = 0; i < FirstDayOfMonthDoW; i++)
 	{
 		<span></span>
 	}
 
-	@for (var i = 1; i <= Model.LastDayOfMonth; i++)
+	@for (var i = 1; i <= LastDayOfMonth; i++)
 	{
 		// TODO: Simon G - Should be able to replace this loop with a ForEach over a new method Model.GetDaysOfMonthToRender() that returns List<DayOfMonthDisplayInfo> - Should wait for app UI running again to dev test before attempting.
-		var displayInfo = this.Model.DisplayDayOfMonth(i);
-		<span class="@displayInfo.Today @displayInfo.HasAppointment @displayInfo.IsSelected day" title="@displayInfo.Title" @onclick="() => Model.MyScheduleState.SelectDate(displayInfo.ThisDay)">@i</span>
+		var displayInfo = this.DisplayDayOfMonth(i);
+		<span class="@displayInfo.Today @displayInfo.HasAppointment @displayInfo.IsSelected day" title="@displayInfo.Title" @onclick="() => MyScheduleState.SelectDate(displayInfo.ThisDay)">@i</span>
 	}
 
 </div>
-<button id="gotoToday" @onclick="Model.GotoToday">Today</button>
+<button id="gotoToday" @onclick="GotoToday">Today</button>
 
-<span>Selected Date is: @Model.SelectedDate.ToShortDateString()</span>
-
+<span>Selected Date is: @SelectedDate.ToShortDateString()</span>

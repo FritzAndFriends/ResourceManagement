@@ -46,8 +46,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		{
 			//this.CurrentUser = currentUser;
 
-			// TODO: Remove mocked schedulestate
-			//this.MyScheduleState = myScheduleState;
+			this.MyScheduleState = myScheduleState;
 			this.httpClient = httpClient;
 		}
 
@@ -55,7 +54,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		{
 
 			_User = user;
-			this.MyScheduleState = new ScheduleState { ScheduleId = _User.GetClaimValueAsInt(UserInfo.Claims.SCHEDULEID).Value };
+			this.MyScheduleState.ScheduleId = _User.GetClaimValueAsInt(UserInfo.Claims.SCHEDULEID).Value;
 
 			this.ResetScheduleItem();
 			this.MySchedule = await GetMyAvailability();
@@ -75,6 +74,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			var fetchedTimeslots = await httpClient.GetJsonAsync<TimeSlot[]>($"api/timeslot/{MyScheduleState.ScheduleId}/{DateTime.Today.AddMonths(-1).ToString("MM.dd.yyyy")}/{DateTime.Today.AddMonths(2).ToString("MM.dd.yyyy")}");
 			Console.WriteLine($"Fetched {fetchedTimeslots.Length} timeslots");
 			MyScheduleState.TimeSlots.AddRange(fetchedTimeslots);
+			Console.WriteLine($"MyScheduleState: {MyScheduleState.GetHashCode()}");
 
 
 		}
