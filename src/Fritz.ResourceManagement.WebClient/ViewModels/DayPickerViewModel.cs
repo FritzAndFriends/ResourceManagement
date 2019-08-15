@@ -10,10 +10,10 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 	public class DayPickerViewModel : ComponentBase
 	{
 
-		protected override void OnInit()
+		protected override void OnInitialized()
 		{
 			Console.WriteLine($"MyScheduleState: {MyScheduleState.GetHashCode()}");
-			base.OnInit();
+			base.OnInitialized();
 		}
 
 		public DateTime SelectedDate

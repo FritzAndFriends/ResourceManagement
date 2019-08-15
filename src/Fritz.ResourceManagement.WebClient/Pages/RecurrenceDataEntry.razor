@@ -61,14 +61,14 @@
 	// Cheer 500 cpayette 8/08/19
 
 	[Parameter]
-	RecurringSchedule Schedule
+	public RecurringSchedule Schedule
 	{
 		get { return Model.Schedule; }
 		set { Model.Schedule = value; }
 	}
 
 	[Parameter]
-	EventCallback OnSave
+	public EventCallback OnSave
 	{
 		get { return Model.OnSave; }
 		set { Model.OnSave = value; }
