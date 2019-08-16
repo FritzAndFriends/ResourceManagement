@@ -9,13 +9,13 @@
 @code {
 
 	[Parameter(CaptureUnmatchedValues = true)]
-  Dictionary<string, object> Attributes { get; set; }
+  public Dictionary<string, object> Attributes { get; set; }
 
 	[Parameter]
-	DateTime Value { get; set; }
+	public DateTime Value { get; set; }
 
 	[Parameter]
-	EventCallback<UIChangeEventArgs> OnChange { get; set; }
+	public EventCallback<UIChangeEventArgs> OnChange { get; set; }
 
 	async Task ChangeHandler(UIChangeEventArgs args) {
 

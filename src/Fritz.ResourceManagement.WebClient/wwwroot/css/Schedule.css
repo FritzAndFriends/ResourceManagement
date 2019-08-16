@@ -93,3 +93,25 @@
 .dayview .ends-after  {
 	border-bottom: 0;
 }
+
+#weekSelector > span {
+	width: 12em;
+	display: inline-block;
+	text-align: center;
+}
+
+#weekSelector a.oi, #weekSelector a.oi:hover, #weekSelector a.oi:active {
+	text-decoration: none;
+}
+
+#weekSelector a.oi {
+	color: black;
+}
+
+#weekSelector a.oi:hover {
+	color: green;
+}
+
+#weekSelector a.oi:active {
+	color: purple;
+}

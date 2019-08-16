@@ -30,9 +30,9 @@
 		}
 	}
 
-	@if (Model.MyScheduleState != null)
+	@if (Model.MyScheduleState != null && Model.MyScheduleState.TimeSlots != null)
 	{
-		foreach (var item in TimeSlots.Where(s => s.StartDateTime.Date == Model.SelectedDate.Date))
+		foreach (var item in Model.MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == Model.SelectedDate.Date))
 		{
 			if (Model.DisplayItem(item.StartDateTime, item.EndDateTime))
 			{
@@ -47,31 +47,28 @@
 
 @code {
 
-		// TODO: Simon G - Work out if it is possible to make the Model a property with a Parameter attribute and pass the whole thing in from the parent rather than using DI, there may be a timing DI vs Paramater state being set, which might be offset by component composition.
+	// TODO: Simon G - Work out if it is possible to make the Model a property with a Parameter attribute and pass the whole thing in from the parent rather than using DI, there may be a timing DI vs Paramater state being set, which might be offset by component composition.
 
-		// Cheer 701 themichaeljolley 09/07/19
-		// Cheer 600 cpayette 09/07/19
-		// Cheer 1500 clintonrocksmith 09/07/19
+	// Cheer 701 themichaeljolley 09/07/19
+	// Cheer 600 cpayette 09/07/19
+	// Cheer 1500 clintonrocksmith 09/07/19
 
 	[Parameter]
-	Data.ScheduleState MyScheduleState
+	public Data.ScheduleState MyScheduleState
 	{
 		get { return Model.MyScheduleState; }
 		set { Model.MyScheduleState = value; }
 	}
 
-	[CascadingParameter(Name = "Timeslots")] protected List<TimeSlot> TimeSlots { get; set; }
-
-
 	[Parameter]
-	DateTime DayViewStart
+	public DateTime DayViewStart
 	{
 		get { return Model.DayViewStart; }
 		set { Model.DayViewStart = value; }
 	}
 
 	[Parameter]
-	DateTime DayViewEnd
+	public DateTime DayViewEnd
 	{
 		get { return Model.DayViewEnd; }
 		set { Model.DayViewEnd = value; }
@@ -80,33 +77,29 @@
 	// Cheer 110 copperbeardy 14/07/19
 
 	[Parameter]
-	int DayCount
+	public int DayCount
 	{
 		get { return Model.DayCount; }
 		set { Model.DayCount = value; }
 	}
 
 	[Parameter]
-	bool DayDisplay
+	public bool DayDisplay
 	{
 		get { return Model.DayDisplay; }
 		set { Model.DayDisplay = value; }
 	}
 
-	protected override void OnInit()
-	{
-		if (Model.MyScheduleState != null)
-		{
-			Model.MyScheduleState.OnSelectedDateChanged += (o, args) => { 
-				Console.WriteLine($"Timeslots: {Model.MyScheduleState.TimeSlots.Count} -- Parm: {TimeSlots.Count}");
-			
-			};
-		}
-		base.OnInit();
-	}
+	// Cheer 142 cpayette 15/8/19 
 
 	protected override void OnParametersSet()
 	{
+
+		MyScheduleState.OnSelectedDateChanged += (obj, args) =>
+		{
+			this.StateHasChanged();
+		};
+
 		this.StateHasChanged();
 		base.OnParametersSet();
 	}

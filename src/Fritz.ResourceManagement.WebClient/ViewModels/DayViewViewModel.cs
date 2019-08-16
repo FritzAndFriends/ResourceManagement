@@ -5,12 +5,18 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 {
 	public class DayViewViewModel
 	{
+
+		public DayViewViewModel(Data.ScheduleState scheduleState)
+		{
+			this.MyScheduleState = scheduleState;
+		}
+
 		public int HoursPerDay
 		{
 			get { return this.DayViewEnd.Subtract(this.DayViewStart).Hours; }
 		}
 
-	public DateTime SelectedDate
+		public DateTime SelectedDate
 		{
 			get { return this.MyScheduleState?.SelectedDate ?? DateTime.Today; }
 		}
@@ -21,8 +27,11 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		}
 
 		public Data.ScheduleState MyScheduleState { get; set; }
+
 		public DateTime DayViewStart { get; set; } = DateTime.Today.AddHours(8);
+
 		public DateTime DayViewEnd { get; set; } = DateTime.Today.AddHours(20);
+
 		public int DayCount { get; set; } = 1;
 
 		/// <summary>

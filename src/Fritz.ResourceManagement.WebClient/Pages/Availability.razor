@@ -77,7 +77,7 @@
 	[CascadingParameter] Task<AuthenticationState> Context { get; set; }
 
 	// Cheer 500 electrichavoc 07/06/19
-	protected override async Task OnInitAsync()
+	protected override async Task OnInitializedAsync()
 	{
 		var state = await Context;
 		await Model.OnInitAsync(state.User);
