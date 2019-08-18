@@ -1,21 +1,19 @@
 @page "/manager"
 @page "/manager/{requesteddate}"
-@inject ViewModels.ManagerScheduleViewViewModel Model
+@inherits ViewModels.ManagerScheduleViewViewModel
 @using System.Globalization
 
 <h1 class="h3">Schedule View</h1>
 
 <div id="weekSelector">
-	@{
-		// TODO: Change the buttons to A tags with HREF that includes the begindate and enddate in the route
-	}
-	<a class="oi oi-media-skip-backward" href="/manager/@Model.MyScheduleState.DisplayBeginDate.AddDays(-7).ToString("yyyyMMdd", CultureInfo.InvariantCulture)" aria-label="Go back a week"></a>
-		<span>@Model.MyScheduleState.DisplayBeginDate.ToShortDateString() - @Model.MyScheduleState.DisplayEndDate.AddDays(-1).ToShortDateString()</span>
-	<a class="oi oi-media-skip-forward" href="/manager/@Model.MyScheduleState.DisplayBeginDate.AddDays(7).ToString("yyyyMMdd", CultureInfo.InvariantCulture)" aria-label="Go forward a week"></a>
 
-	@if (!(Model.MyScheduleState.DisplayBeginDate.Date <= DateTime.Today && Model.MyScheduleState.DisplayEndDate.Date >= DateTime.Today))
+	<a class="oi oi-media-skip-backward" href="/manager/@this.MyScheduleState.DisplayBeginDate.AddDays(-7).ToString("yyyyMMdd", CultureInfo.InvariantCulture)" aria-label="Go back a week"></a>
+		<span>@this.MyScheduleState.DisplayBeginDate.ToShortDateString() - @this.MyScheduleState.DisplayEndDate.AddDays(-1).ToShortDateString()</span>
+	<a class="oi oi-media-skip-forward" href="/manager/@this.MyScheduleState.DisplayBeginDate.AddDays(7).ToString("yyyyMMdd", CultureInfo.InvariantCulture)" aria-label="Go forward a week"></a>
+
+	@if (!(this.MyScheduleState.DisplayBeginDate.Date <= DateTime.Today && this.MyScheduleState.DisplayEndDate.Date >= DateTime.Today))
 	{
-	<a href="/manager" style="margin-left: 15px;">This Week's Schedule <span class="oi oi-calendar"></span></a>
+		<a href="/manager" style="margin-left: 15px;">This Week's Schedule <span class="oi oi-calendar"></span></a>
 	}
 
 </div>
@@ -23,35 +21,3 @@
 <div id="MyScheduleContainer">
 	<DayView DayCount="7" DayDisplay="true"></DayView>
 </div>
-
-@code {
-
-	// Cheer 642 cpayette 16/8/19
-
-	[Parameter]
-	public string RequestedDate
-	{
-		get { return SelectedDate.ToString("yyyyMMdd", CultureInfo.InvariantCulture); }
-		set
-		{
-			if (string.IsNullOrEmpty(value))
-			{
-				SelectedDate = DateTime.Today;
-				return;
-			}
-			SelectedDate = DateTime.ParseExact(value, "yyyyMMdd", CultureInfo.InvariantCulture);
-		}
-	}
-
-	[Parameter]
-	public DateTime SelectedDate
-	{
-		get { return Model.SelectedDate; }
-		set {
-			Model.SelectedDate = value;
-			StateHasChanged();
-		}
-	}
-
-	protected override async Task OnParametersSetAsync() => await this.Model.OnParametersSetAsync();
-}
