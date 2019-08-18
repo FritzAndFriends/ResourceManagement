@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Transactions;
+using FluentAssertions;
 using Fritz.ResourceManagement.Domain;
 using Fritz.ResourceManagement.WebClient.Data;
 using Fritz.ResourceManagement.WebClient.ViewModels;
@@ -11,10 +9,8 @@ using Xunit;
 
 namespace Test.Wasm.ViewModels.Availability.GivenAValidNewScheduleItem
 {
-
 	public class WhenSaving
 	{
-
 		private readonly Mock<IScheduleRepository> _ScheduleRepository;
 
 		public WhenSaving()
@@ -23,15 +19,19 @@ namespace Test.Wasm.ViewModels.Availability.GivenAValidNewScheduleItem
 		}
 
 		[Fact]
-		public async Task ShouldPassDatesProperly() {
-
+		public async Task ShouldPassDatesProperly() 
+		{
 			// arrange
 			var state = new ScheduleState();
 			var StartDate = new DateTime(2019, 8, 25, 14, 0, 0);
 			var EndDate = new DateTime(2019, 8, 25, 16, 0, 0);
 
 			// Act
-			var sut = new AvailabilityViewModel(state, _ScheduleRepository.Object);
+			var sut = new AvailabilityViewModel()
+			{ 
+				MyScheduleState = state,
+				ScheduleRepository = _ScheduleRepository.Object
+			};			
 			sut.MySchedule = new Schedule { Id = 1 };
 			sut.NewScheduleItem.StartDateTime = StartDate;
 			sut.NewScheduleItem.EndDateTime = EndDate;
@@ -39,14 +39,11 @@ namespace Test.Wasm.ViewModels.Availability.GivenAValidNewScheduleItem
 			var results = await sut.AddNewScheduleItem();
 
 			// Assert
-			Assert.Empty(results);
+			results.Should().BeEmpty();
+
 			_ScheduleRepository.Verify(r => r.AddNewScheduleItem(It.IsAny<Schedule>(), 
 				It.Is<ScheduleItem>(i => i.StartDateTime == StartDate && i.EndDateTime == EndDate)),
 				Times.Once, "Did not load the schedule item properly");
-
-
 		}
-
 	}
-
 }
