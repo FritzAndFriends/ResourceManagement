@@ -1,8 +1,10 @@
-﻿namespace Fritz.ResourceManagement.WebClient.ViewModels
+﻿using Microsoft.AspNetCore.Components;
+
+namespace Fritz.ResourceManagement.WebClient.ViewModels
 {
-	public class NavMenuViewModel
+	public class NavMenuViewModel : ComponentBase
 	{
-		public bool CollapseNavMenu { get; set; } = true;
+		private bool CollapseNavMenu { get; set; } = true;
 
 		public string NavMenuCssClass => this.CollapseNavMenu ? "collapse" : null;
 
