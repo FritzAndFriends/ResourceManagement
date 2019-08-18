@@ -1,42 +1,41 @@
-﻿@inject ViewModels.DayViewViewModel Model
+﻿@inherits ViewModels.DayViewViewModel
 
-<div class="dayview" style="grid-template-columns: 4.3em repeat(@Model.DayCount,1fr); grid-template-rows: repeat(@Model.HoursPerDay, 1.5em);">
+<div class="dayview" style="grid-template-columns: 4.3em repeat(@this.DayCount,1fr); grid-template-rows: repeat(@this.HoursPerDay, 1.5em);">
 	@{
-
-		if (Model.DayDisplay)
+		if (this.DayDisplay)
 		{
 			<span class="grid" style="grid-column: 1;"></span>
-			for (int columnCounter = 2; columnCounter < 2 + Model.DayCount; columnCounter++)
+			for (int columnCounter = 2; columnCounter < 2 + this.DayCount; columnCounter++)
 			{
 				<span class="grid" style="grid-column: @columnCounter; text-align: center;">
-					@Model.MyScheduleState.DisplayBeginDate.AddDays(columnCounter - 2).ToString("ddd MMM d")
+					@this.MyScheduleState.DisplayBeginDate.AddDays(columnCounter - 2).ToString("ddd MMM d")
 				</span>
 			}
 		}
 
-		var currentTime = Model.DayViewStart;
+		var currentTime = this.DayViewStart;
 
-		for (var i = 0; i < Model.HoursPerDay; i++)
+		for (var i = 0; i < this.HoursPerDay; i++)
 		{
 			<span class="grid" style="grid-column: 1;">
 				<text>@currentTime.ToString("h:mm tt")</text>
 				@{ currentTime = currentTime.AddHours(1); }
 			</span>
 
-			for (int columnCounter = 2; columnCounter < 2 + Model.DayCount; columnCounter++)
+			for (int columnCounter = 2; columnCounter < 2 + this.DayCount; columnCounter++)
 			{
 				<span class="grid" style="grid-column: @columnCounter"></span>
 			}
 		}
 	}
 
-	@if (Model.MyScheduleState != null && Model.MyScheduleState.TimeSlots != null)
+	@if (this.MyScheduleState != null && this.MyScheduleState.TimeSlots != null)
 	{
-		foreach (var item in Model.MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == Model.SelectedDate.Date))
+		foreach (var item in this.MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == this.SelectedDate.Date))
 		{
-			if (Model.DisplayItem(item.StartDateTime, item.EndDateTime))
+			if (this.DisplayItem(item.StartDateTime, item.EndDateTime))
 			{
-				<span class="scheduleItem @Model.ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @Model.ItemStartRow(item.StartDateTime); top: @Model.ItemTopPosition(item.StartDateTime); height: @Model.ItemRowHeight(item.StartDateTime, item.EndDateTime);">
+				<span class="scheduleItem @this.ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @this.ItemStartRow(item.StartDateTime); top: @this.ItemTopPosition(item.StartDateTime); height: @this.ItemRowHeight(item.StartDateTime, item.EndDateTime);">
 					@item.Name  - @item.StartDateTime.ToShortTimeString()
 				</span>
 			}
@@ -44,63 +43,3 @@
 	}
 
 </div>
-
-@code {
-
-	// TODO: Simon G - Work out if it is possible to make the Model a property with a Parameter attribute and pass the whole thing in from the parent rather than using DI, there may be a timing DI vs Paramater state being set, which might be offset by component composition.
-
-	// Cheer 701 themichaeljolley 09/07/19
-	// Cheer 600 cpayette 09/07/19
-	// Cheer 1500 clintonrocksmith 09/07/19
-
-	[Parameter]
-	public Data.ScheduleState MyScheduleState
-	{
-		get { return Model.MyScheduleState; }
-		set { Model.MyScheduleState = value; }
-	}
-
-	[Parameter]
-	public DateTime DayViewStart
-	{
-		get { return Model.DayViewStart; }
-		set { Model.DayViewStart = value; }
-	}
-
-	[Parameter]
-	public DateTime DayViewEnd
-	{
-		get { return Model.DayViewEnd; }
-		set { Model.DayViewEnd = value; }
-	}
-
-	// Cheer 110 copperbeardy 14/07/19
-
-	[Parameter]
-	public int DayCount
-	{
-		get { return Model.DayCount; }
-		set { Model.DayCount = value; }
-	}
-
-	[Parameter]
-	public bool DayDisplay
-	{
-		get { return Model.DayDisplay; }
-		set { Model.DayDisplay = value; }
-	}
-
-	// Cheer 142 cpayette 15/8/19 
-
-	protected override void OnParametersSet()
-	{
-
-		MyScheduleState.OnSelectedDateChanged += (obj, args) =>
-		{
-			this.StateHasChanged();
-		};
-
-		this.StateHasChanged();
-		base.OnParametersSet();
-	}
-}
