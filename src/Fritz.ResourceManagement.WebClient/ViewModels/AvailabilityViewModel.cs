@@ -2,7 +2,9 @@
 using Fritz.ResourceManagement.WebClient.Data;
 using Microsoft.AspNetCore.Components;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -24,30 +26,28 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		public ScheduleItem NewScheduleItem { get; set; } = new ScheduleItem() { };
 		public RecurringSchedule NewRecurringSchedule { get; set; }
 		public ScheduleState MyScheduleState { get; set; }
-
+		public IScheduleRepository ScheduleRepository { get; }
 		public ScheduleItemViewModel ItemViewModel { get; set; }
 
 		public DateTime DayViewStart => DateTime.Today.AddHours(8);
 		public DateTime DayViewEnd => DateTime.Today.AddHours(20);
 
-		private Schedule MySchedule { get; set; } = null;
+		public Schedule MySchedule { get; set; } = null;
 		private DateTime SelectedDate { get; set; } = DateTime.Today;
 
 		// TODO: Simon G - Do we still need this?
 		private DateTime ThisMonth { get { return new DateTime(SelectedDate.Year, SelectedDate.Month, 1); } }
 		
-		private readonly HttpClient httpClient;
 		public ClaimsPrincipal _User;
 
 		public AvailabilityViewModel(
-			//ClaimsPrincipal currentUser, 
 			ScheduleState myScheduleState,
-			HttpClient httpClient)
+			IScheduleRepository scheduleRepository)
 		{
 			//this.CurrentUser = currentUser;
 
 			this.MyScheduleState = myScheduleState;
-			this.httpClient = httpClient;
+			ScheduleRepository = scheduleRepository;
 		}
 
 		public async Task OnInitAsync(ClaimsPrincipal user)
@@ -57,7 +57,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			this.MyScheduleState.ScheduleId = _User.GetClaimValueAsInt(UserInfo.Claims.SCHEDULEID).Value;
 
 			this.ResetScheduleItem();
-			this.MySchedule = await GetMyAvailability();
+			this.MySchedule = await ScheduleRepository.GetAvailability(MyScheduleState.ScheduleId);
 
 			this.MyScheduleState.SelectDate(SelectedDate);
 			this.MyScheduleState.Schedule = MySchedule;
@@ -71,7 +71,7 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			// Cheer 5000 fixterjake 01/08/19 
 			// Cheer 500 cpayette 08/08/19 
 
-			var fetchedTimeslots = await httpClient.GetJsonAsync<TimeSlot[]>($"api/timeslot/{MyScheduleState.ScheduleId}/{DateTime.Today.AddMonths(-1).ToString("MM.dd.yyyy")}/{DateTime.Today.AddMonths(2).ToString("MM.dd.yyyy")}");
+			var fetchedTimeslots = await ScheduleRepository.FetchTimeSlots(MySchedule.Id);
 			Console.WriteLine($"Fetched {fetchedTimeslots.Length} timeslots");
 			MyScheduleState.TimeSlots.AddRange(fetchedTimeslots);
 			Console.WriteLine($"MyScheduleState: {MyScheduleState.GetHashCode()}");
@@ -79,40 +79,37 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 		}
 
-		public async Task AddNewRecurringSchedule()
+		public async Task<IEnumerable<ValidationResult>> AddNewRecurringSchedule()
 		{
 			// Cheer 2000 organicIT 23/06/19
 
-			this.NewRecurringSchedule.Status = ScheduleStatus.NotAvailable;
-			this.NewRecurringSchedule.ScheduleId = MySchedule.Id;
-			this.MySchedule.RecurringSchedules.Add(NewRecurringSchedule);
-
-			await this.httpClient.PutJsonAsync($"api/schedule/{MySchedule.Id}", MySchedule);
+			var results = NewRecurringSchedule.Validate(null);
+			if (results.Any()) return results;
+			await ScheduleRepository.AddNewRecurringSchedule(this.MySchedule, NewRecurringSchedule);
 
 			this.MyScheduleState.ScheduleUpdated();
 
 			this.ResetScheduleItem();
+			return new ValidationResult[] { };
 		}
 
-		private async Task<Schedule> GetMyAvailability()
-		{
-			return await this.httpClient.GetJsonAsync<Schedule>($"api/schedule/{MyScheduleState.ScheduleId}");
-		}
-
-		public async Task AddNewScheduleItem()
+		public async Task<IEnumerable<ValidationResult>> AddNewScheduleItem()
 		{
 			// Cheer 200 ultramark 07/06/19
 			// Cheer 100 TheMichaelJolley 07/06/19
+			// Cheer 142 cpayette 18/8/19 
 
-			this.NewScheduleItem.Status = ScheduleStatus.NotAvailable;
-			this.NewScheduleItem.ScheduleId = MySchedule.Id;
-			this.MySchedule.ScheduleItems.Add(NewScheduleItem);
+			NewScheduleItem.Status = ScheduleStatus.NotAvailable;
 
-			await this.httpClient.PutJsonAsync($"api/schedule/{MySchedule.Id}", MySchedule);
+			var results = this.NewScheduleItem.Validate(null); // <<-- That's not right...
+			if (results.Any()) return results;
+
+			await ScheduleRepository.AddNewScheduleItem(MySchedule, NewScheduleItem);
 
 			this.MyScheduleState.ScheduleUpdated();
 
 			this.ResetScheduleItem();
+			return new ValidationResult[] { };
 		}
 
 		private void ResetScheduleItem()

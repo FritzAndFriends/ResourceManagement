@@ -9,7 +9,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="$(AspNetCoreVersion)" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.0.0-preview8.19405.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.0.0-preview8.19405.4" />
   </ItemGroup>
 
   <ItemGroup>
