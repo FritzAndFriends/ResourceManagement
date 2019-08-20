@@ -5,28 +5,32 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Fritz.ResourceManagement.WebClient.ViewModels
 {
-	public class AvailabilityViewModel
+	public class AvailabilityViewModel : ComponentBase
 	{
-
 		// Cheer 342 cpayette 09/8/19 
-		public enum Tabs {
+		public enum Tabs 
+		{
 			Single,
 			Recurring
 		}
-
+		
+		[CascadingParameter] 
+		public Task<AuthenticationState> Context { get; set; }
+		
 		public Tabs SelectedTab { get; set; } = Tabs.Single;
 
 		public object CurrentUser { get; set; }
 		public ScheduleItem NewScheduleItem { get; set; } = new ScheduleItem() { };
 		public RecurringSchedule NewRecurringSchedule { get; set; }
+		[Inject]
 		public ScheduleState MyScheduleState { get; set; }
-		public IScheduleRepository ScheduleRepository { get; }
+		[Inject]
+		public IScheduleRepository ScheduleRepository { get; set; }
 		public ScheduleItemViewModel ItemViewModel { get; set; }
 
 		public DateTime DayViewStart => DateTime.Today.AddHours(8);
@@ -35,25 +39,15 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 		public Schedule MySchedule { get; set; } = null;
 		private DateTime SelectedDate { get; set; } = DateTime.Today;
 
-		// TODO: Simon G - Do we still need this?
 		private DateTime ThisMonth { get { return new DateTime(SelectedDate.Year, SelectedDate.Month, 1); } }
 		
 		public ClaimsPrincipal _User;
 
-		public AvailabilityViewModel(
-			ScheduleState myScheduleState,
-			IScheduleRepository scheduleRepository)
+		// Cheer 500 electrichavoc 07/06/19
+		protected override async Task OnInitializedAsync()
 		{
-			//this.CurrentUser = currentUser;
-
-			this.MyScheduleState = myScheduleState;
-			ScheduleRepository = scheduleRepository;
-		}
-
-		public async Task OnInitAsync(ClaimsPrincipal user)
-		{
-
-			_User = user;
+			var state = await Context;
+			_User = state.User;
 			this.MyScheduleState.ScheduleId = _User.GetClaimValueAsInt(UserInfo.Claims.SCHEDULEID).Value;
 
 			this.ResetScheduleItem();
@@ -62,11 +56,11 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			this.MyScheduleState.SelectDate(SelectedDate);
 			this.MyScheduleState.Schedule = MySchedule;
 			await ExpandSchedule();
+			StateHasChanged();
 		}
 
 		private async Task ExpandSchedule()
 		{
-
 			// Cheer 142 cpayette 01/08/19 
 			// Cheer 5000 fixterjake 01/08/19 
 			// Cheer 500 cpayette 08/08/19 
@@ -75,8 +69,6 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			Console.WriteLine($"Fetched {fetchedTimeslots.Length} timeslots");
 			MyScheduleState.TimeSlots.AddRange(fetchedTimeslots);
 			Console.WriteLine($"MyScheduleState: {MyScheduleState.GetHashCode()}");
-
-
 		}
 
 		public async Task<IEnumerable<ValidationResult>> AddNewRecurringSchedule()
@@ -126,15 +118,13 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			};
 		}
 
-		public void ClickTab(Tabs tab) {
-
+		public void ClickTab(Tabs tab) 
+		{
 			SelectedTab = tab;
-
 		}
 
 		public class ScheduleItemViewModel
 		{
-
 			// Cheer 142 cpayette 06/08/19 
 			// Cheer 100 alternativecorn 06/08/19 
 
@@ -146,9 +136,6 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 			[Required]
 			public string EndDateTime { get; set; }
-
 		}
-
-
 	}
 }

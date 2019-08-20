@@ -1,16 +1,11 @@
 ﻿using System;
 using Fritz.ResourceManagement.Domain;
+using Microsoft.AspNetCore.Components;
 
 namespace Fritz.ResourceManagement.WebClient.ViewModels
 {
-	public class DayViewViewModel
+	public class DayViewViewModel : ComponentBase
 	{
-
-		public DayViewViewModel(Data.ScheduleState scheduleState)
-		{
-			this.MyScheduleState = scheduleState;
-		}
-
 		public int HoursPerDay
 		{
 			get { return this.DayViewEnd.Subtract(this.DayViewStart).Hours; }
@@ -26,17 +21,27 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			get { return this.MyScheduleState.Schedule; }
 		}
 
+		[Inject]
+		[Parameter]
 		public Data.ScheduleState MyScheduleState { get; set; }
 
+		// Cheer 701 themichaeljolley 09/07/19
+		// Cheer 600 cpayette 09/07/19
+		// Cheer 1500 clintonrocksmith 09/07/19
+		[Parameter]
 		public DateTime DayViewStart { get; set; } = DateTime.Today.AddHours(8);
 
+		[Parameter]
 		public DateTime DayViewEnd { get; set; } = DateTime.Today.AddHours(20);
 
+		// Cheer 110 copperbeardy 14/07/19
+		[Parameter]
 		public int DayCount { get; set; } = 1;
 
 		/// <summary>
 		/// Should we display the dates above the grid
 		/// </summary>
+		[Parameter]
 		public bool DayDisplay { get; set; } = false;
 
 		public bool DisplayItem(DateTime start, DateTime end)
@@ -67,7 +72,6 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			{
 				return 1;
 			}
-
 			return (start.Hour - this.DayViewStart.Hour) + 1;
 		}
 
@@ -134,6 +138,18 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 			height += 0.063 * (endTime.Subtract(startTime).TotalHours);
 
 			return (height > 0) ? $"{height}em" : "0";
+		}
+
+		// Cheer 142 cpayette 15/8/19 
+		protected override void OnParametersSet()
+		{
+			MyScheduleState.OnSelectedDateChanged += (obj, args) =>
+			{
+				this.StateHasChanged();
+			};
+
+			this.StateHasChanged();
+			base.OnParametersSet();
 		}
 	}
 }

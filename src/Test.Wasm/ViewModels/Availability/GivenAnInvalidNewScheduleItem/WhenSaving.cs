@@ -13,7 +13,6 @@ namespace Test.Wasm.ViewModels.Availability.GivenAnInvalidNewScheduleItem
 
 	public class WhenSaving
 	{
-
 		private readonly Mock<IScheduleRepository> _ScheduleRepository;
 
 		public WhenSaving()
@@ -22,22 +21,22 @@ namespace Test.Wasm.ViewModels.Availability.GivenAnInvalidNewScheduleItem
 		}
 
 		[Fact]
-		public async Task ShouldReturnAppropriateValidationMessages() {
-
+		public async Task ShouldReturnAppropriateValidationMessages() 
+		{
 			// arrange
 			var state = new ScheduleState();
 
 			// Act
-			var sut = new AvailabilityViewModel(state, _ScheduleRepository.Object);
+			var sut = new AvailabilityViewModel()
+			{ 
+				MyScheduleState = state,
+				ScheduleRepository = _ScheduleRepository.Object
+			};
 			await sut.AddNewScheduleItem();
 
 			// Assert
 			_ScheduleRepository.Verify(r => r.AddNewScheduleItem(It.IsAny<Schedule>(), It.IsAny<ScheduleItem>()),
 				Times.Never, "Should not have attempted to save the schedule");
-
 		}
-
-
 	}
-
 }
