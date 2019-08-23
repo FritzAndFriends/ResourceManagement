@@ -1,0 +1,23 @@
+@page "/manager"
+@page "/manager/{requesteddate}"
+@inherits ViewModels.ManagerScheduleViewViewModel
+@using System.Globalization
+
+<h1 class="h3">Schedule View</h1>
+
+<div id="weekSelector">
+
+	<a class="oi oi-media-skip-backward" href="/manager/@this.MyScheduleState.DisplayBeginDate.AddDays(-7).ToString("yyyyMMdd", CultureInfo.InvariantCulture)" aria-label="Go back a week"></a>
+		<span>@this.MyScheduleState.DisplayBeginDate.ToShortDateString() - @this.MyScheduleState.DisplayEndDate.AddDays(-1).ToShortDateString()</span>
+	<a class="oi oi-media-skip-forward" href="/manager/@this.MyScheduleState.DisplayBeginDate.AddDays(7).ToString("yyyyMMdd", CultureInfo.InvariantCulture)" aria-label="Go forward a week"></a>
+
+	@if (!(this.MyScheduleState.DisplayBeginDate.Date <= DateTime.Today && this.MyScheduleState.DisplayEndDate.Date >= DateTime.Today))
+	{
+		<a href="/manager" style="margin-left: 15px;">This Week's Schedule <span class="oi oi-calendar"></span></a>
+	}
+
+</div>
+
+<div id="MyScheduleContainer">
+	<DayView DayCount="7" DayDisplay="true"></DayView>
+</div>

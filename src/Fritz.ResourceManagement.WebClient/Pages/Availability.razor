@@ -1,0 +1,73 @@
+@page "/availability"
+@attribute [Authorize]
+@using Tabs = ViewModels.AvailabilityViewModel.Tabs
+@inherits ViewModels.AvailabilityViewModel
+
+
+<div id="availabilityDataEntry">
+
+	<div id="availabilityHead">
+		<h1 class="h3">Set the availability for @this._User.Identity.Name</h1>
+	</div>
+
+	<div class="availabilityTabBar">
+
+		<div class="btn-group-vertical" role="tablist" aria-label="Type of Event To Add To Your Schedule">
+			<button type="button" class="btn @(this.SelectedTab == Tabs.Single ? "btn-primary" : "btn-outline-primary")" @onclick="(() => this.ClickTab(Tabs.Single))" role="tab" aria-controls="ScheduleItem" aria-selected="@(this.SelectedTab == Tabs.Single ? "true" : "false")" id="single-event-tab-btn">
+			Single Event
+			</button>
+			<button type="button" class="btn @(this.SelectedTab == Tabs.Recurring ? "btn-primary" : "btn-outline-primary")" @onclick="(() => this.ClickTab(Tabs.Recurring))" role="tab" aria-controls="RecurringSchedule" aria-selected="@(this.SelectedTab == Tabs.Recurring ? "true" : "false")" id="recurring-event-tab-btn">
+			Recurring Events
+			</button>
+		</div>
+
+	</div>
+
+	<div class="availabilityCenter">
+
+		<EditForm Model="this">
+
+			<div id="ScheduleItem" class="schedule-form-group form-group" hidden="@(this.SelectedTab != Tabs.Single)" tabindex="0" role="tabpanel" aria-labelledby="single-event-tab-btn">
+
+				<h2 class="head h4">Schedule One Time Appointments</h2>
+				<label for="scheduled-appointment-name" class="appointment-name-label">Appointment Name: </label>
+				<input class="form-control appointment-name" type="text" name="Name" id="scheduled-appointment-name" @bind="this.NewScheduleItem.Name" placeholder="Name of the Appointment" />
+				<label class="label1" for="scheduled-appointment-start-time">Start Time:</label>
+				<DateTimeInput class="form-control startTime" Value="this.NewScheduleItem.StartDateTime" id="scheduled-appointment-start-time"></DateTimeInput>
+
+				<label class="label2" for="scheduled-appointment-end-time">End Time:</label>
+				<DateTimeInput class="form-control endTime" Value="this.NewScheduleItem.EndDateTime" id="scheduled-appointment-end-time"></DateTimeInput>
+
+				<div class="foot">
+					<button class="schedule-item-button btn btn-primary" @onclick="() => this.AddNewScheduleItem()">Add New Schedule Item</button>
+				</div>
+
+			</div>
+
+			<div id="RecurringSchedule" class="schedule-form-group form-group" hidden="@(this.SelectedTab != Tabs.Recurring)" tabindex="0" role="tabpanel" aria-labelledby="recurring-event-tab-btn">
+				<h2 class="head h4">Create a Recurring Schedule</h2>
+
+				<RecurrenceDataEntry Schedule="this.NewRecurringSchedule" OnSave="this.AddNewRecurringSchedule" />
+
+			</div>
+
+		</EditForm>
+
+	</div>
+
+	<div id="MySchedule">
+		<h2 class="h3">My Schedule</h2>
+
+			<DayPicker />
+
+			<DayView DayViewStart="this.DayViewStart" DayViewEnd="this.DayViewEnd" MyScheduleState="this.MyScheduleState" />
+		
+	</div>
+
+	<div id="ScheduleList">
+
+		<!-- OUTPUT THE SCHEDULE LIST FOR THIS USER IN A GRID HERE -->
+
+	</div>
+
+</div>

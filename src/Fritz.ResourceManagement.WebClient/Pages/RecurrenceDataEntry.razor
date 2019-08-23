@@ -1,0 +1,55 @@
+@inherits ViewModels.RecurrenceDataEntryViewModel
+
+<label for="appointment-name">Appointment Name</label>
+<input class="form-control appointment-name" type="text" name="Name" @bind="this.Schedule.Name" placeholder="Name of the Recurring Appointment" />
+
+<label for="StartDate" class="col-sm-4">Start Date:</label>
+<input class="form-control col-sm-8" type="date" id="StartDate" @bind-value="this.Schedule.MinStartDateTime" @bind-value:format="yyyy-MM-dd" />
+<label for="EndDate" class="col-sm-4">End Date:</label>
+<input class="form-control col-sm-8" type="date" id="EndDate" @bind-value="this.Schedule.MaxEndDateTime" @bind-value:format="yyyy-MM-dd" />
+
+<label for="StartTime" class="col-sm-4">Start Time:</label>
+<input class="form-control col-sm-8" type="time" id="StartTime" @bind-value="this.TimeOfDay"  @bind-value:event="TimeChanged"/>
+
+<label for="EndTime" class="col-sm-4">Ending Time:</label>
+<input class="form-control col-sm-8" type="time" id="EndTime" @bind-value="this.EndTime" @bind-value:event="TimeChanged" />
+
+<fieldset>
+	<legend>Recurrence</legend>
+	<div class="schedule-form-group">
+		<label for="select-recurrence-frequency" class="full-row-label">Choose Appointment Frequency</label>
+		<select name="pattern" class="form-control" @bind="this.Pattern" id="select-recurrence-frequency">
+			<option value="D">Daily</option>
+			<option value="W">Weekly</option>
+			@*			<option>Fortnightly</option>*@
+			@*<option value="M">Monthly</option>*@
+		</select>
+
+		@if (this.Pattern == "W")
+		{
+			<div class="form-check">
+				<input id="checkbox-dow-sunday" type="checkbox" class="form-check-input" name="dow" value="0" @onchange='() => this.OnDOWChange("0")' /><label class="form-check-label" for="checkbox-dow-sunday">Sunday</label>
+			</div>
+			<div class="form-check">
+				<input id="checkbox-dow-monday" type="checkbox" class="form-check-input" name="dow" value="1" @onchange='() => this.OnDOWChange("1")' /><label class="form-check-label" for="checkbox-dow-monday">Monday</label>
+			</div>
+			<div class="form-check">
+				<input id="checkbox-dow-tuesday" type="checkbox" class="form-check-input" name="dow" value="2" @onchange='() => this.OnDOWChange("2")' /><label class="form-check-label" for="checkbox-dow-tuesday">Tuesday</label>
+			</div>
+			<div class="form-check">
+				<input id="checkbox-dow-wednesday" type="checkbox" class="form-check-input" name="dow" value="3" @onchange='() => this.OnDOWChange("3")' /><label class="form-check-label" for="checkbox-dow-wednesday">Wednesday</label>
+			</div>
+			<div class="form-check">
+				<input id="checkbox-dow-thursday" type="checkbox" class="form-check-input" name="dow" value="4" @onchange='() => this.OnDOWChange("4")' /><label class="form-check-label" for="checkbox-dow-thursday">Thursday</label>
+			</div>
+			<div class="form-check">
+				<input id="checkbox-dow-friday" type="checkbox" class="form-check-input" name="dow" value="5" @onchange='() => this.OnDOWChange("5")' /><label class="form-check-label" for="checkbox-dow-friday">Friday</label>
+			</div>
+			<div class="form-check">
+				<input id="checkbox-dow-saturday" type="checkbox" class="form-check-input" name="dow" value="6" @onchange='() => this.OnDOWChange("6")' /><label class="form-check-label" for="checkbox-dow-saturday">Saturday</label>
+			</div>
+		}
+	</div>
+</fieldset>
+
+<button class="schedule-item-button ml-0 btn btn-primary" @onclick="this.Save">Add New Recurring Schedule</button>

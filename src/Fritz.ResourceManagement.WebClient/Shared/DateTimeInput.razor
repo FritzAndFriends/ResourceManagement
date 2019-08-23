@@ -1,0 +1,28 @@
+﻿<input type="datetime-local" 
+	class="form-control" 
+	name="StartTime" 
+	@attributes="Attributes" 
+	@bind-Value="Value" 
+	@bind-Value:format="yyyy-MM-ddTHH:mm"
+	@bind-Value:event="ChangeHandler" /> 
+
+@code {
+
+	[Parameter(CaptureUnmatchedValues = true)]
+  public Dictionary<string, object> Attributes { get; set; }
+
+	[Parameter]
+	public DateTime Value { get; set; }
+
+	[Parameter]
+	public EventCallback<UIChangeEventArgs> OnChange { get; set; }
+
+	async Task ChangeHandler(UIChangeEventArgs args) {
+
+		await OnChange.InvokeAsync(args);
+		StateHasChanged();
+
+	}
+
+
+}

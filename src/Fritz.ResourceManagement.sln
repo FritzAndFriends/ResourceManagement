@@ -14,7 +14,19 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02542A59-45AF-4A86-9CF0-16B2B58B5E5F}"
 	ProjectSection(SolutionItems) = preProject
 		Test.Scheduling\.editorconfig = Test.Scheduling\.editorconfig
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fritz.ResourceManagement.WebClient", "Fritz.ResourceManagement.WebClient\Fritz.ResourceManagement.WebClient.csproj", "{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{0FB1D4B6-20CA-4737-8E73-CE9BCA6ACE9E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{B2181174-A064-415C-A565-9E97EB9DE27A}"
+	ProjectSection(SolutionItems) = preProject
+		Build\props\Project.BuildProperties.props = Build\props\Project.BuildProperties.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Wasm", "Test.Wasm\Test.Wasm.csproj", "{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,9 +86,37 @@ Global
 		{F1791DD3-FC59-441A-9C42-5176D3D1FB67}.Release|x64.Build.0 = Release|Any CPU
 		{F1791DD3-FC59-441A-9C42-5176D3D1FB67}.Release|x86.ActiveCfg = Release|Any CPU
 		{F1791DD3-FC59-441A-9C42-5176D3D1FB67}.Release|x86.Build.0 = Release|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Debug|x64.Build.0 = Debug|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Debug|x86.Build.0 = Debug|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Release|x64.ActiveCfg = Release|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Release|x64.Build.0 = Release|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Release|x86.ActiveCfg = Release|Any CPU
+		{A32A4E88-D3EC-444C-AAE5-DE31F3FC6143}.Release|x86.Build.0 = Release|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Debug|x64.Build.0 = Debug|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Debug|x86.Build.0 = Debug|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Release|x64.ActiveCfg = Release|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Release|x64.Build.0 = Release|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Release|x86.ActiveCfg = Release|Any CPU
+		{2B86CD81-9614-4F2B-9E5C-5A03C1F098E9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0FB1D4B6-20CA-4737-8E73-CE9BCA6ACE9E} = {02542A59-45AF-4A86-9CF0-16B2B58B5E5F}
+		{B2181174-A064-415C-A565-9E97EB9DE27A} = {0FB1D4B6-20CA-4737-8E73-CE9BCA6ACE9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26421E1D-5727-463D-911D-9B67A6702FDF}

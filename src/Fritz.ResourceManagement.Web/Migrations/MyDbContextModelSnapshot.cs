@@ -4,7 +4,6 @@ using Fritz.ResourceManagement.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Fritz.ResourceManagement.Web.Migrations
 {
@@ -15,9 +14,7 @@ namespace Fritz.ResourceManagement.Web.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "3.0.0-preview5.19227.1")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("ProductVersion", "3.0.0-preview7.19362.6");
 
             modelBuilder.Entity("Fritz.ResourceManagement.Domain.Person", b =>
                 {

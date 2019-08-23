@@ -1,0 +1,22 @@
+@inherits ViewModels.NavMenuViewModel
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom box-shadow mb-3">
+	<div class="container">
+		<a class="navbar-brand" href="">Fritz.ResourceManagement.Web</a>
+		<button class="navbar-toggler" aria-label="Toggle navigation" @onclick="this.ToggleNavMenu">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="@this.NavMenuCssClass navbar-collapse">
+			<ul class="nav navbar-nav flex-grow-1">
+				<li class="nav-item">
+					<NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+				</li>
+				<AuthenticatedNavPartial />
+			</ul>
+			<ul class="nav navbar-nav">
+				<Login />
+			</ul>
+		</div>
+	</div>
+</nav>

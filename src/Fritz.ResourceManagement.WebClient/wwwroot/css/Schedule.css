@@ -1,0 +1,117 @@
+﻿#MySchedule {
+	width: 20em;
+}
+
+.monthpicker {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 0px;
+	grid-row-gap: 0px;
+}
+
+	.monthpicker #name {
+		grid-area: 1 / 2 / 2 / 7;
+		text-align: center;
+		font-weight: bold;
+	}
+
+	.monthpicker #prevMonth {
+		grid-area: 1 / 1 / 2 / 2;
+	}
+
+	.monthpicker #nextMonth {
+		grid-area: 1 / 7 / 2 / 8;
+	}
+
+	.monthpicker span {
+		text-align: center;
+		font-weight: bold;
+		min-height: 30px;
+	}
+
+	.monthpicker .dow {
+		background-color: lightgrey;
+	}
+
+	.monthpicker .active {
+		border: 2px solid orange;
+	}
+
+	.monthpicker .today {
+		border: 2px solid red;
+	}
+
+	.monthpicker .day {
+		cursor: pointer;
+	}
+
+	.monthpicker .appt {
+		background-color: midnightblue;
+		color: white;
+	}
+
+
+	/** Day View */
+
+/** TODO: investigate positioning with CSS using technique like:
+		https://blogs.igalia.com/mrego/2016/05/27/css-grid-layout-and-positioned-items/
+
+	*/
+
+.dayview {
+	display: grid;
+	position: relative;
+	grid-column-gap: 1px;
+	grid-row-gap: 1px;
+	background-color: grey;
+	border: 1px solid grey;
+}
+
+.dayview span.grid {
+	background-color: #fff;
+	font-size: 0.8em;
+	text-align: right;
+	padding: 2px;
+}
+
+.dayview .scheduleItem  {
+	position: absolute;
+	border: 1px solid navy;
+	background-color: papayawhip;
+	grid-column: 2 / auto;
+	left: 10px;
+	right: 10px;
+	height: 3em;
+	overflow: hidden;
+}
+
+.dayview .starts-before  {
+	border-top: 0;
+}
+
+.dayview .ends-after  {
+	border-bottom: 0;
+}
+
+#weekSelector > span {
+	width: 12em;
+	display: inline-block;
+	text-align: center;
+}
+
+#weekSelector a.oi, #weekSelector a.oi:hover, #weekSelector a.oi:active {
+	text-decoration: none;
+}
+
+#weekSelector a.oi {
+	color: black;
+}
+
+#weekSelector a.oi:hover {
+	color: green;
+}
+
+#weekSelector a.oi:active {
+	color: purple;
+}

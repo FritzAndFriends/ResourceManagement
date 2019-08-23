@@ -1,0 +1,45 @@
+﻿@inherits ViewModels.DayViewViewModel
+
+<div class="dayview" style="grid-template-columns: 4.3em repeat(@this.DayCount,1fr); grid-template-rows: repeat(@this.HoursPerDay, 1.5em);">
+	@{
+		if (this.DayDisplay)
+		{
+			<span class="grid" style="grid-column: 1;"></span>
+			for (int columnCounter = 2; columnCounter < 2 + this.DayCount; columnCounter++)
+			{
+				<span class="grid" style="grid-column: @columnCounter; text-align: center;">
+					@this.MyScheduleState.DisplayBeginDate.AddDays(columnCounter - 2).ToString("ddd MMM d")
+				</span>
+			}
+		}
+
+		var currentTime = this.DayViewStart;
+
+		for (var i = 0; i < this.HoursPerDay; i++)
+		{
+			<span class="grid" style="grid-column: 1;">
+				<text>@currentTime.ToString("h:mm tt")</text>
+				@{ currentTime = currentTime.AddHours(1); }
+			</span>
+
+			for (int columnCounter = 2; columnCounter < 2 + this.DayCount; columnCounter++)
+			{
+				<span class="grid" style="grid-column: @columnCounter"></span>
+			}
+		}
+	}
+
+	@if (this.MyScheduleState != null && this.MyScheduleState.TimeSlots != null)
+	{
+		foreach (var item in this.MyScheduleState.TimeSlots.Where(s => s.StartDateTime.Date == this.SelectedDate.Date))
+		{
+			if (this.DisplayItem(item.StartDateTime, item.EndDateTime))
+			{
+				<span class="scheduleItem @this.ItemBorderStyle(item.StartDateTime, item.EndDateTime)" style="grid-row-start: @this.ItemStartRow(item.StartDateTime); top: @this.ItemTopPosition(item.StartDateTime); height: @this.ItemRowHeight(item.StartDateTime, item.EndDateTime);">
+					@item.Name  - @item.StartDateTime.ToShortTimeString()
+				</span>
+			}
+		}
+	}
+
+</div>

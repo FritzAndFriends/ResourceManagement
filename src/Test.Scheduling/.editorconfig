@@ -1,12 +1,13 @@
+[*.*]
+#use hard tabs for indentation
+indent_style = tab
+
 # Rules in this file were initially inferred by Visual Studio IntelliCode from the C:\dev\ResourceManagement\src\Test.Scheduling\ codebase based on best match to current usage at 5/17/2019
 # You can modify the rules from these initially generated values to suit your own policies
 # You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 [*.cs]
 
 #Core editorconfig formatting - indentation
-
-#use hard tabs for indentation
-indent_style = tab
 
 #Formatting - organize using options
 

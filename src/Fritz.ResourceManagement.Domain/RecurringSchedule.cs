@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading;
 using CronEspresso.NETCore.Utils;
 
 namespace Fritz.ResourceManagement.Domain
@@ -22,6 +24,12 @@ namespace Fritz.ResourceManagement.Domain
 	public string CronPattern { get; set; }
 
 	public TimeSpan Duration { get; set; }
+
+		[NotMapped()]
+		public string DurationText {
+			get { return Duration.ToString(); }
+			set { Duration = TimeSpan.Parse(value); }
+		}
 
 	public DateTime MinStartDateTime { get; set; }
 

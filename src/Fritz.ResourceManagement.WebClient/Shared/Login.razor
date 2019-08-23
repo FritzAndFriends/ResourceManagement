@@ -1,0 +1,21 @@
+﻿<AuthorizeView>
+	<Authorizing>
+		<text>...</text>
+	</Authorizing>
+	<Authorized>
+		<li class="nav-item">
+			<a class="nav-link text-dark" title="Manage" href="identity/account/manage">@context.User.Identity.Name</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link text-dark sign-out" href="user/signout">Sign out</a>
+		</li>
+	</Authorized>
+	<NotAuthorized>
+		<li class="nav-item">
+			<a class="nav-link text-dark" href="identity/account/register">Register</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link text-dark" href="user/signin">Login</a>
+		</li>
+	</NotAuthorized>
+</AuthorizeView>

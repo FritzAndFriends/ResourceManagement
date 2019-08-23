@@ -1,6 +1,6 @@
-namespace Fritz.ResourceManagement.Domain
+﻿namespace Fritz.ResourceManagement.Domain
 {
-  public enum ScheduleStatus {
+	public enum ScheduleStatus {
 
     Tentative,
     NotAvailable,
