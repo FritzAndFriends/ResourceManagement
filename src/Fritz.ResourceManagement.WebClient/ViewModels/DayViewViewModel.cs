@@ -6,6 +6,9 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 {
 	public class DayViewViewModel : ComponentBase
 	{
+		private const double MinuteInEms = 0.025; // 1 minute = 1.25em / 60 = 0.025em
+		private const double RowGaps = 0.063;
+
 		public int HoursPerDay
 		{
 			get { return this.DayViewEnd.Subtract(this.DayViewStart).Hours; }
@@ -68,7 +71,9 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 		public int ItemStartRow(DateTime start)
 		{
-			if (start.Hour <= this.DayViewStart.Hour)
+			var startDayView = this.SelectedDate.Date.Add(this.DayViewStart.TimeOfDay);
+
+			if (start <= startDayView)
 			{
 				return 1;
 			}
@@ -82,12 +87,12 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 			if (start < startDayView)
 			{
-				return "-0.050em";
+				return $"{RowGaps * -1}em";
 			}
 
 			if (start > startDayView && start.Minute > 0)
 			{
-				top = 0.025 * start.Minute;
+				top = MinuteInEms * start.Minute;
 			}
 			return (top > 0) ? $"{top}em" : "0";
 		}
@@ -127,15 +132,15 @@ namespace Fritz.ResourceManagement.WebClient.ViewModels
 
 			if (start.TimeOfDay < this.DayViewStart.TimeOfDay)
 			{
-				height += 0.050; // Add 2 extra minutes for negative top position from ItemTopPosition
+				height += RowGaps; // Add extra length for negative top position from ItemTopPosition
 			}
 
 			totalMinutes = endTime.Subtract(startTime).TotalMinutes;
-			height += 0.025 * totalMinutes; // 1 minute = 1.25em / 60 = 0.025em
+			height += MinuteInEms * totalMinutes;
 
 			/* Adjust for row gaps, 1px = 0.063em at base 16px size
 			 * according to http://pxtoem.com/ */
-			height += 0.063 * (endTime.Subtract(startTime).TotalHours);
+			height += RowGaps * (endTime.Subtract(startTime).TotalHours);
 
 			return (height > 0) ? $"{height}em" : "0";
 		}
